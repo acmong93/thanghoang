@@ -1,0 +1,52 @@
+<%- include('partials/top', { t: album.name }) %>
+
+<p><a href="/admin/albums" class="muted">← Tất cả album</a></p>
+<h1><%= album.name %> <a class="ad-btn sm" href="/album/<%= album.slug %>" target="_blank" rel="noopener">Xem trên web ↗</a></h1>
+
+<form method="post" action="/admin/albums/<%= album.id %>" class="panel grid-form">
+  <label>Tên album <input name="name" value="<%= album.name %>" required /></label>
+  <label>Tag hiển thị <input name="tag" value="<%= album.tag %>" /></label>
+  <label>Nhóm
+    <select name="category">
+      <option value="wedding" <%= album.category === 'wedding' ? 'selected' : '' %>>Ảnh cưới</option>
+      <option value="signature" <%= album.category === 'signature' ? 'selected' : '' %>>Concept độc bản</option>
+      <option value="phong-su" <%= album.category === 'phong-su' ? 'selected' : '' %>>Phóng sự</option>
+    </select>
+  </label>
+  <label>Thứ tự <input name="sort_order" type="number" value="<%= album.sort_order %>" /></label>
+  <label class="full">Mô tả <textarea name="desc" rows="4"><%= album.desc %></textarea></label>
+  <label class="check"><input type="checkbox" name="visible" <%= album.visible ? 'checked' : '' %> /> Hiển thị trên website</label>
+  <div class="row-btns">
+    <button type="submit" class="ad-btn primary">Lưu thay đổi</button>
+  </div>
+</form>
+
+<form method="post" action="/admin/albums/<%= album.id %>/delete" onsubmit="return confirm('Xoá album này cùng toàn bộ ảnh trong đó? Không thể hoàn tác.')" class="inline-form">
+  <button type="submit" class="ad-btn danger sm">Xoá album</button>
+</form>
+
+<h2>Ảnh trong album (<%= images.length %>)</h2>
+<form method="post" action="/admin/albums/<%= album.id %>/images" enctype="multipart/form-data" class="panel upload-form">
+  <input type="file" name="photos" accept="image/jpeg,image/png,image/webp" multiple required />
+  <button type="submit" class="ad-btn primary">Tải ảnh lên (tự nén WebP)</button>
+  <span class="muted">Chọn được nhiều ảnh cùng lúc · tối đa 30MB/ảnh</span>
+</form>
+
+<div class="img-grid">
+  <% images.forEach(im => { %>
+  <div class="img-cell <%= im.is_cover ? 'cover' : '' %>">
+    <img src="<%= im.thumb || im.file %>" alt="" loading="lazy" />
+    <% if (im.is_cover) { %><span class="cover-tag">Ảnh bìa</span><% } %>
+    <div class="img-actions">
+      <form method="post" action="/admin/images/<%= im.id %>/move"><input type="hidden" name="dir" value="up" /><button title="Lên trước">←</button></form>
+      <form method="post" action="/admin/images/<%= im.id %>/move"><input type="hidden" name="dir" value="down" /><button title="Xuống sau">→</button></form>
+      <% if (!im.is_cover) { %>
+      <form method="post" action="/admin/images/<%= im.id %>/cover"><button title="Đặt làm ảnh bìa">★</button></form>
+      <% } %>
+      <form method="post" action="/admin/images/<%= im.id %>/delete" onsubmit="return confirm('Xoá ảnh này?')"><button title="Xoá" class="danger">✕</button></form>
+    </div>
+  </div>
+  <% }) %>
+</div>
+
+<%- include('partials/bottom') %>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Đăng nhập · Quản trị Rosé Wedding</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="login-body">
+<form class="login-card" method="post" action="/admin/login">
+  <div class="login-brand">Rosé Wedding</div>
+  <p class="login-sub">Trang quản trị</p>
+  <% if (error) { %><div class="alert"><%= error %></div><% } %>
+  <label>Tên đăng nhập
+    <input name="username" type="text" autocomplete="username" required autofocus />
+  </label>
+  <label>Mật khẩu
+    <input name="password" type="password" autocomplete="current-password" required />
+  </label>
+  <button type="submit" class="ad-btn primary block">Đăng nhập</button>
+</form>
+</body>
+</html>

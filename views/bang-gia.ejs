@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<%- include('partials/head', { title: current.name, desc: current.intro.slice(0, 155) }) %>
+</head>
+<body>
+<%- include('partials/header', { solidHeader: true }) %>
+
+<main id="main">
+<section class="page-hero has-bg">
+  <img class="page-hero-bg" src="<%= current.hero %>" alt="" aria-hidden="true" />
+  <div class="wrap center">
+    <span class="eyebrow gold"><%= current.tag %></span>
+    <h1><%= current.name.replace('Báo Giá ', '') %></h1>
+    <p><%= current.intro %></p>
+  </div>
+</section>
+
+<nav class="price-tabs wrap" aria-label="Nhóm dịch vụ">
+  <% tabs.forEach(t => { %>
+  <a href="/bang-gia/<%= t.slug %>" class="<%= t.slug === current.slug ? 'active' : '' %>"><%= t.name.replace('Báo Giá ', '').replace('Chụp ', '') %></a>
+  <% }) %>
+</nav>
+
+<section class="pad-sm bg-pearl">
+  <div class="wrap">
+    <div class="tiers">
+      <% current.tiers.forEach(t => { %>
+      <div class="tier reveal <%= t.highlight ? 'hl' : '' %>">
+        <% if (t.highlight) { %><span class="tier-badge"><%= t.note || 'Được chọn nhiều nhất' %></span><% } %>
+        <h3><%= t.name %></h3>
+        <div class="price"><%= t.price %></div>
+        <% if (!t.highlight && t.note) { %><div class="note"><%= t.note %></div><% } %>
+        <ul>
+          <% (t.items || []).forEach(it => { %><li><%= it %></li><% }) %>
+        </ul>
+        <a href="/#booking" class="btn <%= t.highlight ? 'btn-gold' : '' %> btn-block">Nhận tư vấn gói này</a>
+      </div>
+      <% }) %>
+    </div>
+    <p class="pricing-note center reveal"><%= s.pricing_note %></p>
+  </div>
+</section>
+
+<section class="cta-band reveal">
+  <div class="wrap center">
+    <h2>Cần một báo giá <span class="italic">đo ni đóng giày?</span></h2>
+    <p class="mt-14">Mỗi đám cưới một khác. Nhắn Rosé đôi điều về ngày của bạn — chúng tôi sẽ tư vấn gói phù hợp nhất.</p>
+    <a href="/#booking" class="btn btn-gold mt-24">Đặt lịch tư vấn miễn phí</a>
+  </div>
+</section>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+
+# Database (dữ liệu thật — backup riêng, không đưa lên Git)
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+
+# Ảnh gốc chưa tối ưu (1.8GB — giữ trên máy, không push)
+Xây dựng weibsite/
+
+# Ảnh upload từ trang quản trị (backup riêng theo hướng dẫn deploy)
+public/uploads/
+
+# Logs & temp
+*.log
+.DS_Store
+Thumbs.db
+
+# Claude Code local
+.claude/settings.local.json

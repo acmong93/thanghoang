@@ -1,0 +1,34 @@
+<%- include('partials/top', { t: 'Album & Ảnh' }) %>
+
+<h1>Album &amp; Ảnh</h1>
+
+<details class="panel">
+  <summary>+ Tạo album mới</summary>
+  <form method="post" action="/admin/albums" class="grid-form">
+    <label>Tên album <input name="name" required placeholder="VD: Đà Lạt Sương Sớm" /></label>
+    <label>Slug (URL) <input name="slug" placeholder="tự tạo từ tên nếu bỏ trống" /></label>
+    <label>Tag hiển thị <input name="tag" placeholder="VD: Pre-Wedding · Ngoại cảnh" /></label>
+    <label>Nhóm
+      <select name="category">
+        <option value="wedding">Ảnh cưới</option>
+        <option value="signature">Concept độc bản</option>
+        <option value="phong-su">Phóng sự</option>
+      </select>
+    </label>
+    <button type="submit" class="ad-btn primary">Tạo album</button>
+  </form>
+</details>
+
+<div class="album-list">
+  <% albums.forEach(a => { %>
+  <a class="album-item" href="/admin/albums/<%= a.id %>">
+    <div class="thumb"><% if (a.cover) { %><img src="<%= a.cover %>" alt="" loading="lazy" /><% } %></div>
+    <div class="info">
+      <b><%= a.name %></b>
+      <span class="muted"><%= { wedding: 'Ảnh cưới', signature: 'Độc bản', 'phong-su': 'Phóng sự' }[a.category] || a.category %> · <%= a.img_count %> ảnh<%= a.visible ? '' : ' · ĐANG ẨN' %></span>
+    </div>
+  </a>
+  <% }) %>
+</div>
+
+<%- include('partials/bottom') %>

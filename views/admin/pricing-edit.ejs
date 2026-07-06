@@ -1,0 +1,59 @@
+<%- include('partials/top', { t: item.name }) %>
+
+<p><a href="/admin/pricing" class="muted">← Tất cả bảng giá</a></p>
+<h1><%= item.name %> <a class="ad-btn sm" href="/bang-gia/<%= item.slug %>" target="_blank" rel="noopener">Xem trên web ↗</a></h1>
+
+<form method="post" action="/admin/pricing/<%= item.id %>">
+  <div class="panel grid-form">
+    <label>Tên nhóm <input name="name" value="<%= item.name %>" required /></label>
+    <label>Tag <input name="tag" value="<%= item.tag %>" /></label>
+    <label class="full">Giới thiệu <textarea name="intro" rows="3"><%= item.intro %></textarea></label>
+    <label class="check"><input type="checkbox" name="visible" <%= item.visible ? 'checked' : '' %> /> Hiển thị trên website</label>
+  </div>
+
+  <h2>Các gói</h2>
+  <div id="tiers">
+    <% item.tiers.forEach((t, i) => { %>
+    <div class="panel tier-panel">
+      <div class="grid-form">
+        <label>Tên gói <input name="tier_name" value="<%= t.name %>" /></label>
+        <label>Giá <input name="tier_price" value="<%= t.price %>" /></label>
+        <label>Ghi chú <input name="tier_note" value="<%= t.note || '' %>" /></label>
+        <label class="check"><input type="checkbox" name="tier_highlight" value="<%= i %>" <%= t.highlight ? 'checked' : '' %> /> Gói nổi bật</label>
+        <label class="full">Quyền lợi (mỗi dòng một mục)
+          <textarea name="tier_items" rows="6"><%= (t.items || []).join('\n') %></textarea>
+        </label>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <p class="muted">Để xoá một gói: xoá trống "Tên gói" rồi lưu. Muốn thêm gói mới, dùng nút bên dưới.</p>
+  <div class="row-btns">
+    <button type="button" class="ad-btn" onclick="addTier()">+ Thêm gói</button>
+    <button type="submit" class="ad-btn primary">Lưu thay đổi</button>
+  </div>
+</form>
+
+<template id="tierTpl">
+  <div class="panel tier-panel">
+    <div class="grid-form">
+      <label>Tên gói <input name="tier_name" /></label>
+      <label>Giá <input name="tier_price" /></label>
+      <label>Ghi chú <input name="tier_note" /></label>
+      <label class="check"><input type="checkbox" name="tier_highlight" /> Gói nổi bật</label>
+      <label class="full">Quyền lợi (mỗi dòng một mục)<textarea name="tier_items" rows="6"></textarea></label>
+    </div>
+  </div>
+</template>
+<script>
+function addTier() {
+  const wrap = document.getElementById('tiers');
+  const node = document.getElementById('tierTpl').content.cloneNode(true);
+  wrap.appendChild(node);
+  // đánh lại value cho checkbox highlight theo vị trí
+  [...wrap.querySelectorAll('input[name=tier_highlight]')].forEach((cb, i) => cb.value = i);
+}
+[...document.querySelectorAll('#tiers input[name=tier_highlight]')].forEach((cb, i) => cb.value = i);
+</script>
+
+<%- include('partials/bottom') %>

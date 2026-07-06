@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<%- include('partials/head', { title: 'Váy Cưới', desc: 'Kho váy cưới Rosé Wedding — tuyển chọn theo xu hướng, tư vấn 1-1 cùng stylist, thử váy thực tế tại studio Hà Nội.' }) %>
+</head>
+<body>
+<%- include('partials/header', { solidHeader: true }) %>
+
+<main id="main">
+<section class="page-hero">
+  <div class="wrap center">
+    <span class="eyebrow">Váy cưới &amp; Trang phục</span>
+    <h1>Một chiếc váy <span class="italic">sinh ra cho bạn</span></h1>
+    <p>Không phải cô dâu hợp với váy — mà là váy phải hợp với cô dâu. Kho váy Rosé được tuyển chọn để luôn có một thiết kế tôn trọn vóc dáng và tone da của bạn.</p>
+  </div>
+</section>
+
+<section class="feature">
+  <div class="ph"><img loading="lazy" src="<%= s.feature_vay_img %>" alt="Cô dâu Rosé trong váy cưới cao cấp" /></div>
+  <div class="tx reveal">
+    <span class="eyebrow">Trải nghiệm thử váy</span>
+    <h2>Tư vấn 1-1 <span class="italic">cùng stylist</span></h2>
+    <p>Mỗi cô dâu đến Rosé đều có một buổi thử váy riêng: stylist lắng nghe gu thẩm mỹ, phân tích vóc dáng và gợi ý những thiết kế phù hợp nhất — từ tối giản tinh khôi đến dạ hội kiêu sa.</p>
+    <p>Makeup được phối đồng bộ theo từng concept chụp. Nhiều gói cho phép chọn hai look hoàn toàn khác nhau giữa studio và ngoại cảnh.</p>
+    <a href="/bang-gia/vay-cuoi" class="btn mt-14">Xem báo giá váy cưới</a>
+  </div>
+</section>
+
+<% if (images.length) { %>
+<section class="pad-sm bg-pearl">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Bộ sưu tập</span>
+      <h2>Sắc <span class="italic">Rosé</span></h2>
+      <p>Một vài hình ảnh từ bộ sưu tập bridal đặc trưng của chúng tôi.</p>
+    </div>
+    <div class="masonry">
+      <% images.forEach(im => { %>
+      <figure class="reveal"><img loading="lazy" src="<%= im.file %>" alt="<%= im.alt %>" /></figure>
+      <% }) %>
+    </div>
+    <div class="center mt-48 reveal"><a href="/album/sac-rose" class="btn">Xem trọn bộ sưu tập</a></div>
+  </div>
+</section>
+<% } %>
+
+<section class="cta-band reveal">
+  <div class="wrap center">
+    <h2>Hẹn một buổi thử váy <span class="italic">miễn phí?</span></h2>
+    <a href="/#booking" class="btn btn-gold mt-24">Đặt lịch ngay</a>
+  </div>
+</section>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

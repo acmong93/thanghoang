@@ -1,0 +1,30 @@
+<a class="skip-link" href="#main">Bỏ qua điều hướng</a>
+<header id="header" class="<%= typeof solidHeader !== 'undefined' && solidHeader ? 'solid static' : '' %>">
+  <nav class="wrap nav" aria-label="Điều hướng chính">
+    <a href="/" class="brand"><b>Rosé</b> Wedding<small><%= s.tagline %></small></a>
+    <button class="burger" id="burger" aria-label="Mở menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <div class="menu" id="menu">
+      <div class="has-drop">
+        <a href="/cau-chuyen" class="drop-toggle <%= page === 'cau-chuyen' ? 'active' : '' %>">Câu Chuyện</a>
+        <div class="drop">
+          <a href="/cau-chuyen">Về Rosé</a>
+          <a href="/tin-tuc">Tin tức</a>
+        </div>
+      </div>
+      <a href="/anh-cuoi" class="<%= ['anh-cuoi','album'].includes(page) ? 'active' : '' %>">Ảnh Cưới</a>
+      <a href="/vay-cuoi" class="<%= page === 'vay-cuoi' ? 'active' : '' %>">Váy Cưới</a>
+      <a href="/album/phong-su">Phóng Sự</a>
+      <div class="has-drop">
+        <a href="/bang-gia/anh-cuoi" class="drop-toggle <%= page === 'bang-gia' ? 'active' : '' %>">Bảng Giá</a>
+        <div class="drop">
+          <a href="/bang-gia/anh-cuoi">Ảnh cưới</a>
+          <a href="/bang-gia/phong-su">Phóng sự cưới</a>
+          <a href="/bang-gia/combo">Combo trọn gói</a>
+          <a href="/bang-gia/vay-cuoi">Váy cưới</a>
+          <a href="/bang-gia/gia-dinh">Gia đình</a>
+        </div>
+      </div>
+      <a href="/#booking" class="nav-cta">Đặt Lịch Tư Vấn</a>
+    </div>
+  </nav>
+</header>

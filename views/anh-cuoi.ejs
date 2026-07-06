@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<%- include('partials/head', { title: 'Ảnh Cưới', desc: 'Bộ sưu tập ảnh cưới Rosé Wedding — tối giản, editorial, quiet luxury. Chọn concept để xem trọn bộ ảnh.' }) %>
+</head>
+<body>
+<%- include('partials/header', { solidHeader: true }) %>
+
+<main id="main">
+<section class="page-hero">
+  <div class="wrap center">
+    <span class="eyebrow">Bộ sưu tập</span>
+    <h1>Ảnh <span class="italic">Cưới</span></h1>
+    <p>Mỗi concept là một thế giới riêng — được xây dựng từ câu chuyện, ánh sáng và màu sắc mang chữ ký Rosé.</p>
+  </div>
+</section>
+
+<section class="pad-sm bg-pearl">
+  <div class="wrap">
+    <div class="albums-grid">
+      <% weddingAlbums.forEach(a => { %>
+      <a class="album-card reveal" href="/album/<%= a.slug %>">
+        <img loading="lazy" src="<%= a.cover.thumb || a.cover.file %>" alt="<%= a.name %>" />
+        <div class="meta">
+          <div class="t"><%= a.tag %></div>
+          <h3><%= a.name %></h3>
+          <div class="go">Xem bộ sưu tập&ensp;&rsaquo;</div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="pad signature">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Sáng tạo từ gốc rễ Việt Nam</span>
+      <h2>Concept <span class="italic">Độc Bản</span></h2>
+    </div>
+    <div class="sig-grid">
+      <% signatureAlbums.forEach(a => { %>
+      <a class="sig-card reveal" href="/album/<%= a.slug %>">
+        <img loading="lazy" src="<%= a.cover.file %>" alt="<%= a.name %>" />
+        <div class="meta">
+          <div class="t"><%= a.tag %></div>
+          <h3><%= a.name %></h3>
+          <p><%= a.desc.split('. ')[0] %>.</p>
+          <div class="go">Khám phá concept&ensp;&rsaquo;</div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band reveal">
+  <div class="wrap center">
+    <h2>Bạn đã tìm thấy phong cách <span class="italic">của mình?</span></h2>
+    <a href="/#booking" class="btn btn-gold mt-24">Đặt lịch tư vấn miễn phí</a>
+  </div>
+</section>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

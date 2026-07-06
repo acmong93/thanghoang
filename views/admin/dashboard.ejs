@@ -1,0 +1,32 @@
+<%- include('partials/top', { t: 'Tổng quan' }) %>
+
+<h1>Tổng quan</h1>
+<div class="stats">
+  <a class="stat" href="/admin/leads?status=new"><b><%= counts.leadsNew %></b><span>Đặt lịch mới</span></a>
+  <a class="stat" href="/admin/albums"><b><%= counts.albums %></b><span>Album</span></a>
+  <a class="stat" href="/admin/albums"><b><%= counts.images %></b><span>Ảnh</span></a>
+  <a class="stat" href="/admin/posts"><b><%= counts.posts %></b><span>Bài viết</span></a>
+</div>
+
+<h2>Yêu cầu đặt lịch gần đây</h2>
+<% if (!recentLeads.length) { %>
+<p class="muted">Chưa có yêu cầu nào. Khi khách điền form trên website, thông tin sẽ hiện ở đây.</p>
+<% } else { %>
+<table>
+  <thead><tr><th>Thời gian</th><th>Khách</th><th>Điện thoại</th><th>Dịch vụ</th><th>Trạng thái</th></tr></thead>
+  <tbody>
+    <% recentLeads.forEach(l => { %>
+    <tr>
+      <td class="muted"><%= l.created_at %></td>
+      <td><b><%= l.name %></b></td>
+      <td><a href="tel:<%= l.phone %>"><%= l.phone %></a></td>
+      <td><%= l.service %></td>
+      <td><span class="badge <%= l.status %>"><%= { new: 'Mới', contacted: 'Đã liên hệ', done: 'Hoàn tất' }[l.status] %></span></td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+<p><a class="ad-btn" href="/admin/leads">Xem tất cả →</a></p>
+<% } %>
+
+<%- include('partials/bottom') %>

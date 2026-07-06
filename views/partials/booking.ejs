@@ -1,0 +1,49 @@
+<!-- ĐẶT LỊCH TƯ VẤN -->
+<section class="pad" id="booking">
+  <div class="wrap booking">
+    <div class="info reveal">
+      <span class="eyebrow">Đặt lịch tư vấn</span>
+      <h2>Bắt đầu câu chuyện <span class="italic">của bạn</span></h2>
+      <p>Để lại thông tin, Rosé sẽ liên hệ trong thời gian sớm nhất — mời bạn tới studio thử váy, xem album thật và tư vấn concept 1-1, hoàn toàn miễn phí.</p>
+      <div class="contact-row"><b>Hotline</b><span><a href="tel:<%= s.hotline_tel %>"><%= s.hotline %></a></span></div>
+      <div class="contact-row"><b>CSKH</b><span><a href="tel:<%= s.cskh_tel %>"><%= s.cskh %></a></span></div>
+      <div class="contact-row"><b>Email</b><span><a href="mailto:<%= s.email %>"><%= s.email %></a></span></div>
+      <div class="contact-row"><b>Studio</b><span><%= s.address %></span></div>
+      <div class="contact-row"><b>Giờ mở</b><span><%= s.hours %></span></div>
+    </div>
+    <form class="reveal" id="bookForm" novalidate>
+      <div class="f-row">
+        <div class="field">
+          <label for="bk-name">Họ &amp; tên <span aria-hidden="true">*</span></label>
+          <input id="bk-name" name="name" type="text" autocomplete="name" placeholder="Tên của bạn" required />
+        </div>
+        <div class="field">
+          <label for="bk-phone">Số điện thoại <span aria-hidden="true">*</span></label>
+          <input id="bk-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="09xx xxx xxx" required />
+        </div>
+      </div>
+      <div class="field">
+        <label for="bk-service">Dịch vụ quan tâm</label>
+        <select id="bk-service" name="service">
+          <option>Chụp ảnh cưới (Pre-Wedding)</option>
+          <option>Phóng sự cưới</option>
+          <option>Combo trọn gói</option>
+          <option>Váy cưới &amp; trang phục</option>
+          <option>Chụp gia đình</option>
+          <option>Khác — cần tư vấn thêm</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="bk-msg">Lời nhắn</label>
+        <textarea id="bk-msg" name="message" rows="4" placeholder="Chia sẻ đôi điều về câu chuyện của hai bạn..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-block">Gửi yêu cầu tư vấn</button>
+      <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+  <div class="wrap map-outer">
+    <div class="map-wrap reveal">
+      <iframe src="<%= s.map_embed %>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Bản đồ Rosé Wedding Studio"></iframe>
+    </div>
+  </div>
+</section>

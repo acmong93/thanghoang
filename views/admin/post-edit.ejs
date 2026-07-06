@@ -1,0 +1,32 @@
+<%- include('partials/top', { t: post ? post.title : 'Viết bài mới' }) %>
+
+<p><a href="/admin/posts" class="muted">← Tất cả bài viết</a></p>
+<h1><%= post ? 'Sửa bài viết' : 'Viết bài mới' %>
+  <% if (post) { %><a class="ad-btn sm" href="/tin-tuc/<%= post.slug %>" target="_blank" rel="noopener">Xem trên web ↗</a><% } %>
+</h1>
+
+<form method="post" action="<%= post ? '/admin/posts/' + post.id : '/admin/posts/new' %>" enctype="multipart/form-data" class="panel grid-form">
+  <label class="full">Tiêu đề <input name="title" value="<%= post ? post.title : '' %>" required /></label>
+  <label>Chuyên mục <input name="cat" value="<%= post ? post.cat : '' %>" placeholder="VD: Kinh nghiệm" /></label>
+  <label>Ngày hiển thị <input name="date" value="<%= post ? post.date : '' %>" placeholder="VD: 06.07.2026" /></label>
+  <label>Ảnh bìa — đường dẫn <input name="cover" value="<%= post ? post.cover : '' %>" placeholder="/img/... hoặc để trống rồi upload" /></label>
+  <label>Hoặc upload ảnh bìa mới <input type="file" name="cover_file" accept="image/jpeg,image/png,image/webp" /></label>
+  <label class="full">Mô tả ngắn <textarea name="excerpt" rows="2"><%= post ? post.excerpt : '' %></textarea></label>
+  <label class="full">Nội dung (các đoạn cách nhau một dòng trống)
+    <textarea name="body" rows="14"><%= post ? post.body : '' %></textarea>
+  </label>
+  <% if (post) { %>
+  <label class="check"><input type="checkbox" name="visible" <%= post.visible ? 'checked' : '' %> /> Hiển thị trên website</label>
+  <% } %>
+  <div class="row-btns">
+    <button type="submit" class="ad-btn primary"><%= post ? 'Lưu thay đổi' : 'Đăng bài' %></button>
+  </div>
+</form>
+
+<% if (post) { %>
+<form method="post" action="/admin/posts/<%= post.id %>/delete" onsubmit="return confirm('Xoá bài viết này?')" class="inline-form">
+  <button type="submit" class="ad-btn danger sm">Xoá bài viết</button>
+</form>
+<% } %>
+
+<%- include('partials/bottom') %>

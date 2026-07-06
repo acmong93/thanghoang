@@ -1,0 +1,40 @@
+<%- include('partials/top', { t: 'Cài đặt' }) %>
+
+<h1>Cài đặt website</h1>
+
+<form method="post" action="/admin/settings" class="panel grid-form">
+  <label>Tên website <input name="site_name" value="<%= s.site_name %>" /></label>
+  <label>Tagline <input name="tagline" value="<%= s.tagline %>" /></label>
+  <label>Hotline (hiển thị) <input name="hotline" value="<%= s.hotline %>" /></label>
+  <label>Hotline (số gọi) <input name="hotline_tel" value="<%= s.hotline_tel %>" /></label>
+  <label>CSKH (hiển thị) <input name="cskh" value="<%= s.cskh %>" /></label>
+  <label>CSKH (số gọi) <input name="cskh_tel" value="<%= s.cskh_tel %>" /></label>
+  <label>Email <input name="email" value="<%= s.email %>" /></label>
+  <label>Giờ mở cửa <input name="hours" value="<%= s.hours %>" /></label>
+  <label class="full">Địa chỉ studio <input name="address" value="<%= s.address %>" /></label>
+  <label>Instagram <input name="instagram" value="<%= s.instagram %>" /></label>
+  <label>Facebook <input name="facebook" value="<%= s.facebook %>" /></label>
+  <label class="full">Link nhúng Google Maps <input name="map_embed" value="<%= s.map_embed %>" /></label>
+  <label class="full">Ghi chú bảng giá <textarea name="pricing_note" rows="2"><%= s.pricing_note %></textarea></label>
+  <div class="row-btns"><button type="submit" class="ad-btn primary">Lưu cài đặt</button></div>
+</form>
+
+<h2>Phim cưới (YouTube)</h2>
+<div class="panel">
+  <% videos.forEach(v => { %>
+  <div class="video-row">
+    <img src="https://img.youtube.com/vi/<%= v.youtube_id %>/mqdefault.jpg" alt="" loading="lazy" />
+    <div class="info"><b><%= v.title %></b><span class="muted"><%= v.youtube_id %></span></div>
+    <form method="post" action="/admin/videos/<%= v.id %>/delete" onsubmit="return confirm('Xoá video này?')" class="inline-form">
+      <button class="ad-btn danger sm" type="submit">✕</button>
+    </form>
+  </div>
+  <% }) %>
+  <form method="post" action="/admin/videos" class="grid-form" style="margin-top:14px">
+    <label>Link hoặc ID YouTube <input name="youtube_id" placeholder="https://youtube.com/watch?v=..." required /></label>
+    <label>Tiêu đề <input name="title" placeholder="VD: Bên nhau mãi mãi" /></label>
+    <button type="submit" class="ad-btn primary">+ Thêm video</button>
+  </form>
+</div>
+
+<%- include('partials/bottom') %>

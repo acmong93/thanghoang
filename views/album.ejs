@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<%- include('partials/head', { title: album.name, desc: album.desc.slice(0, 155) }) %>
+</head>
+<body>
+<%- include('partials/header', { solidHeader: true }) %>
+
+<main id="main">
+<section class="page-hero">
+  <div class="wrap center">
+    <span class="eyebrow"><%= album.tag %></span>
+    <h1><%= album.name %></h1>
+    <p class="album-desc"><%= album.desc %></p>
+  </div>
+</section>
+
+<section class="pad-sm">
+  <div class="wrap-wide">
+    <div class="masonry" id="gallery">
+      <% images.forEach((im, i) => { %>
+      <figure class="reveal">
+        <img loading="lazy" src="<%= im.file %>" alt="<%= im.alt || album.name %>" data-index="<%= i %>" tabindex="0" />
+      </figure>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Xem ảnh phóng to" hidden>
+  <button class="lb-close" id="lbClose" aria-label="Đóng">&times;</button>
+  <button class="lb-prev" id="lbPrev" aria-label="Ảnh trước">&lsaquo;</button>
+  <img id="lbImg" src="" alt="" />
+  <button class="lb-next" id="lbNext" aria-label="Ảnh sau">&rsaquo;</button>
+  <div class="lb-count" id="lbCount"></div>
+</div>
+
+<% if (others.length) { %>
+<section class="pad bg-pearl">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Tiếp tục khám phá</span>
+      <h2>Bộ sưu tập <span class="italic">khác</span></h2>
+    </div>
+    <div class="albums-grid cols-3">
+      <% others.forEach(a => { %>
+      <a class="album-card reveal" href="/album/<%= a.slug %>">
+        <img loading="lazy" src="<%= a.cover.thumb || a.cover.file %>" alt="<%= a.name %>" />
+        <div class="meta">
+          <div class="t"><%= a.tag %></div>
+          <h3><%= a.name %></h3>
+          <div class="go">Xem bộ sưu tập&ensp;&rsaquo;</div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="cta-band reveal">
+  <div class="wrap center">
+    <h2>Kể câu chuyện của hai bạn <span class="italic">theo cách này?</span></h2>
+    <a href="/#booking" class="btn btn-gold mt-24">Đặt lịch tư vấn miễn phí</a>
+  </div>
+</section>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<%- include('partials/top', { t: 'Bài viết' }) %>
+
+<h1>Bài viết <a class="ad-btn primary sm" href="/admin/posts/new">+ Viết bài mới</a></h1>
+
+<div class="album-list">
+  <% posts.forEach(p => { %>
+  <a class="album-item" href="/admin/posts/<%= p.id %>">
+    <div class="thumb"><% if (p.cover) { %><img src="<%= p.cover %>" alt="" loading="lazy" /><% } %></div>
+    <div class="info">
+      <b><%= p.title %></b>
+      <span class="muted"><%= p.cat %> · <%= p.date %><%= p.visible ? '' : ' · ĐANG ẨN' %></span>
+    </div>
+  </a>
+  <% }) %>
+</div>
+
+<%- include('partials/bottom') %>

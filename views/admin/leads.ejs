@@ -1,0 +1,45 @@
+<%- include('partials/top', { t: 'Đặt lịch' }) %>
+
+<h1>Yêu cầu đặt lịch</h1>
+
+<div class="filter-tabs">
+  <a href="/admin/leads" class="<%= filter === 'all' ? 'active' : '' %>">Tất cả</a>
+  <a href="/admin/leads?status=new" class="<%= filter === 'new' ? 'active' : '' %>">Mới</a>
+  <a href="/admin/leads?status=contacted" class="<%= filter === 'contacted' ? 'active' : '' %>">Đã liên hệ</a>
+  <a href="/admin/leads?status=done" class="<%= filter === 'done' ? 'active' : '' %>">Hoàn tất</a>
+</div>
+
+<% if (!leads.length) { %>
+<p class="muted">Không có yêu cầu nào trong mục này.</p>
+<% } else { %>
+<table>
+  <thead><tr><th>Thời gian</th><th>Khách</th><th>Điện thoại</th><th>Dịch vụ</th><th>Lời nhắn</th><th>Trạng thái</th><th></th></tr></thead>
+  <tbody>
+    <% leads.forEach(l => { %>
+    <tr>
+      <td class="muted nowrap"><%= l.created_at %></td>
+      <td><b><%= l.name %></b></td>
+      <td class="nowrap"><a href="tel:<%= l.phone %>"><%= l.phone %></a></td>
+      <td><%= l.service %></td>
+      <td class="msg-cell"><%= l.message %></td>
+      <td>
+        <form method="post" action="/admin/leads/<%= l.id %>/status" class="inline-form">
+          <select name="status" onchange="this.form.submit()">
+            <option value="new" <%= l.status === 'new' ? 'selected' : '' %>>Mới</option>
+            <option value="contacted" <%= l.status === 'contacted' ? 'selected' : '' %>>Đã liên hệ</option>
+            <option value="done" <%= l.status === 'done' ? 'selected' : '' %>>Hoàn tất</option>
+          </select>
+        </form>
+      </td>
+      <td>
+        <form method="post" action="/admin/leads/<%= l.id %>/delete" onsubmit="return confirm('Xoá yêu cầu này?')" class="inline-form">
+          <button class="ad-btn danger sm" type="submit">✕</button>
+        </form>
+      </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+<% } %>
+
+<%- include('partials/bottom') %>

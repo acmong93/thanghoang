@@ -1,0 +1,32 @@
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-brand">
+        <div class="brand serif">Rosé Wedding</div>
+        <p>Ảnh cưới tối giản, editorial và quiet luxury tại Hà Nội. Chúng tôi không chỉ chụp ảnh — chúng tôi giữ lại cảm xúc để bạn còn rung động sau nhiều năm.</p>
+      </div>
+      <div>
+        <h4>Khám phá</h4>
+        <a href="/cau-chuyen">Câu Chuyện</a>
+        <a href="/anh-cuoi">Ảnh Cưới</a>
+        <a href="/vay-cuoi">Váy Cưới</a>
+        <a href="/album/phong-su">Phóng Sự</a>
+        <a href="/tin-tuc">Tin Tức</a>
+        <a href="/bang-gia/anh-cuoi">Bảng Giá</a>
+      </div>
+      <div>
+        <h4>Liên hệ</h4>
+        <a href="tel:<%= s.hotline_tel %>">Hotline <%= s.hotline %></a>
+        <a href="tel:<%= s.cskh_tel %>">CSKH <%= s.cskh %></a>
+        <a href="mailto:<%= s.email %>"><%= s.email %></a>
+        <a href="<%= s.instagram %>" target="_blank" rel="noopener">Instagram</a>
+        <a href="<%= s.facebook %>" target="_blank" rel="noopener">Facebook</a>
+      </div>
+    </div>
+    <div class="copy">
+      <span>© <%= new Date().getFullYear() %> <%= s.site_name %>. All rights reserved.</span>
+      <span><%= s.address %></span>
+    </div>
+  </div>
+</footer>
+<script src="/js/main.js?v=<%= v %>" defer></script>

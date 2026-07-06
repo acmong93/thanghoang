@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<%- include('partials/head', { title: post.title, desc: post.excerpt.slice(0, 155) }) %>
+</head>
+<body>
+<%- include('partials/header', { solidHeader: true }) %>
+
+<main id="main">
+<article class="pad-sm">
+  <div class="wrap-narrow">
+    <header class="post-head center">
+      <span class="eyebrow"><%= post.cat %> · <%= post.date %></span>
+      <h1><%= post.title %></h1>
+    </header>
+    <figure class="post-cover reveal">
+      <img src="<%= post.cover %>" alt="<%= post.title %>" />
+    </figure>
+    <div class="post-body">
+      <% post.body.split(/\n\s*\n/).forEach(par => { %>
+      <p class="reveal"><%= par.trim() %></p>
+      <% }) %>
+    </div>
+  </div>
+</article>
+
+<% if (others.length) { %>
+<section class="pad bg-pearl">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Đọc thêm</span>
+      <h2>Bài viết <span class="italic">khác</span></h2>
+    </div>
+    <div class="post-grid">
+      <% others.forEach(p => { %>
+      <a class="post-card reveal" href="/tin-tuc/<%= p.slug %>">
+        <div class="ph"><img loading="lazy" src="<%= p.cover %>" alt="<%= p.title %>" /></div>
+        <div class="meta">
+          <div class="t"><%= p.cat %> · <%= p.date %></div>
+          <h3><%= p.title %></h3>
+          <span class="go">Đọc tiếp&ensp;&rsaquo;</span>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

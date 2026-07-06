@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<%- include('partials/head', { title: 'Tin Tức', desc: 'Tin tức, hậu trường và kinh nghiệm chụp ảnh cưới từ Rosé Wedding.' }) %>
+</head>
+<body>
+<%- include('partials/header', { solidHeader: true }) %>
+
+<main id="main">
+<section class="page-hero">
+  <div class="wrap center">
+    <span class="eyebrow">Nhật ký Rosé</span>
+    <h1>Tin tức <span class="amp">&amp;</span> <span class="italic">Chia sẻ</span></h1>
+    <p>Hậu trường những bộ sưu tập, kinh nghiệm chuẩn bị chụp cưới và góc nhìn của Rosé về nghề.</p>
+  </div>
+</section>
+
+<section class="pad-sm bg-pearl">
+  <div class="wrap">
+    <div class="post-grid">
+      <% posts.forEach(p => { %>
+      <a class="post-card reveal" href="/tin-tuc/<%= p.slug %>">
+        <div class="ph"><img loading="lazy" src="<%= p.cover %>" alt="<%= p.title %>" /></div>
+        <div class="meta">
+          <div class="t"><%= p.cat %> · <%= p.date %></div>
+          <h3><%= p.title %></h3>
+          <p><%= p.excerpt %></p>
+          <span class="go">Đọc tiếp&ensp;&rsaquo;</span>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

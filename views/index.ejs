@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<%- include('partials/head', { title: '', desc: '' }) %>
+</head>
+<body>
+<%- include('partials/header') %>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div id="slides" data-images='<%- s.hero_images %>'></div>
+  <div class="hero-inner">
+    <span class="eyebrow gold">Rosé Wedding · Hà Nội</span>
+    <h1>Lưu giữ chuyện tình<br/><span class="italic">vượt thời gian</span></h1>
+    <p>Ảnh cưới tối giản, editorial và quiet luxury —<br class="desk-only"/> nơi hai bạn là trung tâm của từng khung hình.</p>
+    <div class="hero-cta">
+      <a href="#booking" class="btn btn-gold">Đặt lịch tư vấn</a>
+      <a href="#anh-cuoi" class="btn btn-light">Xem bộ sưu tập</a>
+    </div>
+    <div class="hero-line" aria-hidden="true"></div>
+  </div>
+  <div class="dots" id="dots" role="tablist" aria-label="Chọn ảnh nền"></div>
+</section>
+
+<!-- CÂU CHUYỆN -->
+<section class="pad" id="about">
+  <div class="wrap about-row reveal">
+    <div class="about-ph single">
+      <figure><img loading="lazy" src="<%= s.about_img_1 %>" alt="Cô dâu Rosé Wedding trong sắc hồng phấn đặc trưng" /></figure>
+    </div>
+    <div class="about-tx">
+      <span class="eyebrow">Câu chuyện của chúng tôi</span>
+      <h2>Chúng tôi kể chuyện tình yêu,<br/><span class="italic">không chỉ chụp ảnh cưới</span></h2>
+      <p>Rosé theo đuổi sự tối giản, tinh thần editorial và vẻ đẹp quiet luxury. Ít chi tiết thừa — để cảm xúc lên tiếng, và màu sắc khác biệt trở thành dấu ấn riêng của mỗi cặp đôi.</p>
+    </div>
+  </div>
+  <div class="wrap about-row rev reveal">
+    <div class="about-ph duo">
+      <figure><img loading="lazy" src="<%= s.about_img_2 %>" alt="Khoảnh khắc tự nhiên của cặp đôi" /></figure>
+      <figure><img loading="lazy" src="<%= s.about_img_3 %>" alt="Ảnh cưới phong cách editorial" /></figure>
+    </div>
+    <div class="about-tx">
+      <p>Văn hoá của chúng tôi là lấy khách hàng làm trọng tâm. Trước khi bấm máy, chúng tôi lắng nghe: hai người gặp nhau thế nào, điều gì khiến cả hai được là chính mình — để mỗi khung hình không chỉ đẹp, mà còn thật.</p>
+      <p>Đội ngũ Rosé đồng hành từ buổi tư vấn đầu tiên, qua ngày chụp, đến lúc album được trao tận tay. Bởi điều ở lại sau ngày cưới không phải là một buổi chụp — mà là cảm xúc bạn giữ được suốt nhiều năm sau.</p>
+      <div class="sign">Thắng Hoàng<small>Founder</small></div>
+      <a href="/cau-chuyen" class="btn mt-24">Đọc câu chuyện của Rosé</a>
+    </div>
+  </div>
+</section>
+
+<!-- TRÍCH DẪN -->
+<section class="quote reveal">
+  <div class="wrap">
+    <span class="eyebrow">Vì sao ảnh cưới quan trọng</span>
+    <p>&ldquo;Đám cưới chỉ diễn ra trong một ngày. Những tấm ảnh thì ở lại cả đời. Chúng tôi chụp không phải để đẹp trong hôm nay — mà để bạn còn rung động khi xem lại sau hai mươi năm.&rdquo;</p>
+    <span class="quote-by">Rosé Wedding</span>
+  </div>
+</section>
+
+<!-- ẢNH CƯỚI -->
+<section class="pad bg-pearl" id="anh-cuoi">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Bộ sưu tập</span>
+      <h2>Ảnh Cưới</h2>
+      <p>Mỗi concept là một câu chuyện riêng. Chọn một phong cách để bước vào trọn vẹn không gian của bộ ảnh.</p>
+    </div>
+    <div class="albums-grid">
+      <% weddingAlbums.forEach(a => { %>
+      <a class="album-card reveal" href="/album/<%= a.slug %>">
+        <img loading="lazy" src="<%= a.cover.thumb || a.cover.file %>" alt="<%= a.name %>" />
+        <div class="meta">
+          <div class="t"><%= a.tag %></div>
+          <h3><%= a.name %></h3>
+          <div class="go">Xem bộ sưu tập&ensp;&rsaquo;</div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+    <div class="center mt-48 reveal"><a href="/anh-cuoi" class="btn">Xem tất cả bộ sưu tập</a></div>
+  </div>
+</section>
+
+<!-- CONCEPT ĐỘC BẢN -->
+<section class="pad signature" id="doc-ban">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Sáng tạo từ gốc rễ Việt Nam</span>
+      <h2>Concept <span class="italic">Độc Bản</span></h2>
+      <p>Có những vẻ đẹp không thể vay mượn. Rosé không Việt hoá concept của người khác — chúng tôi lắng nghe di sản của chính mình, rồi kể lại bằng ngôn ngữ thời trang cưới đương đại. Mỗi bộ sưu tập độc bản là một lát cắt văn hoá Việt, chỉ được dệt nên một lần, và chỉ có tại Rosé.</p>
+    </div>
+    <div class="sig-grid">
+      <% signatureAlbums.forEach(a => { %>
+      <a class="sig-card reveal" href="/album/<%= a.slug %>">
+        <img loading="lazy" src="<%= a.cover.file %>" alt="<%= a.name %>" />
+        <div class="meta">
+          <div class="t"><%= a.tag %></div>
+          <h3><%= a.name %></h3>
+          <p><%= a.desc.split('. ')[0] %>.</p>
+          <div class="go">Khám phá concept&ensp;&rsaquo;</div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- QUY TRÌNH -->
+<section class="pad" id="quy-trinh">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Trải nghiệm dịch vụ</span>
+      <h2>Quy trình đồng hành <span class="italic">cùng bạn</span></h2>
+      <p>Một hành trình được thiết kế để bạn luôn yên tâm — từ tin nhắn đầu tiên đến khi album nằm trên tay.</p>
+    </div>
+    <div class="steps reveal">
+      <div class="st"><div class="n">01</div><h3>Tư vấn 1-1 tại studio</h3><p>Lắng nghe nhu cầu, xem album thật, thử váy thực tế và cùng chọn concept hợp với hai bạn.</p></div>
+      <div class="st"><div class="n">02</div><h3>Chuẩn bị &amp; đồng hành</h3><p>Lập nhóm riêng cùng ekip, gửi checklist chuẩn bị, nhắc lịch và giải đáp mọi băn khoăn.</p></div>
+      <div class="st"><div class="n">03</div><h3>Ngày chụp trọn vẹn</h3><p>Được chăm sóc xuyên suốt; ekip chỉnh dáng tinh tế để bạn thoải mái là chính mình.</p></div>
+      <div class="st"><div class="n">04</div><h3>Hậu kỳ định hướng</h3><p>Thống nhất tone màu theo gu của bạn, tinh chỉnh đến khi ưng ý, cập nhật tiến độ đều đặn.</p></div>
+      <div class="st"><div class="n">05</div><h3>Bàn giao &amp; chăm sóc</h3><p>Album được đóng gói trang trọng kèm thiệp viết tay — và Rosé vẫn ở đây cho những cột mốc sau này.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- VÁY CƯỚI -->
+<section class="feature" id="vay-cuoi">
+  <div class="ph"><img loading="lazy" src="<%= s.feature_vay_img %>" alt="Cô dâu Rosé trong váy cưới cao cấp" /></div>
+  <div class="tx reveal">
+    <span class="eyebrow">Váy cưới &amp; Trang phục</span>
+    <h2>Một chiếc váy <span class="italic">sinh ra cho bạn</span></h2>
+    <p>Kho váy được tuyển chọn và bổ sung liên tục theo xu hướng — từ thiết kế tối giản tinh khôi đến những chiếc đầm dạ hội kiêu sa. Luôn có một bộ váy tôn trọn vóc dáng và tone da của bạn.</p>
+    <p>Cô dâu được tư vấn 1-1 cùng stylist, thử váy thực tế tại studio và phối makeup đồng bộ theo từng concept. Nhiều gói cho phép chọn hai look hoàn toàn khác nhau giữa studio và ngoại cảnh.</p>
+    <a href="/vay-cuoi" class="btn mt-14">Khám phá váy cưới</a>
+  </div>
+</section>
+
+<!-- PHIM CƯỚI -->
+<section class="pad bg-pearl" id="video">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Phim cưới</span>
+      <h2>Những thước phim <span class="italic">tình yêu</span></h2>
+      <p>Bên cạnh ảnh, chúng tôi kể chuyện bằng chuyển động và âm thanh — để cảm xúc ngày cưới được sống lại trọn vẹn.</p>
+    </div>
+    <div class="video-grid reveal">
+      <% videos.forEach(v => { %>
+      <div>
+        <div class="v"><iframe loading="lazy" src="https://www.youtube.com/embed/<%= v.youtube_id %>" title="<%= v.title %>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="cap"><%= v.title %></div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- PHÓNG SỰ -->
+<section class="feature" id="phong-su">
+  <div class="tx reorder reveal">
+    <span class="eyebrow">Phóng sự cưới</span>
+    <h2>Ngày trọng đại,<br/><span class="italic">đúng như nó diễn ra</span></h2>
+    <p>Từ giây phút chuẩn bị, ánh mắt rưng rưng của cha mẹ, đến lời hẹn ước trao nhau — phóng sự cưới của Rosé không dàn dựng. Chỉ có cảm xúc thật.</p>
+    <p>Ekip di chuyển linh hoạt, không bỏ lỡ một chi tiết nhỏ nào. Để nhiều năm sau, mỗi lần mở album là một lần được sống lại trong ngày hạnh phúc ấy.</p>
+    <a href="/album/phong-su" class="btn mt-14">Xem album phóng sự</a>
+  </div>
+  <div class="ph"><img loading="lazy" src="<%= s.feature_phongsu_img %>" alt="Khoảnh khắc phóng sự cưới chân thật" /></div>
+</section>
+
+<!-- BẢNG GIÁ -->
+<section class="pad bg-pearl" id="bang-gia">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Bảng giá</span>
+      <h2>Gói dịch vụ <span class="amp">&amp;</span> Báo giá</h2>
+      <p>Mức giá linh hoạt theo nhu cầu thật của bạn. Chọn một nhóm dịch vụ để xem báo giá chi tiết.</p>
+    </div>
+    <div class="price-cards reveal">
+      <% const numerals = ['I','II','III','IV','V','VI']; pricing.forEach((p, i) => { %>
+      <a href="/bang-gia/<%= p.slug %>">
+        <span class="pi"><%= numerals[i] %></span>
+        <h3><%= p.name.replace('Báo Giá ', '').replace('Chụp ', '') %></h3>
+        <p><%= p.tag %></p>
+        <span class="go">Xem báo giá&ensp;&rsaquo;</span>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- CAM KẾT -->
+<section class="pad commit">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Vì sao chọn Rosé</span>
+      <h2>Cam kết của <span class="italic">chúng tôi</span></h2>
+    </div>
+    <div class="commit-grid">
+      <div class="it reveal"><div class="n">01</div><h3>Báo giá minh bạch</h3><p>Chi tiết theo từng hạng mục. Không phát sinh chi phí ngoài thoả thuận — cam kết bằng hợp đồng.</p></div>
+      <div class="it reveal"><div class="n">02</div><h3>Đồng hành sát sao</h3><p>Nhóm riêng cùng ekip trước ngày chụp, phản hồi nhanh, cập nhật tiến độ thường xuyên.</p></div>
+      <div class="it reveal"><div class="n">03</div><h3>Ảnh tự nhiên, có gu</h3><p>Chỉnh dáng tinh tế để bạn không gượng gạo. Màu sắc khác biệt, đậm dấu ấn cá nhân.</p></div>
+      <div class="it reveal"><div class="n">04</div><h3>Trọn gói tiện lợi</h3><p>Ảnh, váy, makeup và phóng sự trong một combo — nhiều bối cảnh, tối ưu chi phí.</p></div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/booking') %>
+
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<%- include('partials/top', { t: 'Bảng giá' }) %>
+
+<h1>Bảng giá</h1>
+<div class="album-list">
+  <% items.forEach(p => { %>
+  <a class="album-item" href="/admin/pricing/<%= p.id %>">
+    <div class="thumb"><% if (p.hero) { %><img src="<%= p.hero %>" alt="" loading="lazy" /><% } %></div>
+    <div class="info">
+      <b><%= p.name %></b>
+      <span class="muted"><%= p.tag %> · <%= JSON.parse(p.tiers_json || '[]').length %> gói<%= p.visible ? '' : ' · ĐANG ẨN' %></span>
+    </div>
+  </a>
+  <% }) %>
+</div>
+
+<%- include('partials/bottom') %>
