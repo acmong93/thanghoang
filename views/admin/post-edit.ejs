@@ -9,7 +9,7 @@
   <label class="full">Tiêu đề <input name="title" value="<%= post ? post.title : '' %>" required /></label>
   <label>Chuyên mục <input name="cat" value="<%= post ? post.cat : '' %>" placeholder="VD: Kinh nghiệm" /></label>
   <label>Ngày hiển thị <input name="date" value="<%= post ? post.date : '' %>" placeholder="VD: 06.07.2026" /></label>
-  <label>Ảnh bìa — đường dẫn <input name="cover" value="<%= post ? post.cover : '' %>" placeholder="/img/... hoặc để trống rồi upload" /></label>
+  <label>Ảnh bìa (đường dẫn) <input name="cover" value="<%= post ? post.cover : '' %>" placeholder="/img/... hoặc để trống rồi upload" /></label>
   <label>Hoặc upload ảnh bìa mới <input type="file" name="cover_file" accept="image/jpeg,image/png,image/webp" /></label>
   <label class="full">Mô tả ngắn <textarea name="excerpt" rows="2"><%= post ? post.excerpt : '' %></textarea></label>
   <label class="full">Nội dung (các đoạn cách nhau một dòng trống)

@@ -51,8 +51,8 @@ figure{margin:0}
 .btn::after{content:"";position:absolute;inset:0;background:var(--ink);transform:translateY(101%);transition:.5s var(--ease);z-index:-1}
 .btn:hover{color:var(--cream)}
 .btn:hover::after{transform:translateY(0)}
-.btn-gold{border-color:var(--gold);color:#fff;background:var(--gold)}
-.btn-gold::after{background:var(--gold-deep)}
+.btn-gold{border-color:var(--gold);color:#fff}
+.btn-gold::after{background:var(--gold)}
 .btn-gold:hover{color:#fff;border-color:var(--gold-deep)}
 .btn-light{border-color:rgba(255,255,255,.7);color:#fff}
 .btn-light::after{background:#fff}
