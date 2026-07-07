@@ -50,6 +50,24 @@
   </div>
 </section>
 
+<!-- QUY TRÌNH (nền đen) -->
+<section class="pad dark" id="quy-trinh">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Trải nghiệm dịch vụ</span>
+      <h2>Quy trình đồng hành cùng bạn</h2>
+      <p class="one-line">Một hành trình được thiết kế để bạn luôn yên tâm, từ lần nhắn tin đầu tiên đến khi nhận album.</p>
+    </div>
+    <div class="steps reveal">
+      <div class="st"><div class="n">01</div><h3>Tư vấn 1-1 tại studio</h3><p>Lắng nghe nhu cầu, xem album thật, thử váy thực tế và chọn concept phù hợp với hai bạn.</p></div>
+      <div class="st"><div class="n">02</div><h3>Chuẩn bị &amp; đồng hành</h3><p>Lập nhóm riêng cùng ekip trước ngày chụp, gửi checklist chuẩn bị, nhắc lịch và giải đáp mọi lo lắng.</p></div>
+      <div class="st"><div class="n">03</div><h3>Ngày chụp trọn vẹn</h3><p>Được đón tiếp chu đáo, chăm sóc xuyên suốt, ekip chỉnh dáng tinh tế để bạn thoải mái là chính mình.</p></div>
+      <div class="st"><div class="n">04</div><h3>Hậu kỳ định hướng</h3><p>Thống nhất tone màu theo phong cách bạn thích, tinh chỉnh đến khi ưng ý, cập nhật tiến độ đều đặn.</p></div>
+      <div class="st"><div class="n">05</div><h3>Bàn giao &amp; chăm sóc</h3><p>Trao album đóng gói trang trọng kèm thiệp viết tay, và tiếp tục đồng hành cho những cột mốc sau này.</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- ẢNH CƯỚI -->
 <section class="pad bg-pearl" id="anh-cuoi">
   <div class="wrap">
@@ -142,19 +160,8 @@
   </div>
 </section>
 
-<!-- PHÓNG SỰ (full-bleed) -->
-<section class="banner" id="phong-su">
-  <img class="banner-bg" src="<%= s.feature_phongsu_img %>" alt="" aria-hidden="true" />
-  <div class="banner-inner wrap reveal">
-    <span class="eyebrow gold">Phóng sự cưới</span>
-    <h2 class="italic">Trọn vẹn cảm xúc ngày trọng đại</h2>
-    <p>Không dàn dựng, chỉ có cảm xúc chân thật của ngày cưới.</p>
-    <a href="/album/phong-su" class="btn btn-light mt-24">Xem album phóng sự</a>
-  </div>
-</section>
-
 <!-- PHIM CƯỚI -->
-<section class="pad" id="video">
+<section class="pad bg-pearl" id="video">
   <div class="wrap">
     <div class="sec-head center reveal">
       <span class="eyebrow">Phim cưới</span>
@@ -170,6 +177,18 @@
       <% }) %>
     </div>
   </div>
+</section>
+
+<!-- PHÓNG SỰ -->
+<section class="feature" id="phong-su">
+  <div class="tx reorder reveal">
+    <span class="eyebrow">Phóng sự cưới</span>
+    <h2>Trọn vẹn cảm xúc ngày trọng đại</h2>
+    <p>Phóng sự cưới ghi lại những khoảnh khắc chân thật nhất của ngày cưới, từ giây phút chuẩn bị, ánh mắt rưng rưng của cha mẹ, đến lời hẹn ước trao nhau. Không dàn dựng, chỉ có cảm xúc thật.</p>
+    <p>Ekip di chuyển linh hoạt, bắt trọn từng chi tiết nhỏ để nhiều năm sau, mỗi lần xem lại là một lần được sống trong ngày hạnh phúc ấy.</p>
+    <a href="/album/phong-su" class="btn mt-14">Xem album phóng sự</a>
+  </div>
+  <div class="ph"><img loading="lazy" src="<%= s.feature_phongsu_img %>" alt="Khoảnh khắc phóng sự cưới chân thật" /></div>
 </section>
 
 <!-- BẢNG GIÁ -->
@@ -191,24 +210,6 @@
       <% }) %>
     </div>
     <p class="pricing-note center reveal">Báo giá minh bạch theo từng hạng mục, cam kết không phát sinh chi phí ngoài thoả thuận.</p>
-  </div>
-</section>
-
-<!-- QUY TRÌNH -->
-<section class="pad" id="quy-trinh">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <span class="eyebrow">Trải nghiệm dịch vụ</span>
-      <h2>Quy trình đồng hành cùng bạn</h2>
-      <p class="one-line">Một hành trình được thiết kế để bạn luôn yên tâm, từ lần nhắn tin đầu tiên đến khi nhận album.</p>
-    </div>
-    <div class="steps reveal">
-      <div class="st"><div class="n">01</div><h3>Tư vấn 1-1 tại studio</h3><p>Lắng nghe nhu cầu, xem album thật, thử váy thực tế và chọn concept phù hợp với hai bạn.</p></div>
-      <div class="st"><div class="n">02</div><h3>Chuẩn bị &amp; đồng hành</h3><p>Lập nhóm riêng cùng ekip trước ngày chụp, gửi checklist chuẩn bị, nhắc lịch và giải đáp mọi lo lắng.</p></div>
-      <div class="st"><div class="n">03</div><h3>Ngày chụp trọn vẹn</h3><p>Được đón tiếp chu đáo, chăm sóc xuyên suốt, ekip chỉnh dáng tinh tế để bạn thoải mái là chính mình.</p></div>
-      <div class="st"><div class="n">04</div><h3>Hậu kỳ định hướng</h3><p>Thống nhất tone màu theo phong cách bạn thích, tinh chỉnh đến khi ưng ý, cập nhật tiến độ đều đặn.</p></div>
-      <div class="st"><div class="n">05</div><h3>Bàn giao &amp; chăm sóc</h3><p>Trao album đóng gói trang trọng kèm thiệp viết tay, và tiếp tục đồng hành cho những cột mốc sau này.</p></div>
-    </div>
   </div>
 </section>
 

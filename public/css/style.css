@@ -176,6 +176,15 @@ header.solid .burger span{background:var(--ink)}
 .steps .st h3{font-size:17px;margin:14px 0 10px;font-family:'Montserrat';font-weight:600;letter-spacing:.01em}
 .steps .st p{color:var(--muted);font-size:13.5px}
 
+/* Biến thể nền đen (Quy trình thay chỗ dải quote cũ) */
+.pad.dark{background:#000}
+.pad.dark .eyebrow{color:var(--gold)}
+.pad.dark .sec-head h2{color:var(--cream)}
+.pad.dark .sec-head p{color:rgba(250,248,244,.68)}
+.pad.dark .steps .st{border-top-color:rgba(192,160,98,.45)}
+.pad.dark .steps .st h3{color:var(--cream)}
+.pad.dark .steps .st p{color:rgba(250,248,244,.62)}
+
 /* Split feature (Váy cưới / Phóng sự) — chữ gọn trên nền trắng (giữ từ bản mới) */
 .feature{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:0;background:var(--pearl)}
 .feature .ph{height:100%;min-height:520px;overflow:hidden}
