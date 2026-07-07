@@ -64,10 +64,16 @@ header{position:fixed;top:0;left:0;right:0;z-index:60;padding:24px 0;transition:
 header.solid{background:rgba(250,248,244,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px 0}
 header.static{position:sticky}
 .nav{display:flex;align-items:center;justify-content:space-between}
-.brand{font-family:'Playfair Display',serif;font-size:30px;letter-spacing:.02em;color:#fff;transition:.5s var(--ease);line-height:1.02}
+.brand{font-family:'Playfair Display',serif;font-size:30px;letter-spacing:.02em;color:#fff;transition:.5s var(--ease);line-height:1.02;display:flex;align-items:center}
 .brand b{font-weight:600}
-.brand small{font-family:'Montserrat';display:block;font-size:9px;letter-spacing:.34em;text-transform:uppercase;margin-top:7px;opacity:.82;font-weight:400;padding-left:.34em}
 header.solid .brand{color:var(--ink);font-size:26px}
+/* logo ảnh: bản trắng trên hero, bản đen khi thanh menu nền sáng */
+.brand .logo-img{display:block;height:44px;width:auto;transition:.5s var(--ease)}
+.brand .logo-light{display:block}
+.brand .logo-dark{display:none}
+header.solid .brand .logo-img{height:38px}
+header.solid .brand .logo-light{display:none}
+header.solid .brand .logo-dark{display:block}
 .menu{display:flex;gap:32px;align-items:center}
 .menu a{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#fff;font-weight:400;position:relative;padding:4px 0;transition:.4s}
 header.solid .menu a{color:var(--ink)}
@@ -240,6 +246,7 @@ header.solid .burger span{background:var(--ink)}
 footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
 .foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:50px;padding-bottom:50px;border-bottom:1px solid rgba(250,248,244,.12)}
 .foot .brand{color:#fff;font-size:30px}
+.foot-tagline{font-size:9.5px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-top:8px}
 .foot h4{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-family:'Montserrat';font-weight:500}
 .foot a{display:block;padding:6px 0;font-size:14px;transition:.3s;color:rgba(250,248,244,.78)}
 .foot a:hover{color:var(--gold)}
@@ -330,6 +337,32 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
 .quote-inline{border-left:2px solid var(--gold);padding-left:34px;margin-top:50px}
 .quote-inline p{font-family:'Playfair Display';font-style:italic;font-size:clamp(19px,2.3vw,26px);line-height:1.55;color:var(--ink)}
 .quote-inline .sign{margin-top:20px;font-size:26px}
+
+/* ===== Banner full-bleed (Phóng sự) ===== */
+.banner{position:relative;min-height:76vh;display:flex;align-items:center;justify-content:center;overflow:hidden;text-align:center}
+.banner-bg{position:absolute;inset:0}
+.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,16,.38),rgba(20,18,16,.56))}
+.banner-inner{position:relative;z-index:2;color:#fff;padding-top:90px;padding-bottom:90px}
+.banner-inner .eyebrow{display:block;margin-bottom:18px}
+.banner-inner h2{color:#fff;font-size:clamp(34px,5.2vw,64px);font-weight:500;text-shadow:0 2px 26px rgba(0,0,0,.3)}
+.banner-inner p{margin-top:16px;color:rgba(255,255,255,.92);font-size:15.5px;letter-spacing:.02em}
+
+/* ===== Khách VIP / người nổi tiếng ===== */
+.vip-carousel{position:relative}
+.vip-track{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.vip-track::-webkit-scrollbar{display:none}
+.vip-card{position:relative;flex:0 0 min(430px,80vw);aspect-ratio:16/11;overflow:hidden;background:var(--paper);scroll-snap-align:start;display:block}
+.vip-card img{transition:1.2s var(--ease)}
+.vip-card:hover img{transform:scale(1.05)}
+.vip-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,16,0) 45%,rgba(20,18,16,.74) 100%)}
+.vip-card .meta{position:absolute;left:0;right:0;bottom:0;padding:22px 24px;z-index:2;color:#fff}
+.vip-card .t{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.vip-card h3{font-size:21px;color:#fff}
+.vip-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:46px;height:46px;border:1px solid var(--line);background:var(--pearl);color:var(--ink);font-size:24px;font-family:'Playfair Display',serif;line-height:1;transition:.3s var(--ease)}
+.vip-nav:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.vip-nav.prev{left:-14px}
+.vip-nav.next{right:-14px}
+@media(max-width:680px){.vip-nav{display:none}}
 
 /* ===== CTA band (trang con) ===== */
 .cta-band{background:#000;color:var(--cream);padding:88px 0;text-align:center}

@@ -263,6 +263,74 @@ async function saveCover(file) {
   return `/uploads/posts/${base}.webp`;
 }
 
+/* ---------- Khách VIP / người nổi tiếng ---------- */
+async function saveVipImage(file) {
+  const dir = path.join(UPLOAD_DIR, 'vips');
+  fs.mkdirSync(dir, { recursive: true });
+  const base = Date.now() + '-' + Math.round(Math.random() * 1e4);
+  await sharp(file.buffer, { failOn: 'none' }).rotate()
+    .resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 82 })
+    .toFile(path.join(dir, `${base}.webp`));
+  return `/uploads/vips/${base}.webp`;
+}
+
+router.get('/vips', (req, res) => {
+  res.render('admin/vips', {
+    vips: all('SELECT * FROM vips ORDER BY sort_order'),
+    albums: all('SELECT slug, name FROM albums ORDER BY sort_order')
+  });
+});
+
+router.post('/vips', upload.single('image'), async (req, res) => {
+  const { name, tag, album_slug } = req.body;
+  if (name && name.trim() && req.file) {
+    const image = await saveVipImage(req.file);
+    const max = get('SELECT COALESCE(MAX(sort_order),0) m FROM vips').m;
+    run('INSERT INTO vips(name,tag,image,album_slug,sort_order) VALUES(?,?,?,?,?)',
+      name.trim(), (tag || '').trim(), image, (album_slug || '').trim(), max + 1);
+  }
+  res.redirect('/admin/vips');
+});
+
+router.post('/vips/:id', upload.single('image'), async (req, res) => {
+  const vip = get('SELECT * FROM vips WHERE id = ?', req.params.id);
+  if (vip) {
+    const { name, tag, album_slug, visible } = req.body;
+    let image = vip.image;
+    if (req.file) image = await saveVipImage(req.file);
+    run('UPDATE vips SET name=?, tag=?, image=?, album_slug=?, visible=? WHERE id=?',
+      (name || vip.name).trim(), (tag || '').trim(), image, (album_slug || '').trim(),
+      visible ? 1 : 0, vip.id);
+  }
+  res.redirect('/admin/vips');
+});
+
+router.post('/vips/:id/move', (req, res) => {
+  const vip = get('SELECT * FROM vips WHERE id = ?', req.params.id);
+  const dir = req.body.dir === 'up' ? -1 : 1;
+  if (vip) {
+    const swap = get(
+      `SELECT * FROM vips WHERE sort_order ${dir < 0 ? '<' : '>'} ? ORDER BY sort_order ${dir < 0 ? 'DESC' : 'ASC'} LIMIT 1`,
+      vip.sort_order);
+    if (swap) {
+      run('UPDATE vips SET sort_order = ? WHERE id = ?', swap.sort_order, vip.id);
+      run('UPDATE vips SET sort_order = ? WHERE id = ?', vip.sort_order, swap.id);
+    }
+  }
+  res.redirect('/admin/vips');
+});
+
+router.post('/vips/:id/delete', (req, res) => {
+  const vip = get('SELECT * FROM vips WHERE id = ?', req.params.id);
+  if (vip) {
+    if (vip.image && vip.image.startsWith('/uploads/')) {
+      fs.rm(path.join(__dirname, '..', '..', 'public', vip.image), { force: true }, () => {});
+    }
+    run('DELETE FROM vips WHERE id = ?', vip.id);
+  }
+  res.redirect('/admin/vips');
+});
+
 /* ---------- Leads ---------- */
 router.get('/leads', (req, res) => {
   const filter = req.query.status;

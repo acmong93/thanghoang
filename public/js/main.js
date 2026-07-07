@@ -171,6 +171,19 @@
     });
   }
 
+  /* ---------- Carousel khách VIP ---------- */
+  const vipTrack = document.getElementById('vipTrack');
+  if (vipTrack) {
+    const step = () => {
+      const card = vipTrack.querySelector('.vip-card');
+      return card ? card.getBoundingClientRect().width + 22 : 440;
+    };
+    const prev = document.getElementById('vipPrev');
+    const next = document.getElementById('vipNext');
+    prev && prev.addEventListener('click', () => vipTrack.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next && next.addEventListener('click', () => vipTrack.scrollBy({ left: step(), behavior: 'smooth' }));
+  }
+
   /* ---------- Form đặt lịch ---------- */
   const form = document.getElementById('bookForm');
   if (form) {

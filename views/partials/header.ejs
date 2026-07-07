@@ -1,7 +1,10 @@
 <a class="skip-link" href="#main">Bỏ qua điều hướng</a>
 <header id="header" class="<%= typeof solidHeader !== 'undefined' && solidHeader ? 'solid static' : '' %>">
   <nav class="wrap nav" aria-label="Điều hướng chính">
-    <a href="/" class="brand"><b>Rosé</b> Wedding<small><%= s.tagline %></small></a>
+    <a href="/" class="brand" aria-label="<%= s.site_name %> - Trang chủ">
+      <img class="logo-img logo-light" src="/img/logo/logo-header-trang.png" alt="<%= s.site_name %>" />
+      <img class="logo-img logo-dark" src="/img/logo/logo-header-den.png" alt="" aria-hidden="true" />
+    </a>
     <button class="burger" id="burger" aria-label="Mở menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <div class="menu" id="menu">
       <div class="has-drop">

@@ -25,6 +25,7 @@ router.get('/', (req, res) => {
     ...base(), page: 'home',
     weddingAlbums: albumsWithCover('wedding', 6),
     signatureAlbums: albumsWithCover('signature'),
+    vips: all('SELECT * FROM vips WHERE visible = 1 ORDER BY sort_order'),
     videos: all('SELECT * FROM videos WHERE visible = 1 ORDER BY sort_order'),
     pricing: all('SELECT slug, name, tag FROM pricing WHERE visible = 1 ORDER BY sort_order')
   });

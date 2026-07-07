@@ -1,0 +1,62 @@
+<%- include('partials/top', { t: 'Khách VIP' }) %>
+
+<h1>Khách VIP &amp; người nổi tiếng</h1>
+<p class="muted" style="margin-bottom:18px">Mục này hiển thị thành carousel trên trang chủ (sau phần Concept Độc Bản). Khi chưa có khách nào, section tự ẩn. Lưu ý: chỉ đăng tên và hình ảnh khách khi đã có sự đồng ý của họ.</p>
+
+<details class="panel" open>
+  <summary>+ Thêm khách mới</summary>
+  <form method="post" action="/admin/vips" enctype="multipart/form-data" class="grid-form">
+    <label>Tên hiển thị <input name="name" required placeholder="VD: Cầu thủ A & B" /></label>
+    <label>Dòng phụ <input name="tag" placeholder="VD: Pre-Wedding 2026" /></label>
+    <label>Ảnh đại diện <input type="file" name="image" accept="image/jpeg,image/png,image/webp" required /></label>
+    <label>Liên kết album (nếu có)
+      <select name="album_slug">
+        <option value="">Không liên kết</option>
+        <% albums.forEach(a => { %><option value="<%= a.slug %>"><%= a.name %></option><% }) %>
+      </select>
+    </label>
+    <button type="submit" class="ad-btn primary">Thêm khách</button>
+  </form>
+</details>
+
+<% if (!vips.length) { %>
+<p class="muted">Chưa có khách nào. Thêm khách đầu tiên bằng form phía trên.</p>
+<% } else { %>
+<div class="album-list">
+  <% vips.forEach(v => { %>
+  <div class="panel" style="margin-bottom:12px">
+    <form method="post" action="/admin/vips/<%= v.id %>" enctype="multipart/form-data" class="vip-row">
+      <img class="vip-thumb" src="<%= v.image %>" alt="" loading="lazy" />
+      <div class="grid-form" style="flex:1">
+        <label>Tên <input name="name" value="<%= v.name %>" required /></label>
+        <label>Dòng phụ <input name="tag" value="<%= v.tag %>" /></label>
+        <label>Album liên kết
+          <select name="album_slug">
+            <option value="">Không liên kết</option>
+            <% albums.forEach(a => { %><option value="<%= a.slug %>" <%= v.album_slug === a.slug ? 'selected' : '' %>><%= a.name %></option><% }) %>
+          </select>
+        </label>
+        <label>Đổi ảnh <input type="file" name="image" accept="image/jpeg,image/png,image/webp" /></label>
+        <label class="check"><input type="checkbox" name="visible" <%= v.visible ? 'checked' : '' %> /> Hiển thị</label>
+        <div class="row-btns">
+          <button type="submit" class="ad-btn primary sm">Lưu</button>
+        </div>
+      </div>
+    </form>
+    <div class="row-btns" style="margin-top:10px">
+      <form method="post" action="/admin/vips/<%= v.id %>/move" class="inline-form"><input type="hidden" name="dir" value="up" /><button class="ad-btn sm">↑ Lên</button></form>
+      <form method="post" action="/admin/vips/<%= v.id %>/move" class="inline-form"><input type="hidden" name="dir" value="down" /><button class="ad-btn sm">↓ Xuống</button></form>
+      <form method="post" action="/admin/vips/<%= v.id %>/delete" class="inline-form" onsubmit="return confirm('Xoá khách này?')"><button class="ad-btn danger sm">Xoá</button></form>
+    </div>
+  </div>
+  <% }) %>
+</div>
+<% } %>
+
+<style>
+.vip-row{display:flex;gap:18px;align-items:flex-start}
+.vip-thumb{width:150px;aspect-ratio:16/11;object-fit:cover;border-radius:8px;flex-shrink:0}
+@media(max-width:700px){.vip-row{flex-direction:column}}
+</style>
+
+<%- include('partials/bottom') %>

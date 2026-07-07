@@ -90,6 +90,16 @@ CREATE TABLE IF NOT EXISTS videos (
   sort_order INTEGER NOT NULL DEFAULT 0,
   visible    INTEGER NOT NULL DEFAULT 1
 );
+
+CREATE TABLE IF NOT EXISTS vips (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  name       TEXT NOT NULL,               -- VD: Cầu thủ A & B
+  tag        TEXT NOT NULL DEFAULT '',    -- VD: Pre-Wedding 2026
+  image      TEXT NOT NULL DEFAULT '',
+  album_slug TEXT NOT NULL DEFAULT '',    -- liên kết tới album nếu có
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  visible    INTEGER NOT NULL DEFAULT 1
+);
 `);
 
 /* ---------- helpers ---------- */
