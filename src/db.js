@@ -97,10 +97,14 @@ CREATE TABLE IF NOT EXISTS vips (
   tag        TEXT NOT NULL DEFAULT '',    -- VD: Pre-Wedding 2026
   image      TEXT NOT NULL DEFAULT '',
   album_slug TEXT NOT NULL DEFAULT '',    -- liên kết tới album nếu có
+  quote      TEXT NOT NULL DEFAULT '',    -- cảm nhận ngắn của khách
   sort_order INTEGER NOT NULL DEFAULT 0,
   visible    INTEGER NOT NULL DEFAULT 1
 );
 `);
+
+/* Migration cho database tạo trước khi có cột quote */
+try { db.exec("ALTER TABLE vips ADD COLUMN quote TEXT NOT NULL DEFAULT ''"); } catch (e) { /* đã có */ }
 
 /* ---------- helpers ---------- */
 const get = (sql, ...args) => db.prepare(sql).get(...args);

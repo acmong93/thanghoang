@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<%- include('partials/head', { title: '', desc: '' }) %>
+<% let heroFirst = ''; try { heroFirst = JSON.parse(s.hero_images || '[]')[0] || ''; } catch (e) {} %>
+<%- include('partials/head', { title: '', desc: '', preload: heroFirst }) %>
 </head>
 <body>
 <%- include('partials/header') %>
@@ -45,6 +46,7 @@
       <p>Văn hoá của chúng tôi là lấy khách hàng làm trọng tâm. Trước khi bấm máy, chúng tôi lắng nghe về cách hai người gặp nhau, về điều khiến cả hai thấy là chính mình, để mỗi khung hình không chỉ đẹp mà còn thật.</p>
       <p>Đội ngũ Rosé đồng hành tận tâm từ buổi tư vấn đầu tiên, qua ngày chụp, đến lúc trao tận tay album cuối cùng. Bởi điều ở lại sau ngày cưới không phải là một buổi chụp, mà là cảm xúc bạn giữ được suốt nhiều năm sau.</p>
       <div class="sign">Thắng Hoàng<small>Founder</small></div>
+      <% if (s.about_stats) { %><div class="about-stats"><%= s.about_stats %></div><% } %>
       <a href="/cau-chuyen" class="btn mt-24">Đọc câu chuyện của Rosé</a>
     </div>
   </div>
@@ -132,12 +134,18 @@
         <% if (v.album_slug) { %>
         <a class="vip-card" href="/album/<%= v.album_slug %>">
           <img loading="lazy" src="<%= v.image %>" alt="<%= v.name %>" />
-          <div class="meta"><div class="t"><%= v.tag %></div><h3><%= v.name %></h3></div>
+          <div class="meta">
+            <div class="t"><%= v.tag %></div><h3><%= v.name %></h3>
+            <% if (v.quote) { %><p class="q">&ldquo;<%= v.quote %>&rdquo;</p><% } %>
+          </div>
         </a>
         <% } else { %>
         <div class="vip-card">
           <img loading="lazy" src="<%= v.image %>" alt="<%= v.name %>" />
-          <div class="meta"><div class="t"><%= v.tag %></div><h3><%= v.name %></h3></div>
+          <div class="meta">
+            <div class="t"><%= v.tag %></div><h3><%= v.name %></h3>
+            <% if (v.quote) { %><p class="q">&ldquo;<%= v.quote %>&rdquo;</p><% } %>
+          </div>
         </div>
         <% } %>
         <% }) %>
@@ -145,6 +153,14 @@
       <button class="vip-nav next" id="vipNext" aria-label="Xem khách sau">&rsaquo;</button>
     </div>
   </div>
+</section>
+<% } %>
+
+<!-- KHOẢNH KHẮC EDITORIAL -->
+<% if (s.moment_img) { %>
+<section class="moment">
+  <img src="<%= s.moment_img %>" alt="<%= s.moment_line || 'Rosé Wedding' %>" loading="lazy" />
+  <div class="moment-line reveal"><span><%= s.moment_line %></span></div>
 </section>
 <% } %>
 

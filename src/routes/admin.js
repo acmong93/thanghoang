@@ -282,12 +282,12 @@ router.get('/vips', (req, res) => {
 });
 
 router.post('/vips', upload.single('image'), async (req, res) => {
-  const { name, tag, album_slug } = req.body;
+  const { name, tag, album_slug, quote } = req.body;
   if (name && name.trim() && req.file) {
     const image = await saveVipImage(req.file);
     const max = get('SELECT COALESCE(MAX(sort_order),0) m FROM vips').m;
-    run('INSERT INTO vips(name,tag,image,album_slug,sort_order) VALUES(?,?,?,?,?)',
-      name.trim(), (tag || '').trim(), image, (album_slug || '').trim(), max + 1);
+    run('INSERT INTO vips(name,tag,image,album_slug,quote,sort_order) VALUES(?,?,?,?,?,?)',
+      name.trim(), (tag || '').trim(), image, (album_slug || '').trim(), (quote || '').trim(), max + 1);
   }
   res.redirect('/admin/vips');
 });
@@ -295,12 +295,12 @@ router.post('/vips', upload.single('image'), async (req, res) => {
 router.post('/vips/:id', upload.single('image'), async (req, res) => {
   const vip = get('SELECT * FROM vips WHERE id = ?', req.params.id);
   if (vip) {
-    const { name, tag, album_slug, visible } = req.body;
+    const { name, tag, album_slug, quote, visible } = req.body;
     let image = vip.image;
     if (req.file) image = await saveVipImage(req.file);
-    run('UPDATE vips SET name=?, tag=?, image=?, album_slug=?, visible=? WHERE id=?',
+    run('UPDATE vips SET name=?, tag=?, image=?, album_slug=?, quote=?, visible=? WHERE id=?',
       (name || vip.name).trim(), (tag || '').trim(), image, (album_slug || '').trim(),
-      visible ? 1 : 0, vip.id);
+      (quote || '').trim(), visible ? 1 : 0, vip.id);
   }
   res.redirect('/admin/vips');
 });
@@ -353,8 +353,9 @@ router.post('/leads/:id/delete', (req, res) => {
 
 /* ---------- Cài đặt ---------- */
 const SETTING_KEYS = [
-  'site_name', 'tagline', 'hotline', 'hotline_tel', 'cskh', 'cskh_tel',
-  'email', 'address', 'hours', 'instagram', 'facebook', 'map_embed', 'pricing_note'
+  'site_name', 'tagline', 'slogan', 'hotline', 'hotline_tel', 'cskh', 'cskh_tel',
+  'email', 'address', 'hours', 'instagram', 'facebook', 'map_embed', 'pricing_note',
+  'about_stats', 'moment_img', 'moment_line'
 ];
 
 router.get('/settings', (req, res) => {

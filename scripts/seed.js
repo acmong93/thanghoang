@@ -31,7 +31,11 @@ console.log('[seed] Bắt đầu seed dữ liệu...');
 /* ============ CÀI ĐẶT CHUNG ============ */
 const settings = {
   site_name: 'Rosé Wedding',
-  tagline: 'Timeless Moment',
+  tagline: 'Timeless Moments',
+  slogan: 'Chỉn chu, sáng tạo và màu sắc khác biệt',
+  moment_img: img('lam-diep', '_TH_9723.jpg'),
+  moment_line: 'Chỉn chu, sáng tạo và màu sắc khác biệt',
+  about_stats: '',
   hotline: '0966 669 935',
   hotline_tel: '0966669935',
   cskh: '0865 428 824',

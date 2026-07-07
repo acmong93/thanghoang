@@ -4,7 +4,8 @@
 <meta name="description" content="<%= typeof desc !== 'undefined' && desc ? desc : 'Rosé Wedding · Ảnh cưới phong cách tối giản, editorial, quiet luxury tại Hà Nội. Lấy khách hàng làm trọng tâm trong từng khung hình.' %>" />
 <meta property="og:title" content="<%= typeof title !== 'undefined' && title ? title : s.site_name %>" />
 <meta property="og:type" content="website" />
-<link rel="icon" type="image/png" href="/img/logo/logo-rose-avatar.png" />
+<link rel="icon" type="image/png" href="/img/logo/favicon.png" />
+<% if (typeof preload !== 'undefined' && preload) { %><link rel="preload" as="image" href="<%= preload %>" fetchpriority="high" /><% } %>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />

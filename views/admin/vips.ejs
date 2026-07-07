@@ -8,6 +8,9 @@
   <form method="post" action="/admin/vips" enctype="multipart/form-data" class="grid-form">
     <label>Tên hiển thị <input name="name" required placeholder="VD: Cầu thủ A & B" /></label>
     <label>Dòng phụ <input name="tag" placeholder="VD: Pre-Wedding 2026" /></label>
+    <label class="full">Cảm nhận của khách (hiện in nghiêng trong thẻ, để trống thì ẩn)
+      <input name="quote" placeholder="VD: Xem ảnh mà sống lại cả ngày cưới" />
+    </label>
     <label>Ảnh đại diện <input type="file" name="image" accept="image/jpeg,image/png,image/webp" required /></label>
     <label>Liên kết album (nếu có)
       <select name="album_slug">
@@ -30,6 +33,7 @@
       <div class="grid-form" style="flex:1">
         <label>Tên <input name="name" value="<%= v.name %>" required /></label>
         <label>Dòng phụ <input name="tag" value="<%= v.tag %>" /></label>
+        <label class="full">Cảm nhận của khách <input name="quote" value="<%= v.quote || '' %>" /></label>
         <label>Album liên kết
           <select name="album_slug">
             <option value="">Không liên kết</option>

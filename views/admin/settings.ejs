@@ -5,6 +5,12 @@
 <form method="post" action="/admin/settings" class="panel grid-form">
   <label>Tên website <input name="site_name" value="<%= s.site_name %>" /></label>
   <label>Tagline <input name="tagline" value="<%= s.tagline %>" /></label>
+  <label class="full">Slogan <input name="slogan" value="<%= s.slogan || '' %>" placeholder="VD: Chỉn chu, sáng tạo và màu sắc khác biệt" /></label>
+  <label class="full">Dòng số liệu dưới phần Câu chuyện (để trống thì ẩn)
+    <input name="about_stats" value="<%= s.about_stats || '' %>" placeholder="VD: 500+ cặp đôi tin chọn · 2 concept độc bản · Từ 2019" />
+  </label>
+  <label>Ảnh khoảnh khắc giữa trang <input name="moment_img" value="<%= s.moment_img || '' %>" placeholder="/img/lam-diep/th-9723.webp" /></label>
+  <label>Dòng chữ trên ảnh khoảnh khắc <input name="moment_line" value="<%= s.moment_line || '' %>" /></label>
   <label>Hotline (hiển thị) <input name="hotline" value="<%= s.hotline %>" /></label>
   <label>Hotline (số gọi) <input name="hotline_tel" value="<%= s.hotline_tel %>" /></label>
   <label>CSKH (hiển thị) <input name="cskh" value="<%= s.cskh %>" /></label>
