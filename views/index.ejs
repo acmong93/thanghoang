@@ -15,7 +15,7 @@
   <div class="hero-inner">
     <span class="eyebrow gold">Rosé Wedding · Hà Nội</span>
     <h1><span class="nw">Lưu giữ chuyện tình</span><br/><span class="italic nw">vượt thời gian</span></h1>
-    <p>Ảnh cưới phong cách tối giản, editorial và quiet luxury. Nơi hai bạn là trung tâm của từng khung hình.</p>
+    <p><%= s.slogan %></p>
     <div class="hero-cta">
       <a href="#booking" class="btn btn-gold">Đặt lịch tư vấn</a>
       <a href="#anh-cuoi" class="btn btn-light">Xem bộ sưu tập</a>
@@ -52,23 +52,43 @@
   </div>
 </section>
 
-<!-- QUY TRÌNH (nền đen) -->
-<section class="pad dark" id="quy-trinh">
+<!-- KHÁCH HÀNG VIP / NGƯỜI NỔI TIẾNG (dải đen) -->
+<% if (vips.length) { %>
+<section class="pad dark" id="khach-hang">
   <div class="wrap">
     <div class="sec-head center reveal">
-      <span class="eyebrow">Trải nghiệm dịch vụ</span>
-      <h2>Quy trình đồng hành cùng bạn</h2>
-      <p class="one-line">Một hành trình được thiết kế để bạn luôn yên tâm, từ lần nhắn tin đầu tiên đến khi nhận album.</p>
+      <span class="eyebrow">Niềm tin gửi trao</span>
+      <h2>Được người nổi tiếng tin chọn</h2>
+      <p>Một vài gương mặt thân quen đã chọn Rosé để lưu giữ ngày trọng đại của mình.</p>
     </div>
-    <div class="steps reveal">
-      <div class="st"><div class="n">01</div><h3>Tư vấn 1-1 tại studio</h3><p>Lắng nghe nhu cầu, xem album thật, thử váy thực tế và chọn concept phù hợp với hai bạn.</p></div>
-      <div class="st"><div class="n">02</div><h3>Chuẩn bị &amp; đồng hành</h3><p>Lập nhóm riêng cùng ekip trước ngày chụp, gửi checklist chuẩn bị, nhắc lịch và giải đáp mọi lo lắng.</p></div>
-      <div class="st"><div class="n">03</div><h3>Ngày chụp trọn vẹn</h3><p>Được đón tiếp chu đáo, chăm sóc xuyên suốt, ekip chỉnh dáng tinh tế để bạn thoải mái là chính mình.</p></div>
-      <div class="st"><div class="n">04</div><h3>Hậu kỳ định hướng</h3><p>Thống nhất tone màu theo phong cách bạn thích, tinh chỉnh đến khi ưng ý, cập nhật tiến độ đều đặn.</p></div>
-      <div class="st"><div class="n">05</div><h3>Bàn giao &amp; chăm sóc</h3><p>Trao album đóng gói trang trọng kèm thiệp viết tay, và tiếp tục đồng hành cho những cột mốc sau này.</p></div>
+    <div class="vip-carousel reveal">
+      <button class="vip-nav prev" id="vipPrev" aria-label="Xem khách trước">&lsaquo;</button>
+      <div class="vip-track" id="vipTrack">
+        <% vips.forEach(v => { %>
+        <% if (v.album_slug) { %>
+        <a class="vip-card" href="/album/<%= v.album_slug %>">
+          <img loading="lazy" src="<%= v.image %>" alt="<%= v.name %>" />
+          <div class="meta">
+            <div class="t"><%= v.tag %></div><h3><%= v.name %></h3>
+            <% if (v.quote) { %><p class="q">&ldquo;<%= v.quote %>&rdquo;</p><% } %>
+          </div>
+        </a>
+        <% } else { %>
+        <div class="vip-card">
+          <img loading="lazy" src="<%= v.image %>" alt="<%= v.name %>" />
+          <div class="meta">
+            <div class="t"><%= v.tag %></div><h3><%= v.name %></h3>
+            <% if (v.quote) { %><p class="q">&ldquo;<%= v.quote %>&rdquo;</p><% } %>
+          </div>
+        </div>
+        <% } %>
+        <% }) %>
+      </div>
+      <button class="vip-nav next" id="vipNext" aria-label="Xem khách sau">&rsaquo;</button>
     </div>
   </div>
 </section>
+<% } %>
 
 <!-- ẢNH CƯỚI -->
 <section class="pad bg-pearl" id="anh-cuoi">
@@ -117,44 +137,6 @@
     </div>
   </div>
 </section>
-
-<!-- KHÁCH HÀNG VIP / NGƯỜI NỔI TIẾNG -->
-<% if (vips.length) { %>
-<section class="pad" id="khach-hang">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <span class="eyebrow">Niềm tin gửi trao</span>
-      <h2>Được người nổi tiếng tin chọn</h2>
-      <p>Một vài gương mặt thân quen đã chọn Rosé để lưu giữ ngày trọng đại của mình.</p>
-    </div>
-    <div class="vip-carousel reveal">
-      <button class="vip-nav prev" id="vipPrev" aria-label="Xem khách trước">&lsaquo;</button>
-      <div class="vip-track" id="vipTrack">
-        <% vips.forEach(v => { %>
-        <% if (v.album_slug) { %>
-        <a class="vip-card" href="/album/<%= v.album_slug %>">
-          <img loading="lazy" src="<%= v.image %>" alt="<%= v.name %>" />
-          <div class="meta">
-            <div class="t"><%= v.tag %></div><h3><%= v.name %></h3>
-            <% if (v.quote) { %><p class="q">&ldquo;<%= v.quote %>&rdquo;</p><% } %>
-          </div>
-        </a>
-        <% } else { %>
-        <div class="vip-card">
-          <img loading="lazy" src="<%= v.image %>" alt="<%= v.name %>" />
-          <div class="meta">
-            <div class="t"><%= v.tag %></div><h3><%= v.name %></h3>
-            <% if (v.quote) { %><p class="q">&ldquo;<%= v.quote %>&rdquo;</p><% } %>
-          </div>
-        </div>
-        <% } %>
-        <% }) %>
-      </div>
-      <button class="vip-nav next" id="vipNext" aria-label="Xem khách sau">&rsaquo;</button>
-    </div>
-  </div>
-</section>
-<% } %>
 
 <!-- KHOẢNH KHẮC EDITORIAL -->
 <% if (s.moment_img) { %>
