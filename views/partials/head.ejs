@@ -1,12 +1,51 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title><%= typeof title !== 'undefined' && title ? title + ' · ' : '' %><%= s.site_name %> · Ảnh cưới Editorial & Quiet Luxury Hà Nội</title>
-<meta name="description" content="<%= typeof desc !== 'undefined' && desc ? desc : 'Rosé Wedding · Ảnh cưới phong cách tối giản, editorial, quiet luxury tại Hà Nội. Lấy khách hàng làm trọng tâm trong từng khung hình.' %>" />
-<meta property="og:title" content="<%= typeof title !== 'undefined' && title ? title : s.site_name %>" />
-<meta property="og:type" content="website" />
+<%
+  const pageTitle = (typeof title !== 'undefined' && title ? title + ' · ' : '') + s.site_name + ' · Ảnh cưới Editorial & Quiet Luxury Hà Nội';
+  const pageDesc = typeof desc !== 'undefined' && desc ? desc : 'Rosé Wedding · Ảnh cưới phong cách tối giản, editorial, quiet luxury tại Hà Nội. Lấy khách hàng làm trọng tâm trong từng khung hình.';
+  let ogImage = typeof og !== 'undefined' && og ? og : '';
+  if (!ogImage) { try { ogImage = JSON.parse(s.hero_images || '[]')[0] || ''; } catch (e) {} }
+  const ogImageAbs = ogImage ? (ogImage.startsWith('http') ? ogImage : baseUrl + ogImage) : '';
+%>
+<title><%= pageTitle %></title>
+<meta name="description" content="<%= pageDesc %>" />
+<% if (typeof noindex !== 'undefined' && noindex) { %><meta name="robots" content="noindex" /><% } %>
+<link rel="canonical" href="<%= pageUrl %>" />
+<meta property="og:site_name" content="<%= s.site_name %>" />
+<meta property="og:locale" content="vi_VN" />
+<meta property="og:type" content="<%= typeof ogType !== 'undefined' && ogType ? ogType : 'website' %>" />
+<meta property="og:title" content="<%= typeof title !== 'undefined' && title ? title : pageTitle %>" />
+<meta property="og:description" content="<%= pageDesc %>" />
+<meta property="og:url" content="<%= pageUrl %>" />
+<% if (ogImageAbs) { %><meta property="og:image" content="<%= ogImageAbs %>" /><% } %>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="<%= typeof title !== 'undefined' && title ? title : pageTitle %>" />
+<meta name="twitter:description" content="<%= pageDesc %>" />
+<% if (ogImageAbs) { %><meta name="twitter:image" content="<%= ogImageAbs %>" /><% } %>
 <link rel="icon" type="image/png" href="/img/logo/favicon.png" />
 <% if (typeof preload !== 'undefined' && preload) { %><link rel="preload" as="image" href="<%= preload %>" fetchpriority="high" /><% } %>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/css/style.css?v=<%= v %>" />
+<% if (typeof page !== 'undefined' && page === 'home') {
+  const geoMatch = (s.map_embed || '').match(/q=([\d.]+),([\d.]+)/);
+  const ld = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: s.site_name,
+    description: pageDesc,
+    url: baseUrl,
+    telephone: s.hotline_tel ? '+84' + s.hotline_tel.replace(/\D/g, '').replace(/^0/, '') : undefined,
+    email: s.email || undefined,
+    image: ogImageAbs || undefined,
+    address: { '@type': 'PostalAddress', streetAddress: s.address, addressLocality: 'Hà Nội', addressCountry: 'VN' },
+    geo: geoMatch ? { '@type': 'GeoCoordinates', latitude: Number(geoMatch[1]), longitude: Number(geoMatch[2]) } : undefined,
+    openingHours: 'Mo-Su 09:00-21:00',
+    sameAs: [s.instagram, s.facebook].filter(Boolean),
+    priceRange: '$$'
+  };
+  Object.keys(ld).forEach(k => ld[k] === undefined && delete ld[k]);
+%>
+<script type="application/ld+json"><%- JSON.stringify(ld) %></script>
+<% } %>

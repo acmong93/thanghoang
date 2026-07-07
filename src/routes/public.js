@@ -46,6 +46,7 @@ router.get('/album/:slug', (req, res, next) => {
   if (!album) return next();
   const images = all('SELECT * FROM images WHERE album_id = ? ORDER BY sort_order', album.id);
   const others = albumsWithCover(album.category).filter(a => a.id !== album.id).slice(0, 3);
+  album.cover = coverOf(album.id);
   res.render('album', { ...base(), page: 'album', album, images, others });
 });
 
@@ -87,6 +88,25 @@ router.get('/tin-tuc/:slug', (req, res, next) => {
   if (!post) return next();
   const others = all('SELECT slug, title, cover, cat, date FROM posts WHERE visible = 1 AND id != ? ORDER BY created_at DESC LIMIT 3', post.id);
   res.render('post', { ...base(), page: 'tin-tuc', post, others });
+});
+
+/* ============ SEO: ROBOTS & SITEMAP ============ */
+router.get('/robots.txt', (req, res) => {
+  res.type('text/plain').send(
+    `User-agent: *\nDisallow: /admin\n\nSitemap: ${res.locals.baseUrl}/sitemap.xml\n`
+  );
+});
+
+router.get('/sitemap.xml', (req, res) => {
+  const urls = ['/', '/anh-cuoi', '/vay-cuoi', '/cau-chuyen', '/tin-tuc'];
+  all('SELECT slug FROM pricing WHERE visible = 1 ORDER BY sort_order').forEach(p => urls.push(`/bang-gia/${p.slug}`));
+  all('SELECT slug FROM albums WHERE visible = 1 ORDER BY sort_order').forEach(a => urls.push(`/album/${a.slug}`));
+  all('SELECT slug FROM posts WHERE visible = 1 ORDER BY created_at DESC').forEach(p => urls.push(`/tin-tuc/${p.slug}`));
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    urls.map(u => `  <url><loc>${res.locals.baseUrl}${u}</loc></url>`).join('\n') +
+    '\n</urlset>';
+  res.type('application/xml').send(xml);
 });
 
 /* ============ ĐẶT LỊCH ============ */

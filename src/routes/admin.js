@@ -355,7 +355,7 @@ router.post('/leads/:id/delete', (req, res) => {
 const SETTING_KEYS = [
   'site_name', 'tagline', 'slogan', 'hotline', 'hotline_tel', 'cskh', 'cskh_tel',
   'email', 'address', 'hours', 'instagram', 'facebook', 'map_embed', 'pricing_note',
-  'about_stats', 'moment_img', 'moment_line'
+  'about_stats', 'moment_img', 'moment_line', 'site_url'
 ];
 
 router.get('/settings', (req, res) => {

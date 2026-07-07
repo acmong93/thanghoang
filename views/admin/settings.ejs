@@ -5,6 +5,9 @@
 <form method="post" action="/admin/settings" class="panel grid-form">
   <label>Tên website <input name="site_name" value="<%= s.site_name %>" /></label>
   <label>Tagline <input name="tagline" value="<%= s.tagline %>" /></label>
+  <label class="full">Tên miền chính thức (cho SEO: canonical, sitemap, chia sẻ mạng xã hội)
+    <input name="site_url" value="<%= s.site_url || '' %>" placeholder="VD: https://rosewedding.vn" />
+  </label>
   <label class="full">Slogan <input name="slogan" value="<%= s.slogan || '' %>" placeholder="VD: Chỉn chu, sáng tạo và màu sắc khác biệt" /></label>
   <label class="full">Dòng số liệu dưới phần Câu chuyện (để trống thì ẩn)
     <input name="about_stats" value="<%= s.about_stats || '' %>" placeholder="VD: 500+ cặp đôi tin chọn · 2 concept độc bản · Từ 2019" />

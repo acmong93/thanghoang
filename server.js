@@ -2,7 +2,7 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const { ensureAdmin } = require('./src/db');
+const { ensureAdmin, allSettings } = require('./src/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +26,15 @@ app.use(session({
 }));
 
 ensureAdmin();
+
+/* URL gốc cho SEO (canonical, og:url, sitemap).
+   Ưu tiên: biến môi trường SITE_URL > cài đặt site_url trong admin > host của request */
+app.use((req, res, next) => {
+  const base = (process.env.SITE_URL || allSettings().site_url || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
+  res.locals.baseUrl = base;
+  res.locals.pageUrl = base + req.originalUrl.split('?')[0];
+  next();
+});
 
 /* Chuyển hướng URL kiểu cũ (web tĩnh) sang URL mới */
 app.get('/index.html', (req, res) => res.redirect(301, '/'));
