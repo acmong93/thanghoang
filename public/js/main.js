@@ -45,8 +45,9 @@
   /* ---------- Hero slider ---------- */
   const slidesEl = document.getElementById('slides');
   if (slidesEl) {
-    let images = [];
+    let images = [], pos = [];
     try { images = JSON.parse(slidesEl.dataset.images || '[]'); } catch (e) { /* bỏ qua */ }
+    try { pos = JSON.parse(slidesEl.dataset.pos || '[]'); } catch (e) { /* bỏ qua */ }
     const dotsEl = document.getElementById('dots');
     const slides = [], dots = [];
 
@@ -56,6 +57,7 @@
       const im = document.createElement('img');
       im.src = src;
       im.alt = 'Rosé Wedding';
+      if (pos[i]) im.style.objectPosition = pos[i];
       im.loading = i === 0 ? 'eager' : 'lazy';
       if (i === 0) im.fetchPriority = 'high';
       d.appendChild(im);

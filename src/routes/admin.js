@@ -433,11 +433,23 @@ router.post('/settings/image', upload.single('photo'), async (req, res) => {
       } else {
         setSetting(key, p);
       }
+      setSetting('pos_' + key, '50% 50%'); // ảnh mới thì căn lại từ giữa
     } catch (e) {
       console.error('[settings-image]', e.message);
     }
   }
   res.redirect('/admin/settings');
+});
+
+/* Căn vị trí hiển thị cho ảnh vị trí cố định (lưu setting pos_<key>) */
+router.post('/settings/image-pos', (req, res) => {
+  const key = String(req.body.key || '');
+  if (!IMAGE_SETTING_KEYS.includes(key) && !/^hero_[0-9]$/.test(key)) {
+    return res.status(400).json({ ok: false });
+  }
+  const pos = `${clampPct(req.body.x ?? 50)}% ${clampPct(req.body.y ?? 50)}%`;
+  setSetting('pos_' + key, pos);
+  res.json({ ok: true, pos });
 });
 
 router.post('/settings', (req, res) => {

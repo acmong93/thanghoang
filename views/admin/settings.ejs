@@ -40,20 +40,47 @@
       { key: 'feature_vay_img', label: 'Mục Váy cưới', img: s.feature_vay_img },
       { key: 'feature_phongsu_img', label: 'Mục Phóng sự', img: s.feature_phongsu_img }
     );
+    slots.forEach(sl => { sl.pos = s['pos_' + sl.key] || '50% 50%'; });
   %>
   <div class="img-picker-grid">
     <% slots.forEach(sl => { %>
     <form method="post" action="/admin/settings/image" enctype="multipart/form-data" class="img-picker">
       <input type="hidden" name="key" value="<%= sl.key %>" />
       <label title="Bấm để chọn ảnh thay thế">
-        <img src="<%= sl.img %>" alt="" loading="lazy" />
+        <img src="<%= sl.img %>" alt="" loading="lazy" style="object-position:<%= sl.pos %>" id="pk-<%= sl.key %>" />
         <span><%= sl.label %></span>
         <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()" hidden />
       </label>
+      <div class="pos-ctl" title="Căn phần ảnh hiển thị khi bị cắt: kéo trái = lấy phần trên, kéo phải = lấy phần dưới">
+        <span>↑</span>
+        <input type="range" min="0" max="100" step="5"
+          value="<%= parseInt(sl.pos.split(' ')[1]) || 50 %>"
+          data-key="<%= sl.key %>" class="pos-slider" aria-label="Căn vị trí dọc của <%= sl.label %>" />
+        <span>↓</span>
+      </div>
     </form>
     <% }) %>
   </div>
 </div>
+
+<script>
+// Căn vị trí ảnh cố định: xem trước ngay trên thumbnail, tự lưu sau khi ngừng kéo 0.4s
+document.querySelectorAll('.pos-slider').forEach(sl => {
+  let t;
+  sl.addEventListener('input', () => {
+    const key = sl.dataset.key;
+    document.getElementById('pk-' + key).style.objectPosition = '50% ' + sl.value + '%';
+    clearTimeout(t);
+    t = setTimeout(() => {
+      fetch('/admin/settings/image-pos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, x: 50, y: Number(sl.value) })
+      }).then(r => { if (r.ok) sl.classList.add('saved'); setTimeout(() => sl.classList.remove('saved'), 900); });
+    }, 400);
+  });
+});
+</script>
 
 <h2>Phim cưới (YouTube)</h2>
 <div class="panel">

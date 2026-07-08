@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<% let heroFirst = ''; try { heroFirst = JSON.parse(s.hero_images || '[]')[0] || ''; } catch (e) {} %>
+<%
+  let heroImgs = [];
+  try { heroImgs = JSON.parse(s.hero_images || '[]'); } catch (e) {}
+  const heroFirst = heroImgs[0] || '';
+  const heroPos = heroImgs.map((_, i) => s['pos_hero_' + i] || '50% 50%');
+%>
 <%- include('partials/head', { title: '', desc: '', preload: heroFirst }) %>
 </head>
 <body>
@@ -11,7 +16,7 @@
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div id="slides" data-images='<%- s.hero_images %>'></div>
+  <div id="slides" data-images='<%- s.hero_images %>' data-pos='<%- JSON.stringify(heroPos) %>'></div>
   <div class="hero-inner">
     <span class="eyebrow gold">Rosé Wedding · Hà Nội</span>
     <h1><span class="nw">Lưu giữ chuyện tình</span><br/><span class="italic nw">vượt thời gian</span></h1>
@@ -29,7 +34,7 @@
 <section class="pad" id="about">
   <div class="wrap about-row reveal">
     <div class="about-ph single">
-      <figure><img loading="lazy" src="<%= s.about_img_1 %>" alt="Cô dâu Rosé Wedding trong sắc hồng phấn đặc trưng" /></figure>
+      <figure><img loading="lazy" src="<%= s.about_img_1 %>" alt="Cô dâu Rosé Wedding trong sắc hồng phấn đặc trưng" style="object-position:<%= s.pos_about_img_1 || '50% 50%' %>" /></figure>
     </div>
     <div class="about-tx">
       <span class="eyebrow">Câu chuyện của chúng tôi</span>
@@ -39,8 +44,8 @@
   </div>
   <div class="wrap about-row rev reveal">
     <div class="about-ph duo">
-      <figure><img loading="lazy" src="<%= s.about_img_2 %>" alt="Khoảnh khắc tự nhiên của cặp đôi" /></figure>
-      <figure><img loading="lazy" src="<%= s.about_img_3 %>" alt="Ảnh cưới phong cách editorial" /></figure>
+      <figure><img loading="lazy" src="<%= s.about_img_2 %>" alt="Khoảnh khắc tự nhiên của cặp đôi" style="object-position:<%= s.pos_about_img_2 || '50% 50%' %>" /></figure>
+      <figure><img loading="lazy" src="<%= s.about_img_3 %>" alt="Ảnh cưới phong cách editorial" style="object-position:<%= s.pos_about_img_3 || '50% 50%' %>" /></figure>
     </div>
     <div class="about-tx">
       <p>Văn hoá của chúng tôi là lấy khách hàng làm trọng tâm. Trước khi bấm máy, chúng tôi lắng nghe về cách hai người gặp nhau, về điều khiến cả hai thấy là chính mình, để mỗi khung hình không chỉ đẹp mà còn thật.</p>
@@ -158,7 +163,7 @@
 
 <!-- VÁY CƯỚI -->
 <section class="feature" id="vay-cuoi">
-  <div class="ph"><img loading="lazy" src="<%= s.feature_vay_img %>" alt="Cô dâu Rosé trong váy cưới cao cấp" /></div>
+  <div class="ph"><img loading="lazy" src="<%= s.feature_vay_img %>" alt="Cô dâu Rosé trong váy cưới cao cấp" style="object-position:<%= s.pos_feature_vay_img || '50% 50%' %>" /></div>
   <div class="tx reveal">
     <span class="eyebrow">Váy cưới &amp; Trang phục</span>
     <h2>Kho váy cưới lộng lẫy, đa dạng</h2>
@@ -196,7 +201,7 @@
     <p>Ekip di chuyển linh hoạt, bắt trọn từng chi tiết nhỏ để nhiều năm sau, mỗi lần xem lại là một lần được sống trong ngày hạnh phúc ấy.</p>
     <a href="/album/phong-su" class="btn mt-14">Xem album phóng sự</a>
   </div>
-  <div class="ph"><img loading="lazy" src="<%= s.feature_phongsu_img %>" alt="Khoảnh khắc phóng sự cưới chân thật" /></div>
+  <div class="ph"><img loading="lazy" src="<%= s.feature_phongsu_img %>" alt="Khoảnh khắc phóng sự cưới chân thật" style="object-position:<%= s.pos_feature_phongsu_img || '50% 50%' %>" /></div>
 </section>
 
 <!-- BẢNG GIÁ -->
