@@ -1,6 +1,7 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
+const compression = require('compression');
 const session = require('express-session');
 const { ensureAdmin, allSettings } = require('./src/db');
 
@@ -14,6 +15,7 @@ app.disable('x-powered-by');
 /* Đổi số này mỗi lần deploy để trình duyệt tải lại CSS/JS mới */
 app.locals.v = require('./package.json').version;
 
+app.use(compression());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
