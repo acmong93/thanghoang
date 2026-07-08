@@ -155,6 +155,32 @@ td select { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px;
 .img-actions button:hover { background: #fff; }
 .img-actions button.danger { color: var(--danger); }
 
+/* ---- Nút thay ảnh trong img-actions ---- */
+.img-replace {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 6px; cursor: pointer;
+  background: rgba(255,255,255,.92); font-size: 13px;
+}
+.img-replace:hover { background: #fff; }
+
+/* ---- Thanh căn vị trí crop ---- */
+.pos-ctl {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 10px; background: var(--card); font-size: 11px; color: var(--soft);
+}
+.pos-ctl input[type=range] { flex: 1; accent-color: var(--gold); cursor: pointer; min-width: 0; }
+.pos-ctl input.saved { accent-color: var(--ok); }
+
+/* ---- Bộ chọn ảnh vị trí cố định (Cài đặt) ---- */
+.img-picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.img-picker label {
+  display: block; cursor: pointer; border: 1px solid var(--line); border-radius: 8px;
+  overflow: hidden; background: var(--card); transition: border-color .15s, box-shadow .15s;
+}
+.img-picker label:hover { border-color: var(--gold); box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+.img-picker img { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: var(--line); }
+.img-picker span { display: block; padding: 7px 10px; font-size: 12px; font-weight: 500; color: var(--soft); }
+
 /* ---- Video rows ---- */
 .video-row { display: grid; grid-template-columns: 96px 1fr auto; gap: 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .video-row:last-of-type { border-bottom: 0; }

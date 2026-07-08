@@ -9,7 +9,7 @@ function base() {
   return { s: allSettings() };
 }
 const coverOf = albumId =>
-  get('SELECT file, thumb FROM images WHERE album_id = ? ORDER BY is_cover DESC, sort_order LIMIT 1', albumId) || {};
+  get('SELECT file, thumb, pos FROM images WHERE album_id = ? ORDER BY is_cover DESC, sort_order LIMIT 1', albumId) || {};
 
 function albumsWithCover(category, limit) {
   const rows = all(

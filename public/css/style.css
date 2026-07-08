@@ -419,16 +419,57 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
   .menu a{color:var(--ink)!important;font-size:15px}
   .drop{position:static;transform:none;opacity:1;visibility:visible;box-shadow:none;border:none;background:transparent;padding:4px 0;min-width:0}
   .drop a{color:var(--muted)!important;font-size:12px;padding:7px 0;text-align:center}
-  .steps{grid-template-columns:1fr}
   .burger{display:flex;z-index:70}
   .burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);background:var(--ink)}
   .burger.open span:nth-child(2){opacity:0}
   .burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);background:var(--ink)}
-  .pad{padding:78px 0}
-  .albums-grid,.commit-grid{grid-template-columns:1fr}
-  .masonry{columns:1}
+
+  /* Gọn chiều dọc: giảm khoảng thở, lưới 2 cột thay vì 1 cột dài dằng dặc */
+  .pad{padding:54px 0}
+  .pad.dark{padding:54px 0}
+  .pad-sm{padding:48px 0}
+  .sec-head{margin-bottom:34px}
+  .sec-head p{font-size:14px;margin-top:14px}
+  .mt-48{margin-top:28px}
+  .hero p{margin:20px auto 28px}
+
+  .albums-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .album-card .meta{padding:14px 12px}
+  .album-card .meta .t{font-size:8.5px;letter-spacing:.18em;margin-bottom:4px}
+  .album-card .meta h3{font-size:15px}
+  .album-card .meta .go{display:none}
+
+  .commit-grid{grid-template-columns:1fr}
+  .masonry{columns:2;column-gap:10px}
+  .masonry figure{margin-bottom:10px}
+
+  .sig-card .meta{padding:22px 18px}
+  .sig-card .meta h3{font-size:24px;margin-bottom:8px}
+  .sig-card .meta p{font-size:12.5px;margin-bottom:10px}
+
+  .steps{grid-template-columns:1fr;gap:0}
+  .steps .st{padding:16px 0 12px;border-top:1px solid var(--line)}
+  .steps .st .n{font-size:20px}
+  .steps .st h3{font-size:15px;margin:8px 0 5px}
+  .pad.dark .steps .st{padding:14px 0 10px}
+
+  .feature .ph{min-height:300px}
+  .feature .tx{padding:40px 26px}
+  .about-row{gap:26px}
+  .about-row + .about-row{margin-top:30px}
+
+  .video-grid{gap:14px}
+  .price-cards{grid-template-columns:1fr 1fr;gap:10px}
+  .price-cards a{padding:24px 14px 20px}
+  .price-cards p{min-height:0;margin-bottom:12px}
+
+  .booking{gap:34px}
+  .map-outer{margin-top:40px}
+  .map-wrap iframe{height:300px}
+  footer{padding:56px 0 30px}
+  .foot{gap:28px;padding-bottom:36px}
+
   .f-row{grid-template-columns:1fr}
   .hero-cta{flex-direction:column;align-items:center}
-  .price-cards{grid-template-columns:1fr 1fr}
-  .page-hero{padding:150px 0 56px}
+  .page-hero{padding:140px 0 48px}
 }

@@ -26,6 +26,35 @@
   <div class="row-btns"><button type="submit" class="ad-btn primary">Lưu cài đặt</button></div>
 </form>
 
+<h2>Ảnh trên trang chủ</h2>
+<div class="panel">
+  <p class="muted" style="margin-bottom:14px">Bấm vào ảnh muốn thay → chọn ảnh mới từ máy tính. Ảnh tự nén WebP và cập nhật ngay lên web.</p>
+  <%
+    let heroArr = [];
+    try { heroArr = JSON.parse(s.hero_images || '[]'); } catch (e) {}
+    const slots = heroArr.map((img, i) => ({ key: 'hero_' + i, label: 'Ảnh nền đầu trang ' + (i + 1), img }));
+    slots.push(
+      { key: 'about_img_1', label: 'Câu chuyện — ảnh lớn', img: s.about_img_1 },
+      { key: 'about_img_2', label: 'Câu chuyện — ảnh trái', img: s.about_img_2 },
+      { key: 'about_img_3', label: 'Câu chuyện — ảnh phải', img: s.about_img_3 },
+      { key: 'feature_vay_img', label: 'Mục Váy cưới', img: s.feature_vay_img },
+      { key: 'feature_phongsu_img', label: 'Mục Phóng sự', img: s.feature_phongsu_img }
+    );
+  %>
+  <div class="img-picker-grid">
+    <% slots.forEach(sl => { %>
+    <form method="post" action="/admin/settings/image" enctype="multipart/form-data" class="img-picker">
+      <input type="hidden" name="key" value="<%= sl.key %>" />
+      <label title="Bấm để chọn ảnh thay thế">
+        <img src="<%= sl.img %>" alt="" loading="lazy" />
+        <span><%= sl.label %></span>
+        <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()" hidden />
+      </label>
+    </form>
+    <% }) %>
+  </div>
+</div>
+
 <h2>Phim cưới (YouTube)</h2>
 <div class="panel">
   <% videos.forEach(v => { %>

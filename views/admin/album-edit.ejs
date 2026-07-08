@@ -32,10 +32,12 @@
   <span class="muted">Chọn được nhiều ảnh cùng lúc · tối đa 30MB/ảnh</span>
 </form>
 
+<p class="muted" style="margin:-6px 0 14px">Di chuột lên ảnh để thấy nút thao tác. Thanh kéo dưới mỗi ảnh dùng để <b>căn phần ảnh được giữ lại</b> khi thumbnail bị cắt (VD ảnh dọc bị mất mặt: kéo về phía trên).</p>
+
 <div class="img-grid">
   <% images.forEach(im => { %>
   <div class="img-cell <%= im.is_cover ? 'cover' : '' %>">
-    <img src="<%= im.thumb || im.file %>" alt="" loading="lazy" />
+    <img src="<%= im.thumb || im.file %>" alt="" loading="lazy" style="object-position:<%= im.pos || '50% 50%' %>" id="imprev-<%= im.id %>" />
     <% if (im.is_cover) { %><span class="cover-tag">Ảnh bìa</span><% } %>
     <div class="img-actions">
       <form method="post" action="/admin/images/<%= im.id %>/move"><input type="hidden" name="dir" value="up" /><button title="Lên trước">←</button></form>
@@ -43,10 +45,41 @@
       <% if (!im.is_cover) { %>
       <form method="post" action="/admin/images/<%= im.id %>/cover"><button title="Đặt làm ảnh bìa">★</button></form>
       <% } %>
+      <form method="post" action="/admin/images/<%= im.id %>/replace" enctype="multipart/form-data" class="inline-form">
+        <label class="img-replace" title="Thay bằng ảnh khác từ máy tính">
+          ⇄<input type="file" name="photo" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()" hidden />
+        </label>
+      </form>
       <form method="post" action="/admin/images/<%= im.id %>/delete" onsubmit="return confirm('Xoá ảnh này?')"><button title="Xoá" class="danger">✕</button></form>
+    </div>
+    <div class="pos-ctl" title="Căn phần ảnh hiển thị khi bị cắt: kéo trái = lấy phần trên, kéo phải = lấy phần dưới">
+      <span>↑</span>
+      <input type="range" min="0" max="100" step="5"
+        value="<%= parseInt((im.pos || '50% 50%').split(' ')[1]) || 50 %>"
+        data-id="<%= im.id %>" class="pos-slider" aria-label="Căn vị trí dọc của ảnh" />
+      <span>↓</span>
     </div>
   </div>
   <% }) %>
 </div>
+
+<script>
+// Căn vị trí crop: xem trước ngay trên thumbnail, tự lưu sau khi ngừng kéo 0.4s
+document.querySelectorAll('.pos-slider').forEach(sl => {
+  let t;
+  sl.addEventListener('input', () => {
+    const id = sl.dataset.id;
+    document.getElementById('imprev-' + id).style.objectPosition = '50% ' + sl.value + '%';
+    clearTimeout(t);
+    t = setTimeout(() => {
+      fetch('/admin/images/' + id + '/pos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ x: 50, y: Number(sl.value) })
+      }).then(r => { if (r.ok) sl.classList.add('saved'); setTimeout(() => sl.classList.remove('saved'), 900); });
+    }, 400);
+  });
+});
+</script>
 
 <%- include('partials/bottom') %>

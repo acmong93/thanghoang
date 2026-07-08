@@ -106,6 +106,10 @@ CREATE TABLE IF NOT EXISTS vips (
 /* Migration cho database tạo trước khi có cột quote */
 try { db.exec("ALTER TABLE vips ADD COLUMN quote TEXT NOT NULL DEFAULT ''"); } catch (e) { /* đã có */ }
 
+/* Migration: vị trí hiển thị khi ảnh bị cắt (object-position, VD '50% 30%') */
+try { db.exec("ALTER TABLE images ADD COLUMN pos TEXT NOT NULL DEFAULT '50% 50%'"); } catch (e) { /* đã có */ }
+try { db.exec("ALTER TABLE vips ADD COLUMN pos TEXT NOT NULL DEFAULT '50% 50%'"); } catch (e) { /* đã có */ }
+
 /* ---------- helpers ---------- */
 const get = (sql, ...args) => db.prepare(sql).get(...args);
 const all = (sql, ...args) => db.prepare(sql).all(...args);

@@ -46,7 +46,7 @@
     <div class="albums-grid cols-3">
       <% others.forEach(a => { %>
       <a class="album-card reveal" href="/album/<%= a.slug %>">
-        <img loading="lazy" src="<%= a.cover.thumb || a.cover.file %>" alt="<%= a.name %>" />
+        <img loading="lazy" src="<%= a.cover.thumb || a.cover.file %>" alt="<%= a.name %>" style="object-position:<%= a.cover.pos || '50% 50%' %>" />
         <div class="meta">
           <div class="t"><%= a.tag %></div>
           <h3><%= a.name %></h3>

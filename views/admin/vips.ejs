@@ -29,7 +29,16 @@
   <% vips.forEach(v => { %>
   <div class="panel" style="margin-bottom:12px">
     <form method="post" action="/admin/vips/<%= v.id %>" enctype="multipart/form-data" class="vip-row">
-      <img class="vip-thumb" src="<%= v.image %>" alt="" loading="lazy" />
+      <div class="vip-thumb-box">
+        <img class="vip-thumb" src="<%= v.image %>" alt="" loading="lazy" style="object-position:<%= v.pos || '50% 50%' %>" id="vipprev-<%= v.id %>" />
+        <div class="pos-ctl" title="Căn phần ảnh hiển thị trong thẻ (kéo trái = phần trên, phải = phần dưới)">
+          <span>↑</span>
+          <input type="range" min="0" max="100" step="5"
+            value="<%= parseInt((v.pos || '50% 50%').split(' ')[1]) || 50 %>"
+            data-id="<%= v.id %>" class="pos-slider" aria-label="Căn vị trí dọc của ảnh" />
+          <span>↓</span>
+        </div>
+      </div>
       <div class="grid-form" style="flex:1">
         <label>Tên <input name="name" value="<%= v.name %>" required /></label>
         <label>Dòng phụ <input name="tag" value="<%= v.tag %>" /></label>
@@ -59,8 +68,28 @@
 
 <style>
 .vip-row{display:flex;gap:18px;align-items:flex-start}
-.vip-thumb{width:150px;aspect-ratio:16/11;object-fit:cover;border-radius:8px;flex-shrink:0}
+.vip-thumb-box{width:170px;flex-shrink:0}
+.vip-thumb{width:100%;aspect-ratio:16/11;object-fit:cover;border-radius:8px}
 @media(max-width:700px){.vip-row{flex-direction:column}}
 </style>
+
+<script>
+// Căn vị trí crop ảnh VIP: xem trước ngay, tự lưu sau khi ngừng kéo 0.4s
+document.querySelectorAll('.pos-slider').forEach(sl => {
+  let t;
+  sl.addEventListener('input', () => {
+    const id = sl.dataset.id;
+    document.getElementById('vipprev-' + id).style.objectPosition = '50% ' + sl.value + '%';
+    clearTimeout(t);
+    t = setTimeout(() => {
+      fetch('/admin/vips/' + id + '/pos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ x: 50, y: Number(sl.value) })
+      });
+    }, 400);
+  });
+});
+</script>
 
 <%- include('partials/bottom') %>

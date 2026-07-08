@@ -67,7 +67,7 @@
         <% vips.forEach(v => { %>
         <% if (v.album_slug) { %>
         <a class="vip-card" href="/album/<%= v.album_slug %>">
-          <img loading="lazy" src="<%= v.image %>" alt="<%= v.name %>" />
+          <img loading="lazy" src="<%= v.image %>" alt="<%= v.name %>" style="object-position:<%= v.pos || '50% 50%' %>" />
           <div class="meta">
             <div class="t"><%= v.tag %></div><h3><%= v.name %></h3>
             <% if (v.quote) { %><p class="q">&ldquo;<%= v.quote %>&rdquo;</p><% } %>
@@ -75,7 +75,7 @@
         </a>
         <% } else { %>
         <div class="vip-card">
-          <img loading="lazy" src="<%= v.image %>" alt="<%= v.name %>" />
+          <img loading="lazy" src="<%= v.image %>" alt="<%= v.name %>" style="object-position:<%= v.pos || '50% 50%' %>" />
           <div class="meta">
             <div class="t"><%= v.tag %></div><h3><%= v.name %></h3>
             <% if (v.quote) { %><p class="q">&ldquo;<%= v.quote %>&rdquo;</p><% } %>
@@ -101,7 +101,7 @@
     <div class="albums-grid">
       <% weddingAlbums.forEach(a => { %>
       <a class="album-card reveal" href="/album/<%= a.slug %>">
-        <img loading="lazy" src="<%= a.cover.thumb || a.cover.file %>" alt="<%= a.name %>" />
+        <img loading="lazy" src="<%= a.cover.thumb || a.cover.file %>" alt="<%= a.name %>" style="object-position:<%= a.cover.pos || '50% 50%' %>" />
         <div class="meta">
           <div class="t"><%= a.tag %></div>
           <h3><%= a.name %></h3>
@@ -125,7 +125,7 @@
     <div class="sig-grid">
       <% signatureAlbums.forEach(a => { %>
       <a class="sig-card reveal" href="/album/<%= a.slug %>">
-        <img loading="lazy" src="<%= a.cover.file %>" alt="<%= a.name %>" />
+        <img loading="lazy" src="<%= a.cover.file %>" alt="<%= a.name %>" style="object-position:<%= a.cover.pos || '50% 50%' %>" />
         <div class="meta">
           <div class="t"><%= a.tag %></div>
           <h3><%= a.name %></h3>

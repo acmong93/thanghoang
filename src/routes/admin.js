@@ -135,6 +135,42 @@ router.post('/albums/:id/images', upload.array('photos', 40), async (req, res) =
   res.redirect('/admin/albums/' + album.id);
 });
 
+/* Thay ảnh tại chỗ: giữ nguyên thứ tự + ảnh bìa, xoá file cũ nếu là ảnh upload */
+router.post('/images/:id/replace', upload.single('photo'), async (req, res) => {
+  const img = get('SELECT i.*, a.slug AS album_slug FROM images i JOIN albums a ON a.id = i.album_id WHERE i.id = ?', req.params.id);
+  if (img && req.file) {
+    const dir = path.join(UPLOAD_DIR, img.album_slug);
+    fs.mkdirSync(dir, { recursive: true });
+    const base = Date.now() + '-' + Math.round(Math.random() * 1e4);
+    try {
+      const sh = sharp(req.file.buffer, { failOn: 'none' }).rotate();
+      await sh.clone().resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 82 })
+        .toFile(path.join(dir, `${base}.webp`));
+      await sh.clone().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 74 })
+        .toFile(path.join(dir, `${base}-thumb.webp`));
+      for (const f of [img.file, img.thumb]) {
+        if (f && f.startsWith('/uploads/')) {
+          fs.rm(path.join(__dirname, '..', '..', 'public', f), { force: true }, () => {});
+        }
+      }
+      run("UPDATE images SET file=?, thumb=?, pos='50% 50%' WHERE id=?",
+        `/uploads/${img.album_slug}/${base}.webp`, `/uploads/${img.album_slug}/${base}-thumb.webp`, img.id);
+    } catch (e) {
+      console.error('[replace]', e.message);
+    }
+  }
+  res.redirect(req.get('referer') || '/admin/albums');
+});
+
+/* Căn vị trí hiển thị khi ảnh bị cắt (object-position) — gọi bằng fetch, trả JSON */
+function clampPct(v) { return Math.min(100, Math.max(0, Math.round(Number(v) || 0))); }
+
+router.post('/images/:id/pos', (req, res) => {
+  const pos = `${clampPct(req.body.x ?? 50)}% ${clampPct(req.body.y ?? 50)}%`;
+  run('UPDATE images SET pos = ? WHERE id = ?', pos, req.params.id);
+  res.json({ ok: true, pos });
+});
+
 router.post('/images/:id/delete', (req, res) => {
   const img = get('SELECT * FROM images WHERE id = ?', req.params.id);
   if (img) {
@@ -305,6 +341,12 @@ router.post('/vips/:id', upload.single('image'), async (req, res) => {
   res.redirect('/admin/vips');
 });
 
+router.post('/vips/:id/pos', (req, res) => {
+  const pos = `${clampPct(req.body.x ?? 50)}% ${clampPct(req.body.y ?? 50)}%`;
+  run('UPDATE vips SET pos = ? WHERE id = ?', pos, req.params.id);
+  res.json({ ok: true, pos });
+});
+
 router.post('/vips/:id/move', (req, res) => {
   const vip = get('SELECT * FROM vips WHERE id = ?', req.params.id);
   const dir = req.body.dir === 'up' ? -1 : 1;
@@ -363,6 +405,39 @@ router.get('/settings', (req, res) => {
     s: allSettings(),
     videos: all('SELECT * FROM videos ORDER BY sort_order')
   });
+});
+
+/* Thay ảnh các vị trí cố định (hero, câu chuyện, váy cưới, phóng sự) bằng upload */
+const IMAGE_SETTING_KEYS = ['about_img_1', 'about_img_2', 'about_img_3', 'feature_vay_img', 'feature_phongsu_img'];
+
+router.post('/settings/image', upload.single('photo'), async (req, res) => {
+  const key = String(req.body.key || '');
+  const heroMatch = key.match(/^hero_([0-9])$/);
+  if (req.file && (IMAGE_SETTING_KEYS.includes(key) || heroMatch)) {
+    const dir = path.join(UPLOAD_DIR, 'site');
+    fs.mkdirSync(dir, { recursive: true });
+    const base = Date.now() + '-' + Math.round(Math.random() * 1e4);
+    try {
+      await sharp(req.file.buffer, { failOn: 'none' }).rotate()
+        .resize({ width: heroMatch ? 1920 : 1600, withoutEnlargement: true }).webp({ quality: 82 })
+        .toFile(path.join(dir, `${base}.webp`));
+      const p = `/uploads/site/${base}.webp`;
+      if (heroMatch) {
+        let arr = [];
+        try { arr = JSON.parse(allSettings().hero_images || '[]'); } catch (e) {}
+        const idx = Number(heroMatch[1]);
+        if (idx < arr.length) {
+          arr[idx] = p;
+          setSetting('hero_images', JSON.stringify(arr));
+        }
+      } else {
+        setSetting(key, p);
+      }
+    } catch (e) {
+      console.error('[settings-image]', e.message);
+    }
+  }
+  res.redirect('/admin/settings');
 });
 
 router.post('/settings', (req, res) => {
