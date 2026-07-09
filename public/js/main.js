@@ -186,54 +186,18 @@
     next && next.addEventListener('click', () => vipTrack.scrollBy({ left: step(), behavior: 'smooth' }));
   }
 
-  /* ---------- Form đặt lịch ---------- */
-  const form = document.getElementById('bookForm');
-  if (form) {
-    const msg = document.getElementById('formMsg');
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const name = form.name.value.trim();
-      const phone = form.phone.value.trim();
-      msg.className = 'form-msg';
-
-      if (!name || !phone) {
-        msg.classList.add('err');
-        msg.textContent = 'Vui lòng nhập họ tên và số điện thoại.';
-        (!name ? form.name : form.phone).focus();
-        return;
-      }
-
-      const btn = form.querySelector('button[type=submit]');
-      const label = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = 'Đang gửi...';
-
-      try {
-        const res = await fetch('/api/booking', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name, phone,
-            service: form.service.value,
-            message: form.message.value.trim()
-          })
-        });
-        const data = await res.json();
-        if (data.ok) {
-          msg.classList.add('ok');
-          msg.textContent = 'Cảm ơn ' + name + '! Rosé sẽ liên hệ với bạn trong thời gian sớm nhất.';
-          form.reset();
-        } else {
-          msg.classList.add('err');
-          msg.textContent = data.error || 'Có lỗi xảy ra, vui lòng thử lại hoặc gọi hotline.';
-        }
-      } catch (err) {
-        msg.classList.add('err');
-        msg.textContent = 'Không gửi được yêu cầu. Vui lòng thử lại hoặc gọi hotline.';
-      } finally {
-        btn.disabled = false;
-        btn.textContent = label;
-      }
-    });
-  }
+  /* ---------- Video YouTube: chỉ tải iframe khi bấm play (nhẹ trang) ---------- */
+  document.querySelectorAll('.v[data-yt]').forEach(v => {
+    const play = () => {
+      const id = v.dataset.yt;
+      const f = document.createElement('iframe');
+      f.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+      f.title = v.dataset.title || 'Video Rosé Wedding';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      v.replaceChildren(f);
+    };
+    v.addEventListener('click', play);
+    v.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
+  });
 })();

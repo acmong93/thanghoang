@@ -21,6 +21,12 @@
   <label class="full">Địa chỉ studio <input name="address" value="<%= s.address %>" /></label>
   <label>Instagram <input name="instagram" value="<%= s.instagram %>" /></label>
   <label>Facebook <input name="facebook" value="<%= s.facebook %>" /></label>
+  <label>Số Zalo (nút liên hệ nhanh) <input name="zalo" value="<%= s.zalo || '' %>" placeholder="VD: 0966669935" /></label>
+  <label>Link Messenger <input name="messenger" value="<%= s.messenger || '' %>" placeholder="VD: https://m.me/RoseWeddingHanoi" /></label>
+  <label>TikTok (để trống thì ẩn) <input name="tiktok" value="<%= s.tiktok || '' %>" placeholder="https://www.tiktok.com/@..." /></label>
+  <label>YouTube (để trống thì ẩn) <input name="youtube" value="<%= s.youtube || '' %>" placeholder="https://www.youtube.com/@..." /></label>
+  <label>Google Analytics ID (để trống thì tắt) <input name="ga_id" value="<%= s.ga_id || '' %>" placeholder="VD: G-XXXXXXXXXX" /></label>
+  <label>Meta Pixel ID (để trống thì tắt) <input name="fb_pixel_id" value="<%= s.fb_pixel_id || '' %>" placeholder="VD: 1234567890" /></label>
   <label class="full">Link nhúng Google Maps <input name="map_embed" value="<%= s.map_embed %>" /></label>
   <label class="full">Ghi chú bảng giá <textarea name="pricing_note" rows="2"><%= s.pricing_note %></textarea></label>
   <div class="row-btns"><button type="submit" class="ad-btn primary">Lưu cài đặt</button></div>

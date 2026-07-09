@@ -184,7 +184,10 @@
     <div class="video-grid reveal">
       <% videos.forEach(v => { %>
       <div>
-        <div class="v"><iframe loading="lazy" src="https://www.youtube.com/embed/<%= v.youtube_id %>" title="<%= v.title %>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="v" data-yt="<%= v.youtube_id %>" data-title="<%= v.title %>" role="button" tabindex="0" aria-label="Phát video: <%= v.title %>">
+          <img loading="lazy" src="https://i.ytimg.com/vi/<%= v.youtube_id %>/hqdefault.jpg" alt="<%= v.title %>" />
+          <span class="yt-play" aria-hidden="true"></span>
+        </div>
         <div class="cap"><%= v.title %></div>
       </div>
       <% }) %>

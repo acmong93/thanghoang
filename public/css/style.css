@@ -201,8 +201,13 @@ header.solid .burger span{background:var(--ink)}
 
 /* Video */
 .video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.video-grid .v{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--ink);border:1px solid var(--line)}
+.video-grid .v{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--ink);border:1px solid var(--line);cursor:pointer}
 .video-grid iframe{width:100%;height:100%;border:0;display:block}
+.video-grid .v img{transition:.6s var(--ease)}
+.video-grid .v:hover img{transform:scale(1.04);opacity:.85}
+.yt-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:62px;height:44px;background:rgba(20,18,16,.78);border-radius:10px;transition:.3s var(--ease)}
+.yt-play::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-40%,-50%);border-style:solid;border-width:9px 0 9px 15px;border-color:transparent transparent transparent #fff}
+.video-grid .v:hover .yt-play{background:var(--gold)}
 .video-grid .cap{margin-top:12px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-align:center}
 
 /* Pricing teaser cards */
@@ -385,6 +390,33 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
 .vip-nav.prev{left:-14px}
 .vip-nav.next{right:-14px}
 @media(max-width:680px){.vip-nav{display:none}}
+
+/* ===== Liên hệ nhanh: khối nút trong section Đặt lịch ===== */
+.quick-contact{display:grid;gap:14px;align-content:start}
+.qc-lead{color:var(--muted);font-size:14.5px;margin-bottom:4px}
+.qc-btn{display:flex;align-items:center;gap:16px;border:1px solid var(--line);background:var(--pearl);padding:18px 22px;transition:.4s var(--ease)}
+.qc-btn:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--gold)}
+.qc-btn svg{width:26px;height:26px;flex-shrink:0}
+.qc-btn em{font-style:normal;font-weight:700;font-size:15px;letter-spacing:.02em;flex-shrink:0;width:26px;text-align:center;line-height:1}
+.qc-btn span{font-size:14px;color:var(--muted)}
+.qc-btn span b{display:block;font-weight:500;color:var(--ink);font-size:16.5px;margin-top:2px}
+.qc-call svg{color:var(--gold-deep)}
+.qc-zalo em{color:#0068FF}
+.qc-mess svg{color:#8b5cf6}
+.qc-note{font-size:13px;margin-top:6px}
+
+/* ===== Nút liên hệ nhanh nổi (mọi trang) ===== */
+.quick-dock{position:fixed;left:16px;bottom:18px;z-index:90;display:flex;flex-direction:column;gap:10px}
+.qd{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 8px 24px -6px rgba(30,28,26,.45);transition:.3s var(--ease);font-weight:700;font-size:12.5px;letter-spacing:.01em}
+.qd:hover{transform:translateY(-3px) scale(1.05)}
+.qd svg{width:23px;height:23px}
+.qd-call{background:var(--gold)}
+.qd-zalo{background:#0068FF}
+.qd-mess{background:linear-gradient(135deg,#0099FF,#A033FF,#FF5280)}
+.qd-call{animation:qd-ring 2.6s ease-in-out infinite}
+@keyframes qd-ring{0%,100%{transform:rotate(0)}4%{transform:rotate(-14deg)}8%{transform:rotate(12deg)}12%{transform:rotate(-9deg)}16%{transform:rotate(6deg)}20%{transform:rotate(0)}}
+@media(prefers-reduced-motion:reduce){.qd-call{animation:none}}
+@media(max-width:680px){.quick-dock{left:12px;bottom:14px}.qd{width:44px;height:44px}}
 
 /* ===== CTA band (trang con) ===== */
 .cta-band{background:#000;color:var(--cream);padding:88px 0;text-align:center}

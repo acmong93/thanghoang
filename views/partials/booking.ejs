@@ -4,42 +4,33 @@
     <div class="info reveal">
       <span class="eyebrow">Đặt lịch tư vấn</span>
       <h2>Bắt đầu câu chuyện của bạn</h2>
-      <p>Để lại thông tin, đội ngũ Rosé sẽ liên hệ trong thời gian sớm nhất để lắng nghe và mời bạn tới studio trải nghiệm thử váy, tư vấn concept 1-1 hoàn toàn miễn phí.</p>
+      <p>Nhắn Zalo, Messenger hoặc gọi trực tiếp, đội ngũ Rosé sẽ lắng nghe và mời bạn tới studio trải nghiệm thử váy, tư vấn concept 1-1 hoàn toàn miễn phí.</p>
       <div class="contact-row"><b>Hotline</b><span><a href="tel:<%= s.hotline_tel %>"><%= s.hotline %></a></span></div>
       <div class="contact-row"><b>CSKH</b><span><a href="tel:<%= s.cskh_tel %>"><%= s.cskh %></a></span></div>
       <div class="contact-row"><b>Email</b><span><a href="mailto:<%= s.email %>"><%= s.email %></a></span></div>
       <div class="contact-row"><b>Studio</b><span><%= s.address %></span></div>
       <div class="contact-row"><b>Giờ mở</b><span><%= s.hours %></span></div>
     </div>
-    <form class="reveal" id="bookForm" novalidate>
-      <div class="f-row">
-        <div class="field">
-          <label for="bk-name">Họ &amp; tên <span aria-hidden="true">*</span></label>
-          <input id="bk-name" name="name" type="text" autocomplete="name" placeholder="Tên của bạn" required />
-        </div>
-        <div class="field">
-          <label for="bk-phone">Số điện thoại <span aria-hidden="true">*</span></label>
-          <input id="bk-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="09xx xxx xxx" required />
-        </div>
-      </div>
-      <div class="field">
-        <label for="bk-service">Dịch vụ quan tâm</label>
-        <select id="bk-service" name="service">
-          <option>Chụp ảnh cưới (Pre-Wedding)</option>
-          <option>Phóng sự cưới</option>
-          <option>Combo trọn gói</option>
-          <option>Váy cưới &amp; trang phục</option>
-          <option>Chụp gia đình</option>
-          <option>Khác, cần tư vấn thêm</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="bk-msg">Lời nhắn</label>
-        <textarea id="bk-msg" name="message" rows="4" placeholder="Chia sẻ đôi điều về câu chuyện của hai bạn..."></textarea>
-      </div>
-      <button type="submit" class="btn btn-block">Gửi yêu cầu tư vấn</button>
-      <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
-    </form>
+    <div class="quick-contact reveal">
+      <p class="qc-lead">Chọn kênh bạn quen dùng nhất, Rosé phản hồi ngay trong giờ mở cửa:</p>
+      <a class="qc-btn qc-call" href="tel:<%= s.hotline_tel %>">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        <span>Gọi ngay <b><%= s.hotline %></b></span>
+      </a>
+      <% if (s.zalo) { %>
+      <a class="qc-btn qc-zalo" href="https://zalo.me/<%= s.zalo.replace(/\D/g, '') %>" target="_blank" rel="noopener">
+        <em>Zalo</em>
+        <span>Chat Zalo <b><%= s.zalo %></b></span>
+      </a>
+      <% } %>
+      <% if (s.messenger) { %>
+      <a class="qc-btn qc-mess" href="<%= s.messenger %>" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.14 2 11.25c0 2.88 1.42 5.45 3.63 7.14V22l3.33-1.83c.95.26 1.96.4 3.04.4 5.52 0 10-4.14 10-9.25S17.52 2 12 2zm1.03 12.41l-2.49-2.66-4.87 2.66 5.36-5.69 2.55 2.66 4.81-2.66-5.36 5.69z"/></svg>
+        <span>Nhắn Messenger <b>Rosé Wedding Hà Nội</b></span>
+      </a>
+      <% } %>
+      <p class="qc-note muted">Hoặc ghé studio: <%= s.address %> · <%= s.hours %></p>
+    </div>
   </div>
   <div class="wrap map-outer">
     <div class="map-wrap reveal">

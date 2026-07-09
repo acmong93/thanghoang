@@ -20,8 +20,11 @@
         <a href="tel:<%= s.hotline_tel %>">Hotline <%= s.hotline %></a>
         <a href="tel:<%= s.cskh_tel %>">CSKH <%= s.cskh %></a>
         <a href="mailto:<%= s.email %>"><%= s.email %></a>
-        <a href="<%= s.instagram %>" target="_blank" rel="noopener">Instagram</a>
+        <% if (s.zalo) { %><a href="https://zalo.me/<%= s.zalo.replace(/\D/g, '') %>" target="_blank" rel="noopener">Zalo <%= s.zalo %></a><% } %>
         <a href="<%= s.facebook %>" target="_blank" rel="noopener">Facebook</a>
+        <a href="<%= s.instagram %>" target="_blank" rel="noopener">Instagram</a>
+        <% if (s.tiktok) { %><a href="<%= s.tiktok %>" target="_blank" rel="noopener">TikTok</a><% } %>
+        <% if (s.youtube) { %><a href="<%= s.youtube %>" target="_blank" rel="noopener">YouTube</a><% } %>
       </div>
     </div>
     <div class="copy">
@@ -30,4 +33,20 @@
     </div>
   </div>
 </footer>
+
+<!-- Nút liên hệ nhanh nổi (Gọi / Zalo / Messenger) -->
+<div class="quick-dock" aria-label="Liên hệ nhanh">
+  <a class="qd qd-call" href="tel:<%= s.hotline_tel %>" aria-label="Gọi <%= s.hotline %>" title="Gọi <%= s.hotline %>">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+  </a>
+  <% if (s.zalo) { %>
+  <a class="qd qd-zalo" href="https://zalo.me/<%= s.zalo.replace(/\D/g, '') %>" target="_blank" rel="noopener" aria-label="Chat Zalo" title="Chat Zalo">Zalo</a>
+  <% } %>
+  <% if (s.messenger) { %>
+  <a class="qd qd-mess" href="<%= s.messenger %>" target="_blank" rel="noopener" aria-label="Chat Messenger" title="Chat Messenger">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.14 2 11.25c0 2.88 1.42 5.45 3.63 7.14V22l3.33-1.83c.95.26 1.96.4 3.04.4 5.52 0 10-4.14 10-9.25S17.52 2 12 2zm1.03 12.41l-2.49-2.66-4.87 2.66 5.36-5.69 2.55 2.66 4.81-2.66-5.36 5.69z"/></svg>
+  </a>
+  <% } %>
+</div>
+
 <script src="/js/main.js?v=<%= v %>" defer></script>
