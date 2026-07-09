@@ -14,16 +14,27 @@
   const burger = document.getElementById('burger');
   const menu = document.getElementById('menu');
   if (burger && menu) {
+    const closeMenu = () => {
+      menu.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      document.body.classList.remove('menu-open');
+      // Thu gọn lại các menu con để lần mở sau sạch sẽ
+      menu.querySelectorAll('.has-drop.open').forEach(d => d.classList.remove('open'));
+    };
     burger.addEventListener('click', () => {
       const open = menu.classList.toggle('open');
       burger.classList.toggle('open', open);
       burger.setAttribute('aria-expanded', String(open));
       document.body.style.overflow = open ? 'hidden' : '';
+      document.body.classList.toggle('menu-open', open);
+      if (!open) menu.querySelectorAll('.has-drop.open').forEach(d => d.classList.remove('open'));
     });
-    // Dropdown trên mobile: chạm lần 1 mở, lần 2 đi tới link
+    // Dropdown trên mobile: chạm lần 1 mở menu con, chạm lần 2 đi tới link
     menu.querySelectorAll('.has-drop > .drop-toggle').forEach(t => {
       t.addEventListener('click', e => {
-        if (window.innerWidth <= 900) {
+        if (window.innerWidth <= 680) {
           const parent = t.parentElement;
           if (!parent.classList.contains('open')) {
             e.preventDefault();
@@ -33,12 +44,7 @@
       });
     });
     menu.querySelectorAll('a:not(.drop-toggle)').forEach(a =>
-      a.addEventListener('click', () => {
-        menu.classList.remove('open');
-        burger.classList.remove('open');
-        burger.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-      })
+      a.addEventListener('click', closeMenu)
     );
   }
 

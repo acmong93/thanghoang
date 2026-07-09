@@ -27,7 +27,8 @@ router.get('/', (req, res) => {
     signatureAlbums: albumsWithCover('signature'),
     vips: all('SELECT * FROM vips WHERE visible = 1 ORDER BY sort_order'),
     videos: all('SELECT * FROM videos WHERE visible = 1 ORDER BY sort_order'),
-    pricing: all('SELECT slug, name, tag FROM pricing WHERE visible = 1 ORDER BY sort_order')
+    /* Trang chủ lược bớt thẻ Váy cưới cho gọn (trang bảng giá vẫn đủ) */
+    pricing: all("SELECT slug, name, tag FROM pricing WHERE visible = 1 AND slug != 'vay-cuoi' ORDER BY sort_order")
   });
 });
 

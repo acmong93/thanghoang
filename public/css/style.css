@@ -211,7 +211,7 @@ header.solid .burger span{background:var(--ink)}
 .video-grid .cap{margin-top:12px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-align:center}
 
 /* Pricing teaser cards */
-.price-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+.price-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .price-cards a{background:var(--cream);border:1px solid var(--line);padding:38px 24px 30px;text-align:center;transition:.5s var(--ease);position:relative;display:block}
 .price-cards a::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:.5s var(--ease)}
 .price-cards a:hover{transform:translateY(-8px);box-shadow:var(--shadow);border-color:var(--gold)}
@@ -440,17 +440,25 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
   .sig-grid{grid-template-columns:1fr}
   .sig-card .meta{padding:34px 28px}
   .sig-card .meta h3{font-size:30px}
-  .price-cards{grid-template-columns:1fr 1fr 1fr}
+  .price-cards{grid-template-columns:1fr 1fr}
   .post-grid{grid-template-columns:1fr}
   .about-row{grid-template-columns:1fr;gap:36px}
   .about-row.rev .about-ph{order:0}
 }
 @media(max-width:680px){
-  .menu{position:fixed;inset:0;background:var(--cream);flex-direction:column;justify-content:center;gap:22px;transform:translateX(100%);transition:.5s var(--ease);overflow-y:auto;padding:80px 0;visibility:hidden}
-  .menu.open{transform:none;visibility:visible}
+  /* Ẩn bằng mờ dần thay vì đẩy sang phải: tránh tạo vùng tràn ngang trên trang con */
+  .menu{position:fixed;inset:0;background:var(--cream);flex-direction:column;justify-content:center;gap:26px;opacity:0;transform:scale(.98);transition:.45s var(--ease);overflow-y:auto;padding:80px 0;visibility:hidden}
+  .menu.open{opacity:1;transform:none;visibility:visible}
   .menu a{color:var(--ink)!important;font-size:15px}
-  .drop{position:static;transform:none;opacity:1;visibility:visible;box-shadow:none;border:none;background:transparent;padding:4px 0;min-width:0}
-  .drop a{color:var(--muted)!important;font-size:12px;padding:7px 0;text-align:center}
+  /* Menu con: thu gọn mặc định, chạm vào mục cha mới mở */
+  .drop{display:none;position:static;transform:none;opacity:1;visibility:visible;box-shadow:none;border:none;background:transparent;padding:6px 0 0;min-width:0}
+  .has-drop{text-align:center}
+  .has-drop.open .drop{display:block}
+  .has-drop>.drop-toggle::after{content:"\203A";display:inline-block;margin-left:8px;transform:rotate(90deg);transition:.3s var(--ease);position:static;width:auto;height:auto;background:none;font-size:14px;color:var(--gold-deep);vertical-align:1px}
+  .has-drop.open>.drop-toggle::after{transform:rotate(-90deg)}
+  .drop a{color:var(--muted)!important;font-size:12px;padding:8px 0;text-align:center}
+  /* Ẩn nút liên hệ nổi khi menu đang mở để không đè lên menu */
+  body.menu-open .quick-dock{opacity:0;pointer-events:none}
   .burger{display:flex;z-index:70}
   .burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);background:var(--ink)}
   .burger.open span:nth-child(2){opacity:0}
