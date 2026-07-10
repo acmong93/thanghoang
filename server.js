@@ -29,6 +29,18 @@ app.use(session({
 
 ensureAdmin();
 
+/* Khởi tạo dữ liệu lần đầu trên môi trường mới (VD: vừa deploy lên hosting):
+   database trống thì seed nội dung chuẩn + áp bảng giá 2027 (có marker, chỉ chạy 1 lần) */
+{
+  const { get } = require('./src/db');
+  const { execFileSync } = require('child_process');
+  if (get('SELECT COUNT(*) n FROM albums').n === 0) {
+    console.log('[init] Database trống — seed dữ liệu ban đầu...');
+    execFileSync(process.execPath, [path.join(__dirname, 'scripts', 'seed.js')], { stdio: 'inherit' });
+  }
+  execFileSync(process.execPath, [path.join(__dirname, 'scripts', 'update-pricing-2027.js')], { stdio: 'inherit' });
+}
+
 /* URL gốc cho SEO (canonical, og:url, sitemap).
    Ưu tiên: biến môi trường SITE_URL > cài đặt site_url trong admin > host của request */
 app.use((req, res, next) => {

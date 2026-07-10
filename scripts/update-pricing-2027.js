@@ -4,7 +4,14 @@
  * An toàn chạy lại nhiều lần (ghi đè intro + tiers của 4 nhóm; váy cưới giữ nguyên).
  */
 require('dotenv').config();
-const { run, get } = require('../src/db');
+const { run, get, setting, setSetting } = require('../src/db');
+
+/* Chỉ áp 1 lần (server gọi lúc khởi động); anh Thắng sửa giá qua admin sẽ không bị ghi đè.
+   Muốn áp lại từ đầu: node scripts/update-pricing-2027.js --force */
+if (setting('pricing_2027_applied') === '1' && !process.argv.includes('--force')) {
+  console.log('[pricing] Bảng giá 2027 đã áp trước đó — bỏ qua (dùng --force để áp lại).');
+  process.exit(0);
+}
 
 const data = {
   'anh-cuoi': {
@@ -260,4 +267,5 @@ for (const [slug, d] of Object.entries(data)) {
   run('UPDATE pricing SET intro = ?, tiers_json = ? WHERE slug = ?', d.intro, JSON.stringify(d.tiers), slug);
   console.log('Đã cập nhật', slug + ':', d.tiers.length, 'gói');
 }
+setSetting('pricing_2027_applied', '1');
 console.log('Xong. Nhóm váy cưới giữ nguyên.');

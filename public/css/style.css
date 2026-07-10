@@ -265,8 +265,8 @@ header.solid .burger span{background:var(--ink)}
 /* Footer */
 footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
 .foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:50px;padding-bottom:50px;border-bottom:1px solid rgba(250,248,244,.12)}
-.foot .brand{color:#fff;font-size:30px}
-.foot-tagline{font-size:9.5px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-top:8px}
+.foot .brand{color:#fff;font-size:42px}
+.foot-tagline{font-size:12px;letter-spacing:.44em;text-transform:uppercase;color:var(--gold);margin-top:10px}
 .foot h4{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-family:'Montserrat';font-weight:500}
 .foot a{display:block;padding:6px 0;font-size:14px;transition:.3s;color:rgba(250,248,244,.78)}
 .foot a:hover{color:var(--gold)}
@@ -371,12 +371,12 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
 .vip-card .q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14.5px;color:rgba(255,255,255,.85);margin-top:8px;line-height:1.5}
 
 /* Slogan ở footer */
-.foot-slogan{font-family:'Cormorant Garamond','Playfair Display',serif;font-style:italic;font-size:17px;color:rgba(250,248,244,.85);margin-top:16px}
+.foot p.foot-slogan{font-family:'Cormorant Garamond','Playfair Display',serif;font-style:italic;font-size:22px;color:rgba(250,248,244,.92);margin-top:18px;max-width:none}
 .foot-slogan + p{margin-top:10px}
 
 /* Hàng mạng xã hội dưới slogan */
-.foot-social{display:flex;gap:8px 18px;flex-wrap:wrap;margin-top:20px}
-.foot-social a{display:inline-block;padding:2px 0;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(250,248,244,.65)}
+.foot-social{display:flex;gap:10px 22px;flex-wrap:wrap;margin-top:24px}
+.foot-social a{display:inline-block;padding:2px 0;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:rgba(250,248,244,.8)}
 .foot-social a:hover{color:var(--gold)}
 
 /* Dòng thông tin tĩnh trong cột footer (không phải link) */
