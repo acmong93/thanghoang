@@ -1,7 +1,7 @@
 /**
  * Render từng trang "Portfolio Rose wedding.pdf" thành ảnh WebP cho trang Về Rosé.
  * Chạy 1 lần trên máy local: node scripts/render-portfolio.js "D:/Báo giá/Portfolio Rose wedding.pdf"
- * Kết quả: public/img/portfolio/trang-01.webp ... (rộng 1600px, chất lượng 82)
+ * Kết quả: public/img/portfolio/trang-01.webp ... (rộng 1920px, chất lượng 82)
  */
 const path = require('path');
 const fs = require('fs');
@@ -27,7 +27,7 @@ async function main() {
 
   for (let i = 1; i <= doc.numPages; i++) {
     const page = await doc.getPage(i);
-    const scale = 1600 / page.getViewport({ scale: 1 }).width;
+    const scale = 1920 / page.getViewport({ scale: 1 }).width;
     const viewport = page.getViewport({ scale });
     const canvas = createCanvas(Math.round(viewport.width), Math.round(viewport.height));
     const ctx = canvas.getContext('2d');
