@@ -30,14 +30,15 @@ const data = {
         '01 video slide Basic, 02 ảnh để bàn 15x21',
         'Album 20x30 Ultra HD 20 trang'
       ]},
-      { name: 'Package 4', price: '12.800.000đ', note: '02 địa điểm nội thành · 8 giờ', highlight: false, items: [
+      { name: 'Package 4', price: '12.800.000đ', note: 'Được chọn nhiều nhất', highlight: true, items: [
+        '02 địa điểm nội thành · 8 giờ làm việc',
         '02 váy + 01 set tự chuẩn bị, 02 vest + 01 set',
         '02 ảnh 60x90, file gốc + 40 file photoshop',
         'Album 20x30 giấy Silk 30 trang, 02 ảnh để bàn',
         'Tặng thiệp cưới điện tử trị giá tối đa 2.000.000đ',
         'Tặng 02 clip TikTok (báo trước để sắp xếp ekip)'
       ]},
-      { name: 'Package 5', price: '14.800.000đ', note: 'Được chọn nhiều nhất', highlight: true, items: [
+      { name: 'Package 5', price: '14.800.000đ', note: '02-03 địa điểm nội thành · 10 giờ', highlight: false, items: [
         '02 váy + 01 set tự chuẩn bị, 02 vest + 01 set',
         '02-03 địa điểm nội thành · 10 giờ làm việc',
         '02 ảnh 60x90, file gốc + 40 file photoshop',
@@ -149,31 +150,21 @@ const data = {
   'combo': {
     intro: 'Ghép gói chụp, phóng sự JA Studio, váy áo ngày cưới và trang điểm trong một combo, tiết kiệm hơn hẳn đặt lẻ từng hạng mục. Giá niêm yết ghi kèm từng gói.',
     tiers: [
-      { name: 'Đồng Hành 1', price: '10.500.000đ', note: 'Niêm yết 18.800.000đ · chụp thứ 3-5 · 4 giờ', highlight: false, items: [
-        '01 váy + 01 vest cao cấp, trang điểm cô dâu',
-        '02 ảnh 50x75 Laminate, 15 file photoshop, video Basic',
-        'Chọn 2 trong 5 ưu đãi: mượn váy cưới 5-10 triệu, mượn vest cưới, nâng ảnh phóng 60x90, thêm 5 ảnh để bàn, thêm 15 file sửa chi tiết'
-      ]},
-      { name: 'Đồng Hành 2', price: '13.800.000đ', note: 'Niêm yết 22.800.000đ · chụp thứ 2-4-6 · 5 giờ', highlight: false, items: [
-        '02 váy + 01 vest cao cấp, trang điểm cô dâu',
-        '02 ảnh 60x90, 30 file photoshop, video Basic, 02 ảnh để bàn',
-        'Album 20x30 Ultra HD 20 trang',
-        'Mượn 01 váy ngày cưới 5-10 triệu + 01 bộ vest cưới'
-      ]},
-      { name: 'Combo 1', price: '16.500.000đ', note: 'Niêm yết 23.800.000đ · chụp + váy áo ngày cưới', highlight: false, items: [
+      { name: 'Combo 1', price: '16.500.000đ', note: 'Được chọn nhiều nhất', highlight: true, items: [
+        'Niêm yết 23.800.000đ: gói chụp + váy áo ngày cưới',
         'Gói chụp 9.800.000đ (02 váy, 01 vest)',
         'Mượn 01 váy ngày cưới 8-10 triệu',
         'Mượn 01 áo dài ăn hỏi hoặc 01 vest tối đa 4 triệu',
         '02 ảnh 60x90, 30 file photoshop, album 20x30 Ultra HD 20 trang'
       ]},
-      { name: 'Combo 2', price: '19.500.000đ', note: 'Niêm yết 26.800.000đ · chụp + váy áo ngày cưới', highlight: false, items: [
+      { name: 'Combo 2', price: '19.500.000đ', note: 'Được chọn nhiều nhất', highlight: true, items: [
+        'Niêm yết 26.800.000đ: gói chụp + váy áo ngày cưới',
         'Gói chụp 12.800.000đ',
         'Mượn 01 váy ngày cưới 8-10 triệu + áo dài hoặc vest tối đa 4 triệu',
         'Album 20x30 Silk 30 trang, 40 file photoshop',
         'Tặng thiệp cưới điện tử 2.000.000đ'
       ]},
-      { name: 'Combo 3', price: '24.800.000đ', note: 'Được chọn nhiều nhất', highlight: true, items: [
-        'Niêm yết 27.600.000đ: gói chụp + phóng sự cưới',
+      { name: 'Combo 3', price: '24.800.000đ', note: 'Niêm yết 27.600.000đ · chụp + phóng sự cưới', highlight: false, items: [
         'Gói chụp 12.800.000đ (02 váy + 02 vest)',
         'Phóng sự JA Studio 14.800.000đ: 02 máy ngày cưới + 02 máy ăn hỏi',
         'Album 20x30 Silk 30 trang, 40 file photoshop, thiệp điện tử'
@@ -252,6 +243,16 @@ const data = {
     ]
   }
 };
+
+/* GÓI VỚT KHÁCH — KHÔNG HIỂN THỊ TRÊN WEB (theo chốt của anh Thắng 2026-07-10).
+   Chỉ dùng khi tư vấn riêng cho khách không đủ ngân sách:
+   - Đồng Hành 1: 10.500.000đ (niêm yết 18.800.000đ) · chụp thứ 3-5 · 4 giờ
+     01 váy + 01 vest, 02 ảnh 50x75, 15 file PTS, video Basic.
+     Chọn 2/5 ưu đãi: mượn váy cưới 5-10tr, mượn vest, nâng ảnh 60x90,
+     +5 ảnh để bàn, +15 file sửa chi tiết.
+   - Đồng Hành 2: 13.800.000đ (niêm yết 22.800.000đ) · chụp thứ 2-4-6 · 5 giờ
+     02 váy + 01 vest, 02 ảnh 60x90, 30 file PTS, album 20x30 Ultra HD 20 trang.
+     Mượn 01 váy ngày cưới 5-10tr + 01 vest cưới. */
 
 for (const [slug, d] of Object.entries(data)) {
   const row = get('SELECT id FROM pricing WHERE slug = ?', slug);
