@@ -118,7 +118,8 @@ header.solid .burger span{background:var(--ink)}
 .sec-head{max-width:700px;margin:0 auto 64px}
 .sec-head .eyebrow{display:block;margin-bottom:18px}
 .sec-head h2{font-size:clamp(30px,4.5vw,50px)}
-.sec-head p{margin-top:20px;color:var(--muted);font-size:15.5px}
+.sec-head p{margin-top:20px;color:var(--muted);font-size:15.5px;text-wrap:balance}
+.page-hero p{text-wrap:balance}
 @media(min-width:980px){.sec-head p.one-line{white-space:nowrap;margin-left:-90px;margin-right:-90px}}
 
 /* About */
@@ -126,8 +127,10 @@ header.solid .burger span{background:var(--ink)}
 .about-row + .about-row{margin-top:46px}
 .about-ph{display:grid;gap:16px}
 .about-ph.duo{grid-template-columns:1fr 1fr}
-.about-ph figure{overflow:hidden;aspect-ratio:3/4;background:var(--paper)}
-.about-ph.single figure{aspect-ratio:4/5}
+.about-ph figure{overflow:hidden;aspect-ratio:2/3;background:var(--paper)}
+/* Ảnh lớn: hiển thị trọn khung hình gốc, không cắt */
+.about-ph.single figure{aspect-ratio:auto}
+.about-ph.single img{height:auto}
 .about-ph img{transition:1.2s var(--ease)}
 .about-ph figure:hover img{transform:scale(1.06)}
 .about-tx h2{font-size:clamp(28px,4vw,46px);margin:16px 0 24px}
