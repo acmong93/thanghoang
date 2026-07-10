@@ -48,6 +48,35 @@
   </div>
 </section>
 
+<% if (portfolio.length) { %>
+<!-- PORTFOLIO -->
+<section class="pad bg-pearl" id="portfolio">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Portfolio</span>
+      <h2>Hồ sơ năng lực <span class="italic">Rosé Wedding</span></h2>
+      <p>Trọn bộ portfolio chính thức của Rosé. Bấm vào từng trang để xem phóng to.</p>
+    </div>
+    <div class="portfolio-grid" id="gallery">
+      <% portfolio.forEach((p, i) => { %>
+      <figure class="reveal">
+        <img loading="lazy" src="<%= p %>" alt="Portfolio Rosé Wedding trang <%= i + 1 %>" tabindex="0" />
+      </figure>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Xem trang portfolio phóng to" hidden>
+  <button class="lb-close" id="lbClose" aria-label="Đóng">&times;</button>
+  <button class="lb-prev" id="lbPrev" aria-label="Trang trước">&lsaquo;</button>
+  <img id="lbImg" src="" alt="" />
+  <button class="lb-next" id="lbNext" aria-label="Trang sau">&rsaquo;</button>
+  <div class="lb-count" id="lbCount"></div>
+</div>
+<% } %>
+
 <section class="cta-band reveal">
   <div class="wrap center">
     <h2>Để chúng tôi kể <span class="italic">câu chuyện của bạn?</span></h2>

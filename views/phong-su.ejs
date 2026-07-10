@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<%- include('partials/head', { title: 'Phóng Sự Cưới', desc: 'Album phóng sự cưới Rosé Wedding x JA Studio: những khoảnh khắc chân thật của lễ ăn hỏi và ngày cưới, không dàn dựng, chỉ có cảm xúc thật.' }) %>
+</head>
+<body>
+<%- include('partials/header', { solidHeader: true }) %>
+
+<main id="main">
+<section class="page-hero">
+  <div class="wrap center">
+    <span class="eyebrow">Phóng sự cưới</span>
+    <h1>Khoảnh khắc <span class="italic">chân thật</span></h1>
+    <p>Từ giây phút chuẩn bị, ánh mắt rưng rưng của cha mẹ, đến lời hẹn ước trao nhau. Không dàn dựng, chỉ có cảm xúc thật của ngày trọng đại.</p>
+  </div>
+</section>
+
+<section class="pad-sm bg-pearl">
+  <div class="wrap">
+    <% if (albums.length) { %>
+    <div class="albums-grid">
+      <% albums.forEach(a => { %>
+      <a class="album-card reveal" href="/album/<%= a.slug %>">
+        <img loading="lazy" src="<%= a.cover.thumb || a.cover.file %>" alt="<%= a.name %>" style="object-position:<%= a.cover.pos || '50% 50%' %>" />
+        <div class="meta">
+          <div class="t"><%= a.tag %></div>
+          <h3><%= a.name %></h3>
+          <div class="go">Xem bộ sưu tập&ensp;&rsaquo;</div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+    <% } else { %>
+    <p class="center muted">Album phóng sự đang được cập nhật. Nhắn Rosé để xem trọn bộ ảnh thật nhé.</p>
+    <% } %>
+  </div>
+</section>
+
+<section class="cta-band reveal">
+  <div class="wrap center">
+    <h2>Để ngày cưới của bạn <span class="italic">được kể lại trọn vẹn?</span></h2>
+    <a href="/#booking" class="btn btn-gold mt-24">Đặt lịch tư vấn miễn phí</a>
+  </div>
+</section>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

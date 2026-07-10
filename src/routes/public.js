@@ -71,9 +71,25 @@ router.get('/vay-cuoi', (req, res) => {
   res.render('vay-cuoi', { ...base(), page: 'vay-cuoi', images });
 });
 
+/* ============ PHÓNG SỰ (danh sách album) ============ */
+router.get('/phong-su', (req, res) => {
+  res.render('phong-su', {
+    ...base(), page: 'phong-su',
+    albums: albumsWithCover('phong-su')
+  });
+});
+
 /* ============ CÂU CHUYỆN ============ */
 router.get('/cau-chuyen', (req, res) => {
-  res.render('cau-chuyen', { ...base(), page: 'cau-chuyen' });
+  // Trang portfolio render sẵn trong public/img/portfolio (scripts/render-portfolio.js)
+  const fs = require('fs');
+  const path = require('path');
+  let portfolio = [];
+  try {
+    portfolio = fs.readdirSync(path.join(__dirname, '..', '..', 'public', 'img', 'portfolio'))
+      .filter(f => f.endsWith('.webp')).sort().map(f => '/img/portfolio/' + f);
+  } catch (e) { /* chưa render portfolio */ }
+  res.render('cau-chuyen', { ...base(), page: 'cau-chuyen', portfolio });
 });
 
 /* ============ TIN TỨC ============ */
@@ -99,7 +115,7 @@ router.get('/robots.txt', (req, res) => {
 });
 
 router.get('/sitemap.xml', (req, res) => {
-  const urls = ['/', '/anh-cuoi', '/vay-cuoi', '/cau-chuyen', '/tin-tuc'];
+  const urls = ['/', '/anh-cuoi', '/phong-su', '/vay-cuoi', '/cau-chuyen', '/tin-tuc'];
   all('SELECT slug FROM pricing WHERE visible = 1 ORDER BY sort_order').forEach(p => urls.push(`/bang-gia/${p.slug}`));
   all('SELECT slug FROM albums WHERE visible = 1 ORDER BY sort_order').forEach(a => urls.push(`/album/${a.slug}`));
   all('SELECT slug FROM posts WHERE visible = 1 ORDER BY created_at DESC').forEach(p => urls.push(`/tin-tuc/${p.slug}`));
