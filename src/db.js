@@ -125,14 +125,19 @@ function allSettings() {
   return out;
 }
 
-/* Đảm bảo tài khoản admin tồn tại (tạo từ .env lần đầu) */
+/* Đảm bảo tài khoản admin tồn tại (tạo từ .env lần đầu).
+   Khi ADMIN_PASSWORD được đặt trong môi trường, mật khẩu luôn đồng bộ theo đó:
+   đổi biến môi trường rồi khởi động lại là đổi được mật khẩu (kể cả khi quên). */
 function ensureAdmin() {
   const user = process.env.ADMIN_USER || 'admin';
   const pass = process.env.ADMIN_PASSWORD || 'rosewedding';
-  const existing = get('SELECT id FROM users WHERE username = ?', user);
+  const existing = get('SELECT id, password_hash FROM users WHERE username = ?', user);
   if (!existing) {
     run('INSERT INTO users(username, password_hash) VALUES(?,?)', user, bcrypt.hashSync(pass, 10));
     console.log(`[db] Đã tạo tài khoản quản trị "${user}"`);
+  } else if (process.env.ADMIN_PASSWORD && !bcrypt.compareSync(pass, existing.password_hash)) {
+    run('UPDATE users SET password_hash = ? WHERE id = ?', bcrypt.hashSync(pass, 10), existing.id);
+    console.log(`[db] Đã cập nhật mật khẩu quản trị "${user}" theo ADMIN_PASSWORD`);
   }
 }
 
