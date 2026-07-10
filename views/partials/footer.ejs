@@ -5,6 +5,13 @@
         <div class="brand serif">Rosé Wedding</div>
         <div class="foot-tagline"><%= s.tagline %></div>
         <% if (s.slogan) { %><p class="foot-slogan">&ldquo;<%= s.slogan %>&rdquo;</p><% } %>
+        <div class="foot-social">
+          <a href="<%= s.facebook %>" target="_blank" rel="noopener">Facebook</a>
+          <a href="<%= s.instagram %>" target="_blank" rel="noopener">Instagram</a>
+          <% if (s.zalo) { %><a href="https://zalo.me/<%= s.zalo.replace(/\D/g, '') %>" target="_blank" rel="noopener">Zalo</a><% } %>
+          <% if (s.tiktok) { %><a href="<%= s.tiktok %>" target="_blank" rel="noopener">TikTok</a><% } %>
+          <% if (s.youtube) { %><a href="<%= s.youtube %>" target="_blank" rel="noopener">YouTube</a><% } %>
+        </div>
       </div>
       <div>
         <h4>Khám phá</h4>
@@ -20,16 +27,12 @@
         <a href="tel:<%= s.hotline_tel %>">Hotline <%= s.hotline %></a>
         <a href="tel:<%= s.cskh_tel %>">CSKH <%= s.cskh %></a>
         <a href="mailto:<%= s.email %>"><%= s.email %></a>
-        <% if (s.zalo) { %><a href="https://zalo.me/<%= s.zalo.replace(/\D/g, '') %>" target="_blank" rel="noopener">Zalo <%= s.zalo %></a><% } %>
-        <a href="<%= s.facebook %>" target="_blank" rel="noopener">Facebook</a>
-        <a href="<%= s.instagram %>" target="_blank" rel="noopener">Instagram</a>
-        <% if (s.tiktok) { %><a href="<%= s.tiktok %>" target="_blank" rel="noopener">TikTok</a><% } %>
-        <% if (s.youtube) { %><a href="<%= s.youtube %>" target="_blank" rel="noopener">YouTube</a><% } %>
+        <span class="foot-line"><%= s.address %></span>
       </div>
     </div>
     <div class="copy">
       <span>© <%= new Date().getFullYear() %> <%= s.site_name %>. All rights reserved.</span>
-      <span><%= s.address %></span>
+      <span>Studio mở cửa <%= s.hours %></span>
     </div>
   </div>
 </footer>
