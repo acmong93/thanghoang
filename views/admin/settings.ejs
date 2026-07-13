@@ -36,9 +36,13 @@
 <div class="panel">
   <p class="muted" style="margin-bottom:14px">Bấm vào ảnh muốn thay → chọn ảnh mới từ máy tính. Ảnh tự nén WebP và cập nhật ngay lên web.</p>
   <%
-    let heroArr = [];
+    let heroArr = [], heroMArr = [];
     try { heroArr = JSON.parse(s.hero_images || '[]'); } catch (e) {}
-    const slots = heroArr.map((img, i) => ({ key: 'hero_' + i, label: 'Ảnh nền đầu trang ' + (i + 1), img }));
+    try { heroMArr = JSON.parse(s.hero_images_mobile || '[]'); } catch (e) {}
+    const slots = heroArr.map((img, i) => ({ key: 'hero_' + i, label: 'Ảnh nền đầu trang ' + (i + 1) + ' (máy tính)', img }));
+    for (let i = 0; i < 4; i++) {
+      slots.push({ key: 'hero_m_' + i, label: 'Ảnh nền điện thoại ' + (i + 1) + ' (ảnh dọc)', img: heroMArr[i] || '' });
+    }
     slots.push(
       { key: 'about_img_1', label: 'Câu chuyện — ảnh lớn', img: s.about_img_1 },
       { key: 'about_img_2', label: 'Câu chuyện — ảnh trái', img: s.about_img_2 },
@@ -53,10 +57,15 @@
     <form method="post" action="/admin/settings/image" enctype="multipart/form-data" class="img-picker">
       <input type="hidden" name="key" value="<%= sl.key %>" />
       <label title="Bấm để chọn ảnh thay thế">
+        <% if (sl.img) { %>
         <img src="<%= sl.img %>" alt="" loading="lazy" style="object-position:<%= sl.pos %>" id="pk-<%= sl.key %>" />
+        <% } else { %>
+        <div class="pk-empty" id="pk-<%= sl.key %>">Chưa có ảnh<br/>bấm để tải lên</div>
+        <% } %>
         <span><%= sl.label %></span>
         <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()" hidden />
       </label>
+      <% if (sl.img) { %>
       <div class="pos-ctl" title="Căn phần ảnh hiển thị khi bị cắt: kéo trái = lấy phần trên, kéo phải = lấy phần dưới">
         <span>↑</span>
         <input type="range" min="0" max="100" step="5"
@@ -64,6 +73,7 @@
           data-key="<%= sl.key %>" class="pos-slider" aria-label="Căn vị trí dọc của <%= sl.label %>" />
         <span>↓</span>
       </div>
+      <% } %>
     </form>
     <% }) %>
   </div>

@@ -412,23 +412,30 @@ const IMAGE_SETTING_KEYS = ['about_img_1', 'about_img_2', 'about_img_3', 'featur
 
 router.post('/settings/image', upload.single('photo'), async (req, res) => {
   const key = String(req.body.key || '');
-  const heroMatch = key.match(/^hero_([0-9])$/);
+  // hero_0..3: ảnh nền desktop (ngang) · hero_m_0..3: ảnh nền điện thoại (dọc)
+  const heroMatch = key.match(/^hero_(m_)?([0-9])$/);
   if (req.file && (IMAGE_SETTING_KEYS.includes(key) || heroMatch)) {
     const dir = path.join(UPLOAD_DIR, 'site');
     fs.mkdirSync(dir, { recursive: true });
     const base = Date.now() + '-' + Math.round(Math.random() * 1e4);
+    const width = heroMatch ? (heroMatch[1] ? 1280 : 1920) : 1600;
     try {
       await sharp(req.file.buffer, { failOn: 'none' }).rotate()
-        .resize({ width: heroMatch ? 1920 : 1600, withoutEnlargement: true }).webp({ quality: 82 })
+        .resize({ width, withoutEnlargement: true }).webp({ quality: 82 })
         .toFile(path.join(dir, `${base}.webp`));
       const p = `/uploads/site/${base}.webp`;
       if (heroMatch) {
+        const setKey = heroMatch[1] ? 'hero_images_mobile' : 'hero_images';
+        const idx = Number(heroMatch[2]);
         let arr = [];
-        try { arr = JSON.parse(allSettings().hero_images || '[]'); } catch (e) {}
-        const idx = Number(heroMatch[1]);
-        if (idx < arr.length) {
+        try { arr = JSON.parse(allSettings()[setKey] || '[]'); } catch (e) {}
+        if (heroMatch[1]) {
+          while (arr.length <= idx) arr.push(''); // bộ mobile cho phép điền dần từng ô
           arr[idx] = p;
-          setSetting('hero_images', JSON.stringify(arr));
+          setSetting(setKey, JSON.stringify(arr));
+        } else if (idx < arr.length) {
+          arr[idx] = p;
+          setSetting(setKey, JSON.stringify(arr));
         }
       } else {
         setSetting(key, p);
@@ -444,7 +451,7 @@ router.post('/settings/image', upload.single('photo'), async (req, res) => {
 /* Căn vị trí hiển thị cho ảnh vị trí cố định (lưu setting pos_<key>) */
 router.post('/settings/image-pos', (req, res) => {
   const key = String(req.body.key || '');
-  if (!IMAGE_SETTING_KEYS.includes(key) && !/^hero_[0-9]$/.test(key)) {
+  if (!IMAGE_SETTING_KEYS.includes(key) && !/^hero_(m_)?[0-9]$/.test(key)) {
     return res.status(400).json({ ok: false });
   }
   const pos = `${clampPct(req.body.x ?? 50)}% ${clampPct(req.body.y ?? 50)}%`;

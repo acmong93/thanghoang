@@ -45,6 +45,8 @@ const settings = {
   hours: '9:00 tới 21:00, cả tuần',
   instagram: 'https://www.instagram.com/rosewedding_vn/',
   facebook: 'https://www.facebook.com/RoseWeddingHanoi',
+  zalo: '0966669935',
+  messenger: 'https://m.me/RoseWeddingHanoi',
   map_embed: 'https://maps.google.com/maps?q=21.0272874,105.828378&z=16&hl=vi&output=embed',
   hero_images: JSON.stringify([
     img('editorial', '9.jpg'),

@@ -32,13 +32,16 @@ ensureAdmin();
 /* Khởi tạo dữ liệu lần đầu trên môi trường mới (VD: vừa deploy lên hosting):
    database trống thì seed nội dung chuẩn + áp bảng giá 2027 (có marker, chỉ chạy 1 lần) */
 {
-  const { get } = require('./src/db');
+  const { get, setting, setSetting } = require('./src/db');
   const { execFileSync } = require('child_process');
   if (get('SELECT COUNT(*) n FROM albums').n === 0) {
     console.log('[init] Database trống — seed dữ liệu ban đầu...');
     execFileSync(process.execPath, [path.join(__dirname, 'scripts', 'seed.js')], { stdio: 'inherit' });
   }
   execFileSync(process.execPath, [path.join(__dirname, 'scripts', 'update-pricing-2027.js')], { stdio: 'inherit' });
+  /* Bổ sung cài đặt ra đời sau đợt seed đầu (database cũ thiếu thì điền mặc định) */
+  if (!setting('zalo')) setSetting('zalo', '0966669935');
+  if (!setting('messenger')) setSetting('messenger', 'https://m.me/RoseWeddingHanoi');
 }
 
 /* URL gốc cho SEO (canonical, og:url, sitemap).

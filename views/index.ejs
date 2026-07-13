@@ -2,10 +2,12 @@
 <html lang="vi">
 <head>
 <%
-  let heroImgs = [];
+  let heroImgs = [], heroM = [];
   try { heroImgs = JSON.parse(s.hero_images || '[]'); } catch (e) {}
+  try { heroM = JSON.parse(s.hero_images_mobile || '[]'); } catch (e) {}
   const heroFirst = heroImgs[0] || '';
   const heroPos = heroImgs.map((_, i) => s['pos_hero_' + i] || '50% 50%');
+  const heroMPos = heroM.map((_, i) => s['pos_hero_m_' + i] || '50% 50%');
 %>
 <%- include('partials/head', { title: '', desc: '', preload: heroFirst }) %>
 </head>
@@ -16,7 +18,8 @@
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div id="slides" data-images='<%- s.hero_images %>' data-pos='<%- JSON.stringify(heroPos) %>'></div>
+  <div id="slides" data-images='<%- s.hero_images %>' data-pos='<%- JSON.stringify(heroPos) %>'
+    data-images-mobile='<%- JSON.stringify(heroM) %>' data-pos-mobile='<%- JSON.stringify(heroMPos) %>'></div>
   <div class="hero-inner">
     <span class="eyebrow gold">Rosé Wedding · Hà Nội</span>
     <h1><span class="nw">Lưu giữ chuyện tình</span><br/><span class="italic nw">vượt thời gian</span></h1>

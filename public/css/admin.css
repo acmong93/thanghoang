@@ -179,6 +179,11 @@ td select { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px;
 }
 .img-picker label:hover { border-color: var(--gold); box-shadow: 0 4px 14px rgba(0,0,0,.08); }
 .img-picker img { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: var(--line); }
+.img-picker .pk-empty {
+  aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center;
+  text-align: center; font-size: 12px; color: var(--soft); background: #FAF8F4;
+  border-bottom: 1px dashed var(--line); line-height: 1.5;
+}
 .img-picker span { display: block; padding: 7px 10px; font-size: 12px; font-weight: 500; color: var(--soft); }
 
 /* ---- Video rows ---- */

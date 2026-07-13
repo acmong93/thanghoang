@@ -54,6 +54,17 @@
     let images = [], pos = [];
     try { images = JSON.parse(slidesEl.dataset.images || '[]'); } catch (e) { /* bỏ qua */ }
     try { pos = JSON.parse(slidesEl.dataset.pos || '[]'); } catch (e) { /* bỏ qua */ }
+    // Điện thoại: dùng bộ ảnh dọc riêng nếu đã upload trong admin
+    if (window.matchMedia('(max-width:680px)').matches) {
+      let mi = [], mp = [];
+      try { mi = JSON.parse(slidesEl.dataset.imagesMobile || '[]'); } catch (e) { /* bỏ qua */ }
+      try { mp = JSON.parse(slidesEl.dataset.posMobile || '[]'); } catch (e) { /* bỏ qua */ }
+      const bo = mi.map((src, i) => ({ src, p: mp[i] })).filter(x => x.src);
+      if (bo.length) {
+        images = bo.map(x => x.src);
+        pos = bo.map(x => x.p || '50% 50%');
+      }
+    }
     const dotsEl = document.getElementById('dots');
     const slides = [], dots = [];
 
