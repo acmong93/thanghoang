@@ -1,10 +1,12 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const multer = require('multer');
 const sharp = require('sharp');
 const bcrypt = require('bcryptjs');
-const { all, get, run, allSettings, setSetting } = require('../db');
+const AdmZip = require('adm-zip');
+const { all, get, run, allSettings, setSetting, DB_PATH, checkpoint, reopenDb, ensureAdmin } = require('../db');
 
 const router = express.Router();
 const upload = multer({
@@ -13,7 +15,9 @@ const upload = multer({
   fileFilter: (req, file, cb) => cb(null, /image\/(jpe?g|png|webp)/.test(file.mimetype))
 });
 
-const UPLOAD_DIR = path.join(__dirname, '..', '..', 'public', 'uploads');
+/* Đặt biến môi trường UPLOADS_DIR để chuyển ảnh upload ra ngoài thư mục app
+   (VD một thư mục không bị xoá khi hosting deploy lại) */
+const UPLOAD_DIR = process.env.UPLOADS_DIR || path.join(__dirname, '..', '..', 'public', 'uploads');
 
 /* ---------- Auth ---------- */
 function requireAuth(req, res, next) {
@@ -391,6 +395,89 @@ router.post('/leads/:id/status', (req, res) => {
 router.post('/leads/:id/delete', (req, res) => {
   run('DELETE FROM leads WHERE id = ?', req.params.id);
   res.redirect(req.get('referer') || '/admin/leads');
+});
+
+/* ---------- Sao lưu & Khôi phục dữ liệu ----------
+   Dữ liệu (database + ảnh upload) không theo Git nên bị xoá mỗi lần hosting
+   deploy lại. Quy trình an toàn: tải bản sao lưu TRƯỚC khi deploy, khôi phục SAU. */
+const uploadBackup = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 300 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => cb(null, /\.zip$/i.test(file.originalname))
+});
+
+router.get('/backup', (req, res) => {
+  res.render('admin/backup', {
+    ok: req.query.ok, err: req.query.err,
+    dbSize: fs.existsSync(DB_PATH) ? fs.statSync(DB_PATH).size : 0,
+    uploadCount: fs.existsSync(UPLOAD_DIR) ? fs.readdirSync(UPLOAD_DIR, { recursive: true }).length : 0
+  });
+});
+
+router.get('/backup/download', (req, res) => {
+  try {
+    checkpoint(); // gom WAL về file chính để bản sao lưu đầy đủ
+    const zip = new AdmZip();
+    zip.addLocalFile(DB_PATH, '', 'rose.db');
+    if (fs.existsSync(UPLOAD_DIR)) zip.addLocalFolder(UPLOAD_DIR, 'uploads');
+    const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename="rose-backup-${stamp}.zip"`);
+    res.send(zip.toBuffer());
+  } catch (e) {
+    console.error('[backup]', e.message);
+    res.redirect('/admin/backup?err=' + encodeURIComponent('Không tạo được bản sao lưu: ' + e.message));
+  }
+});
+
+router.post('/backup/restore', uploadBackup.single('backup'), (req, res) => {
+  if (!req.file) return res.redirect('/admin/backup?err=' + encodeURIComponent('Chưa chọn file sao lưu (.zip)'));
+  try {
+    const zip = new AdmZip(req.file.buffer);
+    const entries = zip.getEntries().filter(e => !e.isDirectory);
+    const dbEntry = entries.find(e => e.entryName === 'rose.db');
+    if (!dbEntry) throw new Error('File không đúng định dạng sao lưu của Rosé (thiếu rose.db)');
+
+    // 1) Khôi phục ảnh upload (chỉ nhận đường dẫn an toàn trong uploads/)
+    for (const e of entries) {
+      if (!e.entryName.startsWith('uploads/')) continue;
+      const rel = e.entryName.slice('uploads/'.length);
+      const dest = path.join(UPLOAD_DIR, rel);
+      if (!path.resolve(dest).startsWith(path.resolve(UPLOAD_DIR) + path.sep)) continue; // chặn ../
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.writeFileSync(dest, e.getData());
+    }
+
+    // 2) Khôi phục database: đóng DB, chép đè, mở lại
+    reopenDb(() => fs.writeFileSync(DB_PATH, dbEntry.getData()));
+    ensureAdmin(); // đồng bộ lại mật khẩu quản trị theo biến môi trường hiện tại
+
+    console.log('[restore] Đã khôi phục dữ liệu từ bản sao lưu');
+    res.redirect('/admin/backup?ok=1');
+  } catch (e) {
+    console.error('[restore]', e.message);
+    res.redirect('/admin/backup?err=' + encodeURIComponent('Khôi phục thất bại: ' + e.message));
+  }
+});
+
+/* Chẩn đoán môi trường hosting: tìm thư mục sống sót qua deploy (chỉ admin xem) */
+router.get('/backup/env-info', (req, res) => {
+  const testWrite = dir => {
+    try {
+      const f = path.join(dir, '.rose-write-test-' + Date.now());
+      fs.writeFileSync(f, 'x');
+      fs.rmSync(f, { force: true });
+      return true;
+    } catch (e) { return false; }
+  };
+  const appRoot = path.join(__dirname, '..', '..');
+  const candidates = [os.homedir(), path.resolve(appRoot, '..'), path.resolve(appRoot, '..', '..'), '/data', '/storage', '/persistent'];
+  const dirs = candidates.map(d => {
+    let listing = [];
+    try { listing = fs.readdirSync(d).slice(0, 20); } catch (e) {}
+    return { path: d, exists: fs.existsSync(d), writable: fs.existsSync(d) && testWrite(d), listing };
+  });
+  res.json({ cwd: process.cwd(), appRoot: path.resolve(appRoot), homedir: os.homedir(), platform: process.platform, dirs });
 });
 
 /* ---------- Cài đặt ---------- */

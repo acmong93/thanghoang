@@ -1,0 +1,30 @@
+<%- include('partials/top', { t: 'Sao lưu dữ liệu' }) %>
+
+<h1>Sao lưu &amp; Khôi phục dữ liệu</h1>
+
+<% if (ok) { %><div class="alert" style="background:#EBF3EB;color:#4A7A4C">Đã khôi phục dữ liệu thành công. Kiểm tra lại website và các trang quản trị.</div><% } %>
+<% if (err) { %><div class="alert"><%= err %></div><% } %>
+
+<div class="panel">
+  <h2 style="margin-top:0">Vì sao cần sao lưu?</h2>
+  <p class="muted">Nội dung anh chỉnh qua trang quản trị (ảnh upload, khách VIP, khách đặt lịch, chỉnh sửa bảng giá...) được lưu trên máy chủ, <b>không nằm trong mã nguồn GitHub</b>. Mỗi lần bấm "Tải triển khai" trên Hostinger, máy chủ bị làm mới và <b>dữ liệu này sẽ mất</b> nếu chưa sao lưu.</p>
+  <p class="muted" style="margin-top:10px"><b>Quy trình mỗi lần cập nhật web:</b> ① Tải bản sao lưu về máy → ② Bấm "Tải triển khai" trên Hostinger → ③ Quay lại trang này, khôi phục từ file vừa tải. Xong.</p>
+</div>
+
+<div class="panel">
+  <h2 style="margin-top:0">① Tải bản sao lưu</h2>
+  <p class="muted">Gồm toàn bộ database (<%= (dbSize / 1024 / 1024).toFixed(1) %> MB) và <%= uploadCount %> file ảnh đã upload. Nên tải và cất một bản định kỳ, kể cả khi không deploy.</p>
+  <p style="margin-top:14px"><a class="ad-btn primary" href="/admin/backup/download">⬇ Tải bản sao lưu (.zip)</a></p>
+</div>
+
+<div class="panel">
+  <h2 style="margin-top:0">② Khôi phục từ bản sao lưu</h2>
+  <p class="muted">Chọn file .zip đã tải ở bước trên. Dữ liệu trong file sẽ <b>ghi đè</b> dữ liệu hiện tại (ảnh upload được bổ sung, không xoá ảnh đang có). Website áp dụng ngay, không cần khởi động lại.</p>
+  <form method="post" action="/admin/backup/restore" enctype="multipart/form-data" class="upload-form" style="margin-top:14px"
+    onsubmit="return confirm('Khôi phục sẽ ghi đè dữ liệu hiện tại bằng dữ liệu trong file sao lưu. Tiếp tục?')">
+    <input type="file" name="backup" accept=".zip" required />
+    <button type="submit" class="ad-btn danger">Khôi phục dữ liệu</button>
+  </form>
+</div>
+
+<%- include('partials/bottom') %>

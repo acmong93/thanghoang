@@ -18,6 +18,10 @@ app.locals.v = require('./package.json').version;
 app.use(compression());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+/* Khi UPLOADS_DIR trỏ ra ngoài app (thư mục sống sót qua deploy), vẫn phục vụ ảnh tại /uploads */
+if (process.env.UPLOADS_DIR) {
+  app.use('/uploads', express.static(process.env.UPLOADS_DIR, { maxAge: '7d' }));
+}
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
 
 app.use(session({

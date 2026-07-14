@@ -1,20 +1,19 @@
 /**
  * Tầng database — dùng node:sqlite có sẵn trong Node.js >= 22.5 (không cần native build).
  * File DB: data/rose.db (tự tạo lần đầu, gitignore).
+ * Đặt biến môi trường DATA_DIR để chuyển dữ liệu ra ngoài thư mục app
+ * (VD một thư mục không bị xoá khi hosting deploy lại).
  */
 const { DatabaseSync } = require('node:sqlite');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
+const DB_PATH = path.join(DATA_DIR, 'rose.db');
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
-const db = new DatabaseSync(path.join(DATA_DIR, 'rose.db'));
-db.exec('PRAGMA journal_mode = WAL;');
-db.exec('PRAGMA foreign_keys = ON;');
-
-db.exec(`
+const SCHEMA = `
 CREATE TABLE IF NOT EXISTS settings (
   key   TEXT PRIMARY KEY,
   value TEXT NOT NULL DEFAULT ''
@@ -101,14 +100,38 @@ CREATE TABLE IF NOT EXISTS vips (
   sort_order INTEGER NOT NULL DEFAULT 0,
   visible    INTEGER NOT NULL DEFAULT 1
 );
-`);
+`;
 
-/* Migration cho database tạo trước khi có cột quote */
-try { db.exec("ALTER TABLE vips ADD COLUMN quote TEXT NOT NULL DEFAULT ''"); } catch (e) { /* đã có */ }
+function openDb() {
+  const d = new DatabaseSync(DB_PATH);
+  d.exec('PRAGMA journal_mode = WAL;');
+  d.exec('PRAGMA foreign_keys = ON;');
+  d.exec(SCHEMA);
+  /* Migration cho database tạo trước khi có cột quote */
+  try { d.exec("ALTER TABLE vips ADD COLUMN quote TEXT NOT NULL DEFAULT ''"); } catch (e) { /* đã có */ }
+  /* Migration: vị trí hiển thị khi ảnh bị cắt (object-position, VD '50% 30%') */
+  try { d.exec("ALTER TABLE images ADD COLUMN pos TEXT NOT NULL DEFAULT '50% 50%'"); } catch (e) { /* đã có */ }
+  try { d.exec("ALTER TABLE vips ADD COLUMN pos TEXT NOT NULL DEFAULT '50% 50%'"); } catch (e) { /* đã có */ }
+  return d;
+}
 
-/* Migration: vị trí hiển thị khi ảnh bị cắt (object-position, VD '50% 30%') */
-try { db.exec("ALTER TABLE images ADD COLUMN pos TEXT NOT NULL DEFAULT '50% 50%'"); } catch (e) { /* đã có */ }
-try { db.exec("ALTER TABLE vips ADD COLUMN pos TEXT NOT NULL DEFAULT '50% 50%'"); } catch (e) { /* đã có */ }
+let db = openDb();
+
+/* Gom dữ liệu WAL về file .db chính (gọi trước khi sao lưu để file luôn đầy đủ) */
+function checkpoint() {
+  db.exec('PRAGMA wal_checkpoint(TRUNCATE);');
+}
+
+/* Đóng rồi mở lại database — dùng khi khôi phục bản sao lưu (thay file .db đang mở) */
+function reopenDb(fn) {
+  db.close();
+  try {
+    fn(); // thao tác trên file db khi đã đóng (VD: chép đè bản sao lưu)
+  } finally {
+    for (const suffix of ['-wal', '-shm']) fs.rmSync(DB_PATH + suffix, { force: true });
+    db = openDb();
+  }
+}
 
 /* ---------- helpers ---------- */
 const get = (sql, ...args) => db.prepare(sql).get(...args);
@@ -141,4 +164,8 @@ function ensureAdmin() {
   }
 }
 
-module.exports = { db, get, all, run, setting, setSetting, allSettings, ensureAdmin };
+module.exports = {
+  get db() { return db; }, // getter để luôn trả instance hiện hành (sau reopenDb)
+  DATA_DIR, DB_PATH, checkpoint, reopenDb,
+  get, all, run, setting, setSetting, allSettings, ensureAdmin
+};
