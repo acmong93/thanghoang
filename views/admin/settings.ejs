@@ -39,9 +39,15 @@
     let heroArr = [], heroMArr = [];
     try { heroArr = JSON.parse(s.hero_images || '[]'); } catch (e) {}
     try { heroMArr = JSON.parse(s.hero_images_mobile || '[]'); } catch (e) {}
-    const slots = heroArr.map((img, i) => ({ key: 'hero_' + i, label: 'Ảnh nền đầu trang ' + (i + 1) + ' (máy tính)', img }));
-    for (let i = 0; i < 4; i++) {
-      slots.push({ key: 'hero_m_' + i, label: 'Ảnh nền điện thoại ' + (i + 1) + ' (ảnh dọc)', img: heroMArr[i] || '' });
+    const slots = heroArr.map((img, i) => ({ key: 'hero_' + i, label: 'Ảnh nền đầu trang ' + (i + 1) + ' (máy tính)', img, removable: heroArr.length > 1 }));
+    if (heroArr.length < 6) {
+      slots.push({ key: 'hero_' + heroArr.length, label: '+ Thêm ảnh nền máy tính (' + heroArr.length + '/6)', img: '' });
+    }
+    heroMArr.forEach((img, i) => {
+      slots.push({ key: 'hero_m_' + i, label: 'Ảnh nền điện thoại ' + (i + 1) + ' (ảnh dọc)', img, removable: true });
+    });
+    if (heroMArr.length < 6) {
+      slots.push({ key: 'hero_m_' + heroMArr.length, label: '+ Thêm ảnh nền điện thoại (' + heroMArr.length + '/6)', img: '' });
     }
     slots.push(
       { key: 'about_img_1', label: 'Câu chuyện — ảnh lớn', img: s.about_img_1 },
@@ -56,6 +62,9 @@
     <% slots.forEach(sl => { %>
     <form method="post" action="/admin/settings/image" enctype="multipart/form-data" class="img-picker">
       <input type="hidden" name="key" value="<%= sl.key %>" />
+      <% if (sl.removable) { %>
+      <button type="button" class="pk-remove" data-key="<%= sl.key %>" title="Gỡ ảnh này khỏi bộ ảnh nền">&times;</button>
+      <% } %>
       <label title="Bấm để chọn ảnh thay thế">
         <% if (sl.img) { %>
         <img src="<%= sl.img %>" alt="" loading="lazy" style="object-position:<%= sl.pos %>" id="pk-<%= sl.key %>" />
@@ -80,6 +89,18 @@
 </div>
 
 <script>
+// Gỡ ảnh khỏi bộ ảnh nền
+document.querySelectorAll('.pk-remove').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!confirm('Gỡ ảnh này khỏi bộ ảnh nền? (File ảnh vẫn được giữ, chỉ bỏ khỏi danh sách hiển thị)')) return;
+    fetch('/admin/settings/image-remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'key=' + encodeURIComponent(btn.dataset.key)
+    }).then(() => location.reload());
+  });
+});
+
 // Căn vị trí ảnh cố định: xem trước ngay trên thumbnail, tự lưu sau khi ngừng kéo 0.4s
 document.querySelectorAll('.pos-slider').forEach(sl => {
   let t;

@@ -516,11 +516,9 @@ router.post('/settings/image', upload.single('photo'), async (req, res) => {
         const idx = Number(heroMatch[2]);
         let arr = [];
         try { arr = JSON.parse(allSettings()[setKey] || '[]'); } catch (e) {}
-        if (heroMatch[1]) {
-          while (arr.length <= idx) arr.push(''); // bộ mobile cho phép điền dần từng ô
-          arr[idx] = p;
-          setSetting(setKey, JSON.stringify(arr));
-        } else if (idx < arr.length) {
+        // idx trong bộ: thay ảnh; idx == độ dài bộ: thêm ảnh mới (tối đa 6 ảnh)
+        if (idx < arr.length || (idx === arr.length && arr.length < 6)) {
+          while (arr.length <= idx) arr.push('');
           arr[idx] = p;
           setSetting(setKey, JSON.stringify(arr));
         }
@@ -530,6 +528,31 @@ router.post('/settings/image', upload.single('photo'), async (req, res) => {
       setSetting('pos_' + key, '50% 50%'); // ảnh mới thì căn lại từ giữa
     } catch (e) {
       console.error('[settings-image]', e.message);
+    }
+  }
+  res.redirect('/admin/settings');
+});
+
+/* Gỡ một ảnh khỏi bộ ảnh nền (không xoá file vật lý, chỉ bỏ khỏi danh sách) */
+router.post('/settings/image-remove', (req, res) => {
+  const key = String(req.body.key || '');
+  const m = key.match(/^hero_(m_)?([0-9])$/);
+  if (m) {
+    const setKey = m[1] ? 'hero_images_mobile' : 'hero_images';
+    const prefix = m[1] ? 'hero_m_' : 'hero_';
+    const idx = Number(m[2]);
+    let arr = [];
+    try { arr = JSON.parse(allSettings()[setKey] || '[]'); } catch (e) {}
+    // Bộ máy tính giữ tối thiểu 1 ảnh (hero không được trống); bộ điện thoại cho về 0
+    const minLen = m[1] ? 0 : 1;
+    if (idx < arr.length && arr.length > minLen) {
+      arr.splice(idx, 1);
+      setSetting(setKey, JSON.stringify(arr));
+      // Dồn lại các vị trí crop phía sau cho khớp thứ tự mới
+      const s = allSettings();
+      for (let i = idx; i <= arr.length; i++) {
+        setSetting('pos_' + prefix + i, s['pos_' + prefix + (i + 1)] || '50% 50%');
+      }
     }
   }
   res.redirect('/admin/settings');
