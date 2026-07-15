@@ -17,12 +17,22 @@
       <img src="<%= post.cover %>" alt="<%= post.title %>" />
     </figure>
     <div class="post-body">
-      <% post.body.split(/\n\s*\n/).forEach(par => { %>
-      <p class="reveal"><%= par.trim() %></p>
-      <% }) %>
+      <%- bodyHtml %>
     </div>
   </div>
 </article>
+
+<script type="application/ld+json"><%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  description: post.excerpt,
+  image: post.cover ? (post.cover.startsWith('http') ? post.cover : baseUrl + post.cover) : undefined,
+  datePublished: post.created_at,
+  author: { '@type': 'Organization', name: s.site_name, url: baseUrl },
+  publisher: { '@type': 'Organization', name: s.site_name },
+  mainEntityOfPage: pageUrl
+}) %></script>
 
 <% if (others.length) { %>
 <section class="pad bg-pearl">

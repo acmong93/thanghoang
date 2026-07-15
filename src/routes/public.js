@@ -104,7 +104,8 @@ router.get('/tin-tuc/:slug', (req, res, next) => {
   const post = get('SELECT * FROM posts WHERE slug = ? AND visible = 1', req.params.slug);
   if (!post) return next();
   const others = all('SELECT slug, title, cover, cat, date FROM posts WHERE visible = 1 AND id != ? ORDER BY created_at DESC LIMIT 3', post.id);
-  res.render('post', { ...base(), page: 'tin-tuc', post, others });
+  const { renderPostBody } = require('../post-render');
+  res.render('post', { ...base(), page: 'tin-tuc', post, others, bodyHtml: renderPostBody(post.body) });
 });
 
 /* ============ SEO: ROBOTS & SITEMAP ============ */

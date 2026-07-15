@@ -260,6 +260,26 @@ router.get('/posts/new', (req, res) => {
   res.render('admin/post-edit', { post: null });
 });
 
+/* Tải nhiều ảnh cho nội dung bài viết: trả danh sách đường dẫn để chèn vào bài.
+   Phải khai báo TRƯỚC /posts/:id để không bị route động nuốt mất. */
+router.post('/posts/upload-images', upload.array('photos', 20), async (req, res) => {
+  const dir = path.join(UPLOAD_DIR, 'posts');
+  fs.mkdirSync(dir, { recursive: true });
+  const paths = [];
+  for (const file of req.files || []) {
+    try {
+      const base = Date.now() + '-' + Math.round(Math.random() * 1e4);
+      await sharp(file.buffer, { failOn: 'none' }).rotate()
+        .resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 82 })
+        .toFile(path.join(dir, `${base}.webp`));
+      paths.push(`/uploads/posts/${base}.webp`);
+    } catch (e) {
+      console.error('[post-images]', e.message);
+    }
+  }
+  res.json({ ok: true, paths });
+});
+
 router.post('/posts/new', upload.single('cover_file'), async (req, res) => {
   const { title, cat, date, excerpt, body, cover } = req.body;
   const slug = String(title).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
