@@ -11,10 +11,34 @@
   <label>Ngày hiển thị <input name="date" value="<%= post ? post.date : '' %>" placeholder="VD: 06.07.2026" /></label>
   <label>Ảnh bìa (đường dẫn) <input name="cover" value="<%= post ? post.cover : '' %>" placeholder="/img/... hoặc để trống rồi upload" /></label>
   <label>Hoặc upload ảnh bìa mới <input type="file" name="cover_file" accept="image/jpeg,image/png,image/webp" /></label>
-  <label class="full">Mô tả ngắn <textarea name="excerpt" rows="2"><%= post ? post.excerpt : '' %></textarea></label>
-  <label class="full">Nội dung (các đoạn cách nhau một dòng trống)
-    <textarea name="body" rows="14"><%= post ? post.body : '' %></textarea>
+  <label class="full">Mô tả ngắn (hiện dưới tiêu đề trên Google — nên 120-155 ký tự, có từ khoá)
+    <textarea name="excerpt" rows="2"><%= post ? post.excerpt : '' %></textarea>
   </label>
+  <div class="full">
+    <div class="body-toolbar">
+      <button type="button" class="ad-btn sm" data-ins="## ">Tiêu đề mục</button>
+      <button type="button" class="ad-btn sm" data-ins="### ">Tiêu đề nhỏ</button>
+      <button type="button" class="ad-btn sm" data-wrap="**">Chữ đậm</button>
+      <button type="button" class="ad-btn sm" data-ins="> ">Trích dẫn</button>
+      <label class="ad-btn sm" style="cursor:pointer">📷 Tải ảnh vào bài
+        <input type="file" id="bodyImages" accept="image/jpeg,image/png,image/webp" multiple hidden />
+      </label>
+      <span class="muted" id="imgStatus"></span>
+    </div>
+    <label class="full" style="margin-top:8px">Nội dung bài viết
+      <textarea name="body" id="bodyArea" rows="22"><%= post ? post.body : '' %></textarea>
+    </label>
+    <div class="syntax-help">
+      <b>Cách soạn bài (mỗi khối cách nhau 1 dòng trống):</b>
+      <code>## Tiêu đề mục</code> ·
+      <code>### Tiêu đề nhỏ</code> ·
+      <code>**chữ đậm**</code> ·
+      <code>*chữ nghiêng*</code> ·
+      <code>&gt; câu trích dẫn</code> ·
+      ảnh: bấm "📷 Tải ảnh vào bài", đường dẫn tự chèn tại vị trí con trỏ; thêm chú thích bằng cách viết <code>| chú thích</code> ngay sau đường dẫn ảnh ·
+      link: <code>[chữ hiện](/bang-gia/anh-cuoi)</code>
+    </div>
+  </div>
   <% if (post) { %>
   <label class="check"><input type="checkbox" name="visible" <%= post.visible ? 'checked' : '' %> /> Hiển thị trên website</label>
   <% } %>
@@ -28,5 +52,45 @@
   <button type="submit" class="ad-btn danger sm">Xoá bài viết</button>
 </form>
 <% } %>
+
+<script>
+(() => {
+  const area = document.getElementById('bodyArea');
+  const insertAtCursor = text => {
+    const s = area.selectionStart, e = area.selectionEnd;
+    area.value = area.value.slice(0, s) + text + area.value.slice(e);
+    area.focus();
+    area.selectionStart = area.selectionEnd = s + text.length;
+  };
+  // Nút chèn cú pháp
+  document.querySelectorAll('.body-toolbar [data-ins]').forEach(b =>
+    b.addEventListener('click', () => insertAtCursor(b.dataset.ins)));
+  document.querySelectorAll('.body-toolbar [data-wrap]').forEach(b =>
+    b.addEventListener('click', () => {
+      const s = area.selectionStart, e = area.selectionEnd;
+      const sel = area.value.slice(s, e) || 'chữ đậm';
+      area.value = area.value.slice(0, s) + b.dataset.wrap + sel + b.dataset.wrap + area.value.slice(e);
+      area.focus();
+    }));
+  // Tải nhiều ảnh, chèn đường dẫn vào vị trí con trỏ
+  const input = document.getElementById('bodyImages');
+  const status = document.getElementById('imgStatus');
+  input.addEventListener('change', async () => {
+    if (!input.files.length) return;
+    status.textContent = 'Đang tải ' + input.files.length + ' ảnh...';
+    const fd = new FormData();
+    for (const f of input.files) fd.append('photos', f);
+    try {
+      const r = await fetch('/admin/posts/upload-images', { method: 'POST', body: fd });
+      const j = await r.json();
+      insertAtCursor('\n\n' + j.paths.map(p => p + ' | ').join('\n\n') + '\n\n');
+      status.textContent = 'Đã chèn ' + j.paths.length + ' ảnh — viết chú thích sau dấu | (hoặc xoá dấu | nếu không cần)';
+    } catch (e) {
+      status.textContent = 'Tải ảnh thất bại, thử lại.';
+    }
+    input.value = '';
+  });
+})();
+</script>
 
 <%- include('partials/bottom') %>
