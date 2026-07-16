@@ -57,14 +57,14 @@
       <% if (s.about_stats) {
         // "1000+ cặp đôi tin chọn · 6 năm kinh nghiệm · 10 concept độc bản" -> các ô số to + nhãn
         const statItems = s.about_stats.split('·').map(x => x.trim()).filter(Boolean).map(item => {
-          const m = item.match(/^([\d.,]+\s*[+★]?)\s+(.+)$/);
-          return m ? { n: m[1].replace(/\s+/g, ''), l: m[2] } : { n: '', l: item };
+          const m = item.match(/^([\d.,]+)\s*([+★]?)\s+(.+)$/);
+          return m ? { num: m[1], suf: m[2], l: m[3] } : { num: '', suf: '', l: item };
         });
       %>
       <div class="about-stats reveal">
         <% statItems.forEach(it => { %>
         <div class="stat-i">
-          <% if (it.n) { %><b class="count-up" data-count="<%= it.n %>"><%= it.n %></b><% } %>
+          <% if (it.num) { %><b><span class="count-up" data-count="<%= it.num %>"><%= it.num %></span><% if (it.suf) { %><i class="suf"><%= it.suf %></i><% } %></b><% } %>
           <small><%= it.l %></small>
         </div>
         <% }) %>
