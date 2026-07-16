@@ -46,6 +46,7 @@ ensureAdmin();
   /* Bổ sung cài đặt ra đời sau đợt seed đầu (database cũ thiếu thì điền mặc định) */
   if (!setting('zalo')) setSetting('zalo', '0966669935');
   if (!setting('messenger')) setSetting('messenger', 'https://m.me/RoseWeddingHanoi');
+  if (!setting('tiktok')) setSetting('tiktok', 'https://www.tiktok.com/@anhcuoi_rosewedding');
 }
 
 /* URL gốc cho SEO (canonical, og:url, sitemap).

@@ -47,6 +47,7 @@ const settings = {
   facebook: 'https://www.facebook.com/RoseWeddingHanoi',
   zalo: '0966669935',
   messenger: 'https://m.me/RoseWeddingHanoi',
+  tiktok: 'https://www.tiktok.com/@anhcuoi_rosewedding',
   map_embed: 'https://maps.google.com/maps?q=21.0272874,105.828378&z=16&hl=vi&output=embed',
   hero_images: JSON.stringify([
     img('editorial', '9.jpg'),

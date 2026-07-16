@@ -54,7 +54,22 @@
       <p>Chúng tôi tin một bức ảnh đẹp chưa đủ, nó còn phải thật. Vì thế trước khi bấm máy, Rosé dành thời gian lắng nghe câu chuyện của hai bạn, để từng khung hình mang đúng dáng vẻ của người trong ảnh.</p>
       <p>Từ lần hẹn đầu tiên đến khi album nằm gọn trong tay bạn, đội ngũ Rosé luôn ở bên cạnh. Nhẹ nhàng, chu đáo và không vội vàng, như cách một câu chuyện đẹp xứng đáng được kể.</p>
       <div class="sign">Thắng Hoàng<small>Founder</small></div>
-      <% if (s.about_stats) { %><div class="about-stats"><%= s.about_stats %></div><% } %>
+      <% if (s.about_stats) {
+        // "1000+ cặp đôi tin chọn · 6 năm kinh nghiệm · 10 concept độc bản" -> các ô số to + nhãn
+        const statItems = s.about_stats.split('·').map(x => x.trim()).filter(Boolean).map(item => {
+          const m = item.match(/^([\d.,]+)\s*([+★]?)\s+(.+)$/);
+          return m ? { num: m[1], suf: m[2], l: m[3] } : { num: '', suf: '', l: item };
+        });
+      %>
+      <div class="about-stats reveal">
+        <% statItems.forEach(it => { %>
+        <div class="stat-i">
+          <% if (it.num) { %><b><span class="count-up" data-count="<%= it.num %>"><%= it.num %></span><% if (it.suf) { %><i class="suf"><%= it.suf %></i><% } %></b><% } %>
+          <small><%= it.l %></small>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
       <a href="/cau-chuyen" class="btn mt-24">Xem portfolio của Rosé</a>
     </div>
   </div>
