@@ -203,6 +203,34 @@
     next && next.addEventListener('click', () => vipTrack.scrollBy({ left: step(), behavior: 'smooth' }));
   }
 
+  /* ---------- Đếm số liệu tăng dần khi cuộn tới (dải cặp đôi/năm kinh nghiệm) ---------- */
+  const counters = document.querySelectorAll('.count-up[data-count]');
+  if (counters.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const animate = el => {
+      const raw = el.dataset.count;                       // VD "1000+", "4.9★", "6"
+      const m = raw.match(/^([\d.,]+)(.*)$/);
+      if (!m) return;
+      const target = parseFloat(m[1].replace(/,/g, ''));
+      const suffix = m[2] || '';
+      const decimals = (m[1].split('.')[1] || '').length;
+      const t0 = performance.now(), dur = 1400;
+      const tick = now => {
+        const p = Math.min((now - t0) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = (target * eased).toFixed(decimals) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = raw;
+      };
+      requestAnimationFrame(tick);
+    };
+    const cio = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { animate(e.target); cio.unobserve(e.target); }
+      });
+    }, { threshold: .6 });
+    counters.forEach(el => cio.observe(el));
+  }
+
   /* ---------- Video YouTube: chỉ tải iframe khi bấm play (nhẹ trang) ---------- */
   document.querySelectorAll('.v[data-yt]').forEach(v => {
     const play = () => {
