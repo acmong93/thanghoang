@@ -376,12 +376,13 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
 @media(max-width:680px){.portfolio-pages{gap:8px;padding-bottom:8px}}
 
 /* Dải số liệu dưới chữ ký (chỉ hiện khi điền trong admin):
-   số nghiêng thanh mảnh tông vàng đồng như chữ ký, ngăn nhau bằng đường chỉ mảnh */
+   cùng font và màu với dòng số liệu nguyên bản (Montserrat, vàng đồng),
+   chỉ nâng cỡ số và ngăn các ô bằng đường chỉ mảnh */
 .about-stats{margin-top:30px;display:flex;flex-wrap:wrap}
 .about-stats .stat-i{padding:2px 24px 2px 0;margin-right:24px;border-right:1px solid var(--line)}
 .about-stats .stat-i:last-child{border-right:0;margin-right:0;padding-right:0}
-.about-stats b{display:block;font-family:'Cormorant Garamond','Playfair Display',serif;font-style:italic;font-weight:500;font-size:clamp(24px,2.4vw,31px);line-height:1.15;color:var(--gold-deep);font-variant-numeric:tabular-nums}
-.about-stats .suf{font-style:normal;font-size:.55em;color:var(--gold);vertical-align:.3em;margin-left:2px}
+.about-stats b{display:block;font-family:'Montserrat',sans-serif;font-weight:400;font-size:clamp(21px,2.1vw,27px);letter-spacing:.06em;line-height:1.2;color:var(--gold-deep);font-variant-numeric:tabular-nums}
+.about-stats .suf{font-size:.6em;color:var(--gold);vertical-align:.25em;margin-left:2px}
 .about-stats small{display:block;margin-top:5px;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);opacity:.85}
 @media(max-width:680px){.about-stats{gap:12px 0}.about-stats .stat-i{padding-right:16px;margin-right:16px}}
 
