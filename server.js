@@ -47,6 +47,36 @@ ensureAdmin();
   if (!setting('zalo')) setSetting('zalo', '0966669935');
   if (!setting('messenger')) setSetting('messenger', 'https://m.me/RoseWeddingHanoi');
   if (!setting('tiktok')) setSetting('tiktok', 'https://www.tiktok.com/@anhcuoi_rosewedding');
+  /* Quy chuẩn nội dung: không dùng ký tự '&' — đổi thành ' - ' trong tên album,
+     tag và tên khách VIP có sẵn (chạy đúng 1 lần nhờ marker) */
+  if (!setting('fix_amp_v1')) {
+    const { run } = require('./src/db');
+    run("UPDATE albums SET name = REPLACE(name, ' & ', ' - '), tag = REPLACE(tag, ' & ', ' - ')");
+    run("UPDATE vips SET name = REPLACE(name, ' & ', ' - ')");
+    setSetting('fix_amp_v1', '1');
+    console.log('[init] Đã thay ký tự & bằng " - " trong tên album/khách VIP');
+  }
+  /* Gói 9tr8 (Package 3) cũng được chọn nhiều — gắn nhãn nổi bật (chạy 1 lần) */
+  if (!setting('hl_pkg3_2027')) {
+    const { run } = require('./src/db');
+    const g = get("SELECT id, tiers_json FROM pricing WHERE slug = 'anh-cuoi'");
+    if (g) {
+      const tiers = JSON.parse(g.tiers_json);
+      const t = tiers.find(x => x.name === 'Package 3');
+      if (t && !t.highlight) {
+        t.highlight = true;
+        if (t.note) { t.items.unshift(t.note + ' làm việc'); delete t.note; }
+        run('UPDATE pricing SET tiers_json = ? WHERE id = ?', JSON.stringify(tiers), g.id);
+        console.log('[init] Đã gắn nhãn "Được chọn nhiều nhất" cho Package 3 (9tr8)');
+      }
+    }
+    setSetting('hl_pkg3_2027', '1');
+  }
+  /* Ghi chú bảng giá 2027: thời hạn áp dụng rõ ràng (chạy 1 lần, sau đó sửa được trong admin) */
+  if (!setting('pricing_note_2027')) {
+    setSetting('pricing_note', 'Bảng giá 2027 áp dụng đến hết 31/12/2027. Mỗi gói đều có thể điều chỉnh theo nhu cầu thực tế của hai bạn.');
+    setSetting('pricing_note_2027', '1');
+  }
 }
 
 /* URL gốc cho SEO (canonical, og:url, sitemap).

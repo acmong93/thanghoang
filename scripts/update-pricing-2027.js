@@ -31,7 +31,8 @@ const data = {
         'Toàn bộ file gốc và 30 file photoshop hoàn thiện',
         '01 video slide Basic, 02 ảnh để bàn gương 15x21'
       ]},
-      { name: 'Package 3', price: '9.800.000đ', note: '01 địa điểm nội thành · 5 giờ', highlight: false, items: [
+      { name: 'Package 3', price: '9.800.000đ', highlight: true, items: [
+        '01 địa điểm nội thành · 5 giờ làm việc',
         '02 váy chụp cao cấp, 01 vest kèm phụ kiện',
         '02 ảnh 60x90 Laminate, file gốc + 30 file photoshop',
         '01 video slide Basic, 02 ảnh để bàn 15x21',

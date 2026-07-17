@@ -39,6 +39,9 @@
       <% }) %>
     </div>
     <p class="pricing-note center reveal"><%= s.pricing_note %></p>
+    <% if (s.zalo) { %>
+    <p class="pricing-zalo reveal"><a href="https://zalo.me/<%= s.zalo.replace(/\D/g, '') %>" target="_blank" rel="noopener">Nhận báo giá chi tiết 2027 kèm ưu đãi tháng này qua Zalo</a></p>
+    <% } %>
   </div>
 </section>
 
