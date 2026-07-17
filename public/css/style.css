@@ -265,14 +265,14 @@ figure{margin:0}
 
 /* Footer */
 footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
-.foot{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;padding-bottom:34px;border-bottom:1px solid rgba(250,248,244,.12)}
+.foot{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;padding-bottom:26px;border-bottom:1px solid rgba(250,248,244,.12)}
 .foot .brand{color:#fff;font-size:34px}
 .foot-tagline{font-size:12px;letter-spacing:.44em;text-transform:uppercase;color:var(--gold);margin-top:10px}
 .foot h4{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-family:'Montserrat';font-weight:500}
 .foot a{display:block;padding:6px 0;font-size:14px;transition:.3s;color:rgba(250,248,244,.78)}
 .foot a:hover{color:var(--gold)}
 .foot p{font-size:14px;max-width:340px;margin-top:18px;color:rgba(250,248,244,.6)}
-.copy{padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12px;letter-spacing:.1em;color:rgba(250,248,244,.5)}
+.copy{padding-top:24px;display:flex;justify-content:center;text-align:center;flex-wrap:wrap;gap:12px;font-size:12px;letter-spacing:.1em;color:rgba(250,248,244,.5)}
 
 /* reveal */
 .reveal{opacity:0;transform:translateY(36px);transition:1s var(--ease)}
