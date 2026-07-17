@@ -242,9 +242,10 @@ figure{margin:0}
 .commit.mini .it p{font-size:12.5px}
 
 /* Booking */
-.booking{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start}
+/* Cột trái căn giữa theo chiều cao cụm nút; đoạn dẫn bó hẹp hơn tiêu đề để xuống dòng gọn */
+.booking{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
 .booking .info h2{font-size:clamp(24px,3vw,36px);margin:14px 0 20px}
-.booking .info p{color:var(--muted);font-size:15.5px;margin-bottom:30px}
+.booking .info p{color:var(--muted);font-size:15.5px;margin-bottom:0;max-width:42ch}
 .contact-row{display:flex;gap:14px;padding:18px 0;border-top:1px solid var(--line);font-size:14px;align-items:center}
 .contact-row b{font-weight:500;min-width:92px;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:var(--gold-deep)}
 .contact-row a:hover{color:var(--gold-deep)}
@@ -271,7 +272,7 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
 .foot a{display:block;padding:6px 0;font-size:14px;transition:.3s;color:rgba(250,248,244,.78)}
 .foot a:hover{color:var(--gold)}
 .foot p{font-size:14px;max-width:340px;margin-top:18px;color:rgba(250,248,244,.6)}
-.copy{padding-top:28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12px;letter-spacing:.1em;color:rgba(250,248,244,.5)}
+.copy{padding-top:24px;display:flex;justify-content:center;flex-wrap:wrap;gap:12px;font-size:12px;letter-spacing:.1em;color:rgba(250,248,244,.5)}
 
 /* reveal */
 .reveal{opacity:0;transform:translateY(36px);transition:1s var(--ease)}
