@@ -265,17 +265,14 @@ figure{margin:0}
 
 /* Footer */
 footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
-/* Hai đầu dòng kẻ ngang đều được khối nội dung "giữ": thương hiệu neo góc trái,
-   Liên hệ neo góc phải (chữ căn phải, đối xứng gương) — không hở đầu kẻ */
-.foot{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;padding-bottom:26px;border-bottom:1px solid rgba(250,248,244,.12);align-items:end}
-.foot>div:last-child{justify-self:end;text-align:right}
+.foot{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;padding-bottom:30px;border-bottom:1px solid rgba(250,248,244,.12)}
 .foot .brand{color:#fff;font-size:34px}
 .foot-tagline{font-size:12px;letter-spacing:.44em;text-transform:uppercase;color:var(--gold);margin-top:10px}
 .foot h4{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-family:'Montserrat';font-weight:500}
 .foot a{display:block;padding:6px 0;font-size:14px;transition:.3s;color:rgba(250,248,244,.78)}
 .foot a:hover{color:var(--gold)}
 .foot p{font-size:14px;max-width:340px;margin-top:18px;color:rgba(250,248,244,.6)}
-.copy{padding-top:24px;display:flex;justify-content:center;text-align:center;flex-wrap:wrap;gap:12px;font-size:12px;letter-spacing:.1em;color:rgba(250,248,244,.5)}
+.copy{padding-top:26px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12px;letter-spacing:.1em;color:rgba(250,248,244,.5)}
 
 /* reveal */
 .reveal{opacity:0;transform:translateY(36px);transition:1s var(--ease)}
@@ -410,7 +407,13 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
 .foot-social a:hover{color:var(--gold);border-color:var(--gold)}
 
 /* Dòng thông tin tĩnh trong cột footer (không phải link) */
-.foot-line{display:block;padding:6px 0;font-size:14px;color:rgba(250,248,244,.6)}
+/* Cụm Liên hệ kiểu hàng nhãn + giá trị + kẻ chân mảnh — cùng ngôn ngữ với
+   khối Đặt lịch (STUDIO | địa chỉ), kẻ chạy hết cột nên tự đóng khung tới mép phải */
+.foot .foot-row{display:grid;grid-template-columns:72px 1fr;gap:18px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(250,248,244,.1);color:rgba(250,248,244,.78);transition:.3s}
+.foot .foot-row:last-child{border-bottom:0;padding-bottom:0}
+.foot .foot-row b{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.foot .foot-row span{font-size:14px;font-variant-numeric:tabular-nums}
+.foot a.foot-row:hover span{color:var(--gold)}
 
 /* ===== Banner full-bleed (Phóng sự) ===== */
 .banner{position:relative;min-height:76vh;display:flex;align-items:center;justify-content:center;overflow:hidden;text-align:center}
@@ -481,8 +484,6 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
   .feature .ph{min-height:420px}
   .masonry{columns:2}
   .foot{grid-template-columns:1fr;gap:36px}
-  /* Một cột dọc: trả về căn trái cho thuận mắt đọc */
-  .foot>div:last-child{justify-self:start;text-align:left}
   .video-grid{grid-template-columns:1fr}
   .steps{grid-template-columns:1fr 1fr}
   .tiers{grid-template-columns:1fr}
