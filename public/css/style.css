@@ -278,7 +278,6 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
 .reveal.in{opacity:1;transform:none}
 
 /* Elegant ampersand */
-.amp{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:1.06em}
 
 /* ===== Trang con: hero chữ ===== */
 .page-hero{padding:180px 0 70px}
@@ -394,9 +393,13 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
 .foot-slogan + p{margin-top:10px}
 
 /* Hàng mạng xã hội dưới slogan */
-.foot-social{display:flex;gap:10px 22px;flex-wrap:wrap;margin-top:24px}
-.foot-social a{display:inline-block;padding:2px 0;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:rgba(250,248,244,.8)}
-.foot-social a:hover{color:var(--gold)}
+.foot-social{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.foot-social a{position:relative;display:inline-flex;align-items:center;gap:9px;padding:10px 16px;border:1px solid rgba(192,160,98,.45);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(250,248,244,.85);overflow:hidden;transition:color .45s var(--ease),border-color .45s var(--ease),transform .45s var(--ease)}
+.foot-social a::before{content:"";position:absolute;inset:0;background:var(--gold);transform:scaleY(0);transform-origin:bottom;transition:transform .5s var(--ease)}
+.foot-social a>*{position:relative}
+.foot-social a svg{width:15px;height:15px;flex:none}
+.foot-social a:hover{color:#171412;border-color:var(--gold);transform:translateY(-2px)}
+.foot-social a:hover::before{transform:scaleY(1)}
 
 /* Dòng thông tin tĩnh trong cột footer (không phải link) */
 .foot-line{display:block;padding:6px 0;font-size:14px;color:rgba(250,248,244,.6)}
@@ -484,15 +487,24 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:80px 0 36px}
 @media(max-width:680px){
   /* Ẩn bằng mờ dần thay vì đẩy sang phải: tránh tạo vùng tràn ngang trên trang con.
      pointer-events chặn "click xuyên" khi menu đang mờ dần đóng lại */
-  .menu{position:fixed;inset:0;z-index:65;background:var(--cream);flex-direction:column;justify-content:center;gap:26px;opacity:0;transform:scale(.98);transition:.45s var(--ease);overflow-y:auto;padding:80px 0;visibility:hidden;pointer-events:none}
+  /* justify-content:flex-start + margin auto ở mục đầu/cuối: nội dung vẫn nằm giữa
+     màn hình khi đủ chỗ, nhưng khi mở menu con dài thì cuộn được tới mọi mục
+     (flexbox center + overflow sẽ cắt cụt phần đầu, không cuộn lên được) */
+  .menu{position:fixed;inset:0;z-index:65;background:var(--cream);flex-direction:column;justify-content:flex-start;gap:26px;opacity:0;transform:scale(.98);transition:.45s var(--ease);overflow-y:auto;padding:80px 0;visibility:hidden;pointer-events:none}
+  .menu>:first-child{margin-top:auto}
+  .menu>:last-child{margin-bottom:auto}
   .menu.open{opacity:1;transform:none;visibility:visible;pointer-events:auto}
   .menu a{color:var(--ink)!important;font-size:15px}
   /* Menu con: thu gọn mặc định, chạm vào mục cha mới mở */
   .drop{display:none;position:static;transform:none;opacity:1;visibility:visible;box-shadow:none;border:none;background:transparent;padding:6px 0 0;min-width:0}
   .has-drop{text-align:center}
   .has-drop.open .drop{display:block}
-  .has-drop>.drop-toggle::after{content:"\203A";display:inline-block;margin-left:8px;transform:rotate(90deg);transition:.3s var(--ease);position:static;width:auto;height:auto;background:none;font-size:14px;color:var(--gold-deep);vertical-align:1px}
-  .has-drop.open>.drop-toggle::after{transform:rotate(-90deg)}
+  /* Mũi tên đặt tuyệt đối bên phải chữ để chữ của mục cha căn giữa
+     thẳng hàng với các mục con (nằm trong luồng sẽ đẩy chữ lệch trái) */
+  .has-drop>.drop-toggle{display:block;width:max-content;margin:0 auto;position:relative}
+  .has-drop>.drop-toggle::after{content:"\203A";position:absolute;left:100%;margin-left:10px;top:50%;bottom:auto;width:auto;height:auto;background:none;font-size:15px;line-height:1;color:var(--gold-deep);transform:translateY(-55%) rotate(90deg);transition:transform .3s var(--ease)}
+  .has-drop>.drop-toggle:hover::after{width:auto}
+  .has-drop.open>.drop-toggle::after{transform:translateY(-55%) rotate(-90deg)}
   .drop a{color:var(--muted)!important;font-size:12px;padding:8px 0;text-align:center}
   /* Ẩn nút liên hệ nổi khi menu đang mở để không đè lên menu */
   body.menu-open .quick-dock{opacity:0;pointer-events:none}

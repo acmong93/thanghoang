@@ -6,6 +6,13 @@
       "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
       "runtimeArgs": ["server.js"],
       "port": 3000
+    },
+    {
+      "name": "styleguide",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["-e", "const h=require('http'),f=require('fs'),p=process.env.RW_SG;h.createServer((q,s)=>{s.setHeader('content-type','text/html;charset=utf-8');f.createReadStream(p).pipe(s)}).listen(4173)"],
+      "env": { "RW_SG": "C:/Users/sieus/AppData/Local/Temp/claude/C--Users-sieus-OneDrive-Desktop-video-t-i-web-cuoi/624b0727-793d-4765-9264-eb9140c6e42a/scratchpad/rose-design-system.html" },
+      "port": 4173
     }
   ]
 }

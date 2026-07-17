@@ -47,6 +47,15 @@ ensureAdmin();
   if (!setting('zalo')) setSetting('zalo', '0966669935');
   if (!setting('messenger')) setSetting('messenger', 'https://m.me/RoseWeddingHanoi');
   if (!setting('tiktok')) setSetting('tiktok', 'https://www.tiktok.com/@anhcuoi_rosewedding');
+  /* Quy chuẩn nội dung: không dùng ký tự '&' — đổi thành 'và' trong tên album,
+     tag và tên khách VIP có sẵn (chạy đúng 1 lần nhờ marker) */
+  if (!setting('fix_amp_v1')) {
+    const { run } = require('./src/db');
+    run("UPDATE albums SET name = REPLACE(name, ' & ', ' và '), tag = REPLACE(tag, ' & ', ' và ')");
+    run("UPDATE vips SET name = REPLACE(name, ' & ', ' và ')");
+    setSetting('fix_amp_v1', '1');
+    console.log('[init] Đã thay ký tự & bằng "và" trong tên album/khách VIP');
+  }
 }
 
 /* URL gốc cho SEO (canonical, og:url, sitemap).

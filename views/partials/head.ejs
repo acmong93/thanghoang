@@ -1,7 +1,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <%
-  const pageTitle = (typeof title !== 'undefined' && title ? title + ' · ' : '') + s.site_name + ' · Ảnh cưới Editorial & Quiet Luxury Hà Nội';
+  const pageTitle = (typeof title !== 'undefined' && title ? title + ' · ' : '') + s.site_name + ' · Ảnh cưới Editorial · Quiet Luxury Hà Nội';
   const pageDesc = typeof desc !== 'undefined' && desc ? desc : 'Rosé Wedding · Ảnh cưới phong cách tối giản, editorial, quiet luxury tại Hà Nội. Lấy khách hàng làm trọng tâm trong từng khung hình.';
   let ogImage = typeof og !== 'undefined' && og ? og : '';
   if (!ogImage) { try { ogImage = JSON.parse(s.hero_images || '[]')[0] || ''; } catch (e) {} }

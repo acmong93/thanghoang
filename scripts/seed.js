@@ -69,7 +69,7 @@ for (const [k, v] of Object.entries(settings)) setSetting(k, v);
 const albums = [
   {
     slug: 'huong-lien', category: 'wedding', folder: 'huong-lien',
-    name: 'Chuyện của Hương & Liên', tag: 'Real Wedding · Khách hàng Rosé',
+    name: 'Chuyện của Hương và Liên', tag: 'Real Wedding · Khách hàng Rosé',
     desc: 'Một câu chuyện thật của khách hàng Rosé. Nhẹ nhàng, đời thường và đầy yêu thương, đúng tinh thần tối giản mà sâu lắng của chúng tôi.',
     imgs: ['1.jpg','2.JPG','7.JPG','8.jpg','9.jpg','14.JPG','15.jpg','16.jpg','_TH_3434 (2).jpg','_TH_3443 (2).jpg','_TH_3459..jpg']
   },
