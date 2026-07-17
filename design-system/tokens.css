@@ -84,4 +84,40 @@
   --rw-t-reveal: 1s;     /* hiện nội dung khi cuộn (translateY 36px + fade) */
   --rw-t-img:    1.4s;   /* ảnh phóng nhẹ khi hover (scale 1.05–1.08) */
   --rw-t-count:  1.4s;   /* số liệu đếm tăng (ease-out bậc 3) */
+
+  /* ============================================================
+     BIẾN THỂ ROSÉ OPS — phần mềm quản lý, dashboard, công cụ nội bộ
+     Nguyên tắc: "Rõ ràng trước, cảm xúc sau". Chi tiết: README.md mục 10
+     ============================================================ */
+  --rw-ops-bg:        #F5F3EF;  /* nền màn hình (be ấm, trầm hơn cream) */
+  --rw-ops-card:      #FFFFFF;  /* panel, thẻ, bảng */
+  --rw-ops-ink:       #1C1917;  /* chữ chính */
+  --rw-ops-soft:      #6B6560;  /* chữ phụ */
+  --rw-ops-gold:      #B08D57;  /* nhấn — đậm hơn web để đủ tương phản UI */
+  --rw-ops-gold-deep: #8F6F3F;
+  --rw-ops-line:      #E5E0D6;  /* đường kẻ be đặc, bảng biểu đọc rõ */
+  --rw-ops-danger:    #B4472F;
+  --rw-ops-ok:        #4A7A4C;
+
+  /* Chữ ops: Montserrat 100% giao diện (Playfair CHỈ ở logo, 1 vị trí/màn) */
+  --rw-ops-fs-body:  14.5px;  /* weight 400 mặc định */
+  --rw-ops-fs-small: 13px;
+  --rw-ops-fs-label: 11.5px;  /* HOA, giãn 0.08em (ÍT hơn web để đọc nhanh) */
+  --rw-ops-fs-h1:    24px;    /* tiêu đề trang, weight 600 */
+  --rw-ops-fs-h2:    17px;    /* tiêu đề khối, weight 600 */
+  --rw-ops-fs-kpi:   28px;    /* số liệu lớn, weight 600 + tabular-nums */
+
+  /* Hình khối & nhịp ops */
+  --rw-ops-radius-btn:   6px;
+  --rw-ops-radius-panel: 10px;
+  --rw-ops-radius-badge: 20px;
+  --rw-ops-t: 0.15s;          /* phản hồi tức thì — không reveal, không trang trí */
+  --rw-ops-pad-page:  40px;
+  --rw-ops-pad-panel: 22px;
+  --rw-ops-gap:       16px;
+
+  /* Badge trạng thái: nền nhạt + chữ đậm cùng tông */
+  --rw-ops-badge-new-bg:   #FDF3E3; --rw-ops-badge-new-fg:   #8F6F3F;
+  --rw-ops-badge-doing-bg: #EAF1FB; --rw-ops-badge-doing-fg: #3A66A0;
+  --rw-ops-badge-done-bg:  #EBF3EB; --rw-ops-badge-done-fg:  #4A7A4C;
 }
