@@ -442,14 +442,16 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
 @media(max-width:680px){.vip-nav{display:none}}
 
 /* ===== Liên hệ nhanh: khối nút trong section Đặt lịch ===== */
-.quick-contact{display:grid;gap:14px;align-content:start}
-.qc-lead{color:var(--muted);font-size:14.5px;margin-bottom:4px}
-.qc-btn{display:flex;align-items:center;gap:16px;border:1px solid var(--line);background:var(--pearl);padding:18px 22px;transition:.4s var(--ease)}
+/* Cụm nút thu gọn ~25% để cân tỉ trọng với cột chữ bên trái,
+   vẫn giữ mỗi nút cao ≥52px cho vùng bấm thoải mái */
+.quick-contact{display:grid;gap:10px;align-content:start}
+.qc-lead{color:var(--muted);font-size:14.5px;margin-bottom:2px}
+.qc-btn{display:flex;align-items:center;gap:14px;border:1px solid var(--line);background:var(--pearl);padding:12px 20px;transition:.4s var(--ease)}
 .qc-btn:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--gold)}
-.qc-btn svg{width:26px;height:26px;flex-shrink:0}
-.qc-btn em{font-style:normal;font-weight:700;font-size:15px;letter-spacing:.02em;flex-shrink:0;width:26px;text-align:center;line-height:1}
-.qc-btn span{font-size:14px;color:var(--muted)}
-.qc-btn span b{display:block;font-weight:500;color:var(--ink);font-size:16.5px;margin-top:2px}
+.qc-btn svg{width:22px;height:22px;flex-shrink:0}
+.qc-btn em{font-style:normal;font-weight:700;font-size:14px;letter-spacing:.02em;flex-shrink:0;width:22px;text-align:center;line-height:1}
+.qc-btn span{font-size:12.5px;color:var(--muted)}
+.qc-btn span b{display:block;font-weight:500;color:var(--ink);font-size:15.5px;margin-top:1px}
 .qc-call svg{color:var(--gold-deep)}
 .qc-zalo em{color:#0068FF}
 .qc-mess svg{color:#8b5cf6}
