@@ -1,0 +1,87 @@
+/* ============================================================
+   ROSÉ WEDDING · DESIGN TOKENS (CSS)
+   Nhúng file này vào bất kỳ website nào để dùng chung ngôn ngữ
+   thiết kế Rosé. Nguồn chuẩn: design-system/README.md
+   ============================================================ */
+
+:root {
+  /* ---------- MÀU NỀN ---------- */
+  --rw-cream:  #FAF8F4;   /* nền chính toàn trang */
+  --rw-pearl:  #FFFFFF;   /* nền section xen kẽ, thẻ */
+  --rw-paper:  #F3EFE8;   /* nền placeholder ảnh, khối phụ */
+  --rw-blush:  #EFE3DC;   /* hồng phấn điểm xuyết (dùng tiết chế) */
+  --rw-dark:   #000000;   /* section tối: concept độc bản, quy trình, CTA band */
+
+  /* ---------- MÀU CHỮ ---------- */
+  --rw-ink:    #1E1C1A;   /* chữ chính (không dùng đen tuyền trên nền sáng) */
+  --rw-muted:  #6F685F;   /* chữ phụ, đoạn mô tả */
+  --rw-on-dark:        rgba(250, 248, 244, 0.78); /* chữ thường trên nền tối */
+  --rw-on-dark-strong: #FAF8F4;                   /* tiêu đề trên nền tối */
+
+  /* ---------- MÀU NHẤN (vàng đồng — chỉ một họ nhấn duy nhất) ---------- */
+  --rw-gold:      #C0A062;  /* nhấn sáng: eyebrow trên nền tối, hover, gạch chân */
+  --rw-gold-deep: #A6884B;  /* nhấn đậm: eyebrow trên nền sáng, nhãn, link nội dung */
+  --rw-line: rgba(192, 160, 98, 0.35); /* đường kẻ mảnh, viền thẻ, ngăn cách */
+
+  /* ---------- MÀU NGỮ NGHĨA ---------- */
+  --rw-danger: #A4392A;   /* lỗi form (đất nung trầm, không đỏ tươi) */
+  --rw-ok:     #4A7A4C;   /* thành công */
+
+  /* ---------- CHỮ ---------- */
+  --rw-font-display: 'Playfair Display', Georgia, serif;          /* tiêu đề */
+  --rw-font-accent:  'Cormorant Garamond', Georgia, serif;        /* nghiêng cảm xúc: chữ ký, trích dẫn, slogan */
+  --rw-font-body:    'Montserrat', system-ui, sans-serif;         /* thân bài, nhãn, nút */
+  /* Google Fonts:
+     Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500
+     Cormorant+Garamond:ital,wght@1,400;1,500
+     Montserrat:wght@300;400;500;600&display=swap */
+
+  /* Cỡ chữ (fluid — tự co theo màn hình) */
+  --rw-fs-hero:    clamp(30px, 6.6vw, 80px);
+  --rw-fs-h2:      clamp(30px, 4.5vw, 50px);
+  --rw-fs-h2-sub:  clamp(24px, 3.2vw, 36px);
+  --rw-fs-h3-card: 21px;
+  --rw-fs-quote:   clamp(19px, 2.3vw, 27px);
+  --rw-fs-body:    15.5px;
+  --rw-fs-body-lg: 16.5px;   /* thân bài viết dài */
+  --rw-fs-small:   13.5px;
+  --rw-fs-eyebrow: 11px;
+  --rw-fs-btn:     12px;
+
+  /* Giãn chữ (letter-spacing) — chữ hoa nhỏ PHẢI giãn rộng */
+  --rw-ls-eyebrow: 0.42em;
+  --rw-ls-btn:     0.28em;
+  --rw-ls-label:   0.22em;
+  --rw-ls-nav:     0.16em;
+
+  --rw-lh-body: 1.7;
+  --rw-lh-heading: 1.15;
+
+  /* ---------- KHOẢNG CÁCH ---------- */
+  --rw-sect:       120px;  /* đệm dọc section desktop */
+  --rw-sect-sm:    72px;
+  --rw-sect-mobile: 54px;  /* dùng ở breakpoint ≤680px */
+  --rw-gap-grid:   22px;   /* khe lưới thẻ chuẩn */
+  --rw-gap-cols:   70px;   /* khe 2 cột chữ–ảnh */
+  --rw-sec-head-mb: 64px;  /* cách từ cụm tiêu đề xuống nội dung */
+
+  /* ---------- KHUNG TRANG ---------- */
+  --rw-wrap:        1240px;
+  --rw-wrap-wide:   1400px;
+  --rw-wrap-narrow: 800px;  /* trang đọc dài: bài viết */
+  --rw-pad-x:       28px;
+  /* Breakpoints: 980px (tablet) · 680px (mobile) */
+
+  /* ---------- GÓC & BÓNG ---------- */
+  --rw-radius: 0;   /* WEB KHÁCH: tuyệt đối không bo góc — cạnh sắc là chữ ký thẩm mỹ */
+  --rw-radius-admin: 8px; /* công cụ quản trị nội bộ được phép bo nhẹ */
+  --rw-shadow: 0 24px 60px -28px rgba(30, 28, 26, 0.45); /* bóng duy nhất, dùng khi hover nổi thẻ */
+
+  /* ---------- CHUYỂN ĐỘNG ---------- */
+  --rw-ease: cubic-bezier(0.22, 0.61, 0.36, 1); /* easing chữ ký — mọi transition dùng chung */
+  --rw-t-fast:   0.3s;   /* đổi màu, trạng thái nhỏ */
+  --rw-t-mid:    0.5s;   /* nút, thẻ, header */
+  --rw-t-reveal: 1s;     /* hiện nội dung khi cuộn (translateY 36px + fade) */
+  --rw-t-img:    1.4s;   /* ảnh phóng nhẹ khi hover (scale 1.05–1.08) */
+  --rw-t-count:  1.4s;   /* số liệu đếm tăng (ease-out bậc 3) */
+}
