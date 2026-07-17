@@ -36,10 +36,12 @@
       </div>
       <div>
         <h4>Liên hệ</h4>
-        <a href="tel:<%= s.hotline_tel %>">Hotline <%= s.hotline %></a>
-        <a href="tel:<%= s.cskh_tel %>">CSKH <%= s.cskh %></a>
-        <a href="mailto:<%= s.email %>"><%= s.email %></a>
-        <span class="foot-line"><%= s.address %></span>
+        <div class="foot-rows">
+          <a class="foot-row" href="tel:<%= s.hotline_tel %>"><b>Hotline</b><span><%= s.hotline %></span></a>
+          <a class="foot-row" href="tel:<%= s.cskh_tel %>"><b>CSKH</b><span><%= s.cskh %></span></a>
+          <a class="foot-row" href="mailto:<%= s.email %>"><b>Email</b><span><%= s.email %></span></a>
+          <div class="foot-row"><b>Studio</b><span><%= s.address %></span></div>
+        </div>
       </div>
     </div>
     <div class="copy">

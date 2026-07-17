@@ -5,8 +5,6 @@
       <span class="eyebrow">Đặt lịch tư vấn</span>
       <h2>Bắt đầu câu chuyện của bạn</h2>
       <p>Nhắn Zalo, Messenger hoặc gọi trực tiếp, đội ngũ Rosé sẽ lắng nghe và mời bạn tới studio trải nghiệm thử váy, tư vấn concept 1-1 hoàn toàn miễn phí.</p>
-      <div class="contact-row"><b>Studio</b><span><%= s.address %></span></div>
-      <div class="contact-row"><b>Giờ mở</b><span><%= s.hours %></span></div>
     </div>
     <div class="quick-contact reveal">
       <p class="qc-lead">Chọn kênh bạn quen dùng nhất, Rosé phản hồi ngay trong giờ mở cửa:</p>
@@ -19,7 +17,7 @@
       <% if (s.zalo) { %>
       <a class="qc-btn qc-zalo" href="https://zalo.me/<%= s.zalo.replace(/\D/g, '') %>" target="_blank" rel="noopener">
         <em>Zalo</em>
-        <span>Chat Zalo <b><%= s.zalo %></b></span>
+        <span>Chat Zalo <b>Rosé Wedding</b></span>
       </a>
       <% } %>
       <a class="qc-btn qc-call" href="tel:<%= s.hotline_tel %>">
