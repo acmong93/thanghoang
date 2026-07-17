@@ -323,6 +323,9 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
 .tier ul{list-style:none;border-top:1px solid var(--line);padding-top:20px;margin:22px 0 26px}
 .tier li{color:var(--muted);font-size:13.5px;padding:7px 0 7px 22px;position:relative}
 .tier li::before{content:"";position:absolute;left:0;top:13px;width:7px;height:7px;border:1px solid var(--gold);transform:rotate(45deg)}
+/* Trong thẻ giá (nền sáng) nút vàng phải có nền đặc, nếu không chữ trắng sẽ tàng hình */
+.tier .btn-gold{background:var(--gold)}
+.tier .btn-gold::after{background:var(--gold-deep)}
 .pricing-note{text-align:center;color:var(--muted);font-size:13px;margin-top:34px;letter-spacing:.02em}
 .pricing-zalo{text-align:center;margin-top:14px;font-size:13.5px}
 .pricing-zalo a{color:var(--gold-deep);font-weight:500;letter-spacing:.04em;border-bottom:1px solid var(--line);padding-bottom:2px;transition:.3s}
