@@ -265,7 +265,9 @@ figure{margin:0}
 
 /* Footer */
 footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
-.foot{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;padding-bottom:26px;border-bottom:1px solid rgba(250,248,244,.12)}
+/* align-items:end: cột nào ngắn hơn (Liên hệ) được neo xuống sát dòng kẻ ngang,
+   không treo lơ lửng để hở khoảng trống phía trên đường kẻ */
+.foot{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;padding-bottom:26px;border-bottom:1px solid rgba(250,248,244,.12);align-items:end}
 .foot .brand{color:#fff;font-size:34px}
 .foot-tagline{font-size:12px;letter-spacing:.44em;text-transform:uppercase;color:var(--gold);margin-top:10px}
 .foot h4{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-family:'Montserrat';font-weight:500}
