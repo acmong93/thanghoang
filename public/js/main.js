@@ -48,6 +48,34 @@
     );
   }
 
+  /* ---------- Đường nối trượt (trang chủ): khối Ảnh Cưới ghim lại,
+     frame Concept tối trượt lên phủ dần, khối bị đè lùi nhẹ và chìm tối ---------- */
+  const seamPin = document.querySelector('.seam-pin');
+  const seamCover = document.querySelector('.seam-cover');
+  if (seamPin && seamCover && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Đáy khối ghim luôn chạm đáy màn hình, dù khối cao hay thấp hơn viewport
+    const setTop = () => {
+      seamPin.style.top = Math.min(0, window.innerHeight - seamPin.offsetHeight) + 'px';
+    };
+    const onSeam = () => {
+      const t = seamCover.getBoundingClientRect().top;
+      const p = 1 - Math.min(1, Math.max(0, t / window.innerHeight));
+      if (p > 0) {
+        seamPin.style.transform = 'scale(' + (1 - p * 0.045) + ')';
+        seamPin.style.filter = 'brightness(' + (1 - p * 0.38) + ')';
+      } else {
+        seamPin.style.transform = '';
+        seamPin.style.filter = '';
+      }
+    };
+    window.addEventListener('resize', setTop);
+    window.addEventListener('scroll', onSeam, { passive: true });
+    // Ảnh trong khối nạp xong có thể đổi chiều cao khối
+    window.addEventListener('load', setTop);
+    setTop();
+    onSeam();
+  }
+
   /* ---------- Hero slider ---------- */
   const slidesEl = document.getElementById('slides');
   if (slidesEl) {
