@@ -159,6 +159,13 @@ figure{margin:0}
 .album-card:hover .meta .go{opacity:1;transform:none}
 
 /* Signature concepts (độc bản) */
+/* Đường nối trượt duy nhất của trang chủ: khối Ảnh Cưới ghim lại (top do JS tính
+   để đáy khối luôn chạm đáy màn hình), frame Concept tối trượt lên phủ dần.
+   Bóng hắt lên trên cho mép frame nổi khỏi khối bị đè */
+.seam-pin{position:sticky;top:0;will-change:transform,filter}
+.seam-cover{position:relative;z-index:2;box-shadow:0 -40px 90px -40px rgba(13,12,11,.55)}
+@media(prefers-reduced-motion:reduce){.seam-pin{position:static;transform:none!important;filter:none!important}}
+
 .signature{background:#000}
 .signature .sec-head h2,.signature .sec-head p{color:var(--cream)}
 .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}

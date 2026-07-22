@@ -1,6 +1,6 @@
 {
   "name": "rose-wedding",
-  "version": "1.4.17",
+  "version": "1.4.18",
   "description": "Rosé Wedding — Website ảnh cưới Editorial · Quiet Luxury tại Hà Nội, kèm trang quản trị.",
   "main": "server.js",
   "type": "commonjs",
