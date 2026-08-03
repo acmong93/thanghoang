@@ -72,6 +72,18 @@ ensureAdmin();
     }
     setSetting('hl_pkg3_2027', '1');
   }
+  /* Khôi phục 3 video trang chủ về mặc định (link bị thay nhầm 22/07/2026, chạy 1 lần) */
+  if (!setting('restore_videos_v1')) {
+    const { run } = require('./src/db');
+    run('DELETE FROM videos');
+    [
+      ['CkkOOj2ka_w', 'Bên nhau mãi mãi'],
+      ['EOcZk4Xa8hw', 'Mình cứ đi cùng nhau · Đà Lạt'],
+      ['DDC5jch0qbM', 'Khi hai ta về chung một nhà']
+    ].forEach((v, i) => run('INSERT INTO videos(youtube_id,title,sort_order) VALUES(?,?,?)', v[0], v[1], i));
+    setSetting('restore_videos_v1', '1');
+    console.log('[init] Đã khôi phục 3 video mặc định cho trang chủ');
+  }
   /* Ghi chú bảng giá 2027: thời hạn áp dụng rõ ràng (chạy 1 lần, sau đó sửa được trong admin) */
   if (!setting('pricing_note_2027')) {
     setSetting('pricing_note', 'Bảng giá 2027 áp dụng đến hết 31/12/2027. Mỗi gói đều có thể điều chỉnh theo nhu cầu thực tế của hai bạn.');
