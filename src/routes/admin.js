@@ -66,6 +66,53 @@ router.get('/', (req, res) => {
   });
 });
 
+/* ---------- Thống kê truy cập ---------- */
+router.get('/thong-ke', (req, res) => {
+  const days = [7, 30, 90].includes(Number(req.query.d)) ? Number(req.query.d) : 30;
+  const cutoff = new Date(Date.now() - (days - 1) * 86400000);
+  const pad = n => String(n).padStart(2, '0');
+  const dayStr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const since = dayStr(cutoff);
+  const today = dayStr(new Date());
+
+  /* Chuỗi theo ngày (điền đủ cả ngày không có khách để biểu đồ liền mạch) */
+  const rows = all(
+    `SELECT day,
+            SUM(kind = 'view') views,
+            COUNT(DISTINCT CASE WHEN kind = 'view' THEN vid END) visitors,
+            SUM(kind = 'contact') contacts
+     FROM hits WHERE day >= ? GROUP BY day`, since);
+  const byDay = Object.fromEntries(rows.map(r => [r.day, r]));
+  const series = [];
+  for (let i = 0; i < days; i++) {
+    const d = dayStr(new Date(cutoff.getTime() + i * 86400000));
+    const r = byDay[d] || {};
+    series.push({ day: d, views: r.views || 0, visitors: r.visitors || 0, contacts: r.contacts || 0 });
+  }
+
+  const range = get(
+    `SELECT SUM(kind = 'view') views,
+            COUNT(DISTINCT CASE WHEN kind = 'view' THEN vid END) visitors,
+            SUM(kind = 'contact') contacts
+     FROM hits WHERE day >= ?`, since) || {};
+  const todayRow = byDay[today] || { views: 0, visitors: 0, contacts: 0 };
+
+  res.render('admin/thong-ke', {
+    days, series,
+    kpi: {
+      visitors: range.visitors || 0,
+      views: range.views || 0,
+      contacts: range.contacts || 0,
+      conv: range.visitors ? Math.round((range.contacts || 0) / range.visitors * 1000) / 10 : 0,
+      today: todayRow
+    },
+    topPages: all("SELECT path, COUNT(*) n FROM hits WHERE kind = 'view' AND day >= ? GROUP BY path ORDER BY n DESC LIMIT 8", since),
+    sources: all("SELECT src, COUNT(DISTINCT vid) v, COUNT(*) n FROM hits WHERE kind = 'view' AND day >= ? GROUP BY src ORDER BY v DESC LIMIT 8", since),
+    devices: all("SELECT device, COUNT(DISTINCT vid) v FROM hits WHERE kind = 'view' AND day >= ? GROUP BY device", since),
+    channels: all("SELECT label, COUNT(*) n FROM hits WHERE kind = 'contact' AND day >= ? GROUP BY label ORDER BY n DESC", since)
+  });
+});
+
 /* ---------- Albums ---------- */
 router.get('/albums', (req, res) => {
   const albums = all(`
@@ -504,7 +551,7 @@ router.get('/backup/env-info', (req, res) => {
 const SETTING_KEYS = [
   'site_name', 'tagline', 'slogan', 'hotline', 'hotline_tel', 'cskh', 'cskh_tel',
   'email', 'address', 'hours', 'instagram', 'facebook', 'map_embed', 'pricing_note',
-  'about_stats', 'site_url', 'zalo', 'messenger', 'tiktok', 'youtube', 'ga_id', 'fb_pixel_id'
+  'about_stats', 'site_url', 'zalo', 'messenger', 'tiktok', 'youtube', 'ga_id', 'fb_pixel_id', 'tiktok_pixel_id'
 ];
 
 router.get('/settings', (req, res) => {

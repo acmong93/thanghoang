@@ -14,6 +14,7 @@
     <div class="side-brand">Rosé <b>Admin</b></div>
     <nav>
       <a href="/admin" class="<%= path === '/' ? 'active' : '' %>">Tổng quan</a>
+      <a href="/admin/thong-ke" class="<%= path.startsWith('/thong-ke') ? 'active' : '' %>">Thống kê</a>
       <a href="/admin/leads" class="<%= path.startsWith('/leads') ? 'active' : '' %>">Đặt lịch</a>
       <a href="/admin/albums" class="<%= path.startsWith('/albums') ? 'active' : '' %>">Album &amp; Ảnh</a>
       <a href="/admin/vips" class="<%= path.startsWith('/vips') ? 'active' : '' %>">Khách VIP</a>

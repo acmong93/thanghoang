@@ -48,6 +48,33 @@
     );
   }
 
+  /* ---------- Đo lượt bấm liên hệ (thống kê nội bộ + Meta Pixel/GA nếu có) ---------- */
+  const trackContact = (channel) => {
+    try {
+      navigator.sendBeacon('/track', JSON.stringify({ c: channel }));
+      if (typeof fbq === 'function') fbq('track', 'Contact');
+      if (typeof gtag === 'function') gtag('event', 'contact', { channel: channel });
+      if (typeof ttq === 'object' && ttq && typeof ttq.track === 'function') ttq.track('Contact');
+    } catch (e) { /* đo đạc không được làm hỏng thao tác của khách */ }
+  };
+  const CONTACT_MAP = [
+    ['.qc-zalo, .qd-zalo', 'zalo'],
+    ['.qc-mess, .qd-mess', 'messenger'],
+    ['.qc-call, .qd-call', 'call'],
+    ['a[href="/#booking"], a[href="#booking"]', 'booking']
+  ];
+  CONTACT_MAP.forEach(([sel, channel]) => {
+    document.querySelectorAll(sel).forEach(el =>
+      el.addEventListener('click', () => trackContact(channel))
+    );
+  });
+  document.querySelectorAll('.foot-social a').forEach(el => {
+    const label = (el.textContent || '').trim().toLowerCase();
+    if (['facebook', 'instagram', 'zalo', 'tiktok', 'youtube'].includes(label)) {
+      el.addEventListener('click', () => trackContact(label));
+    }
+  });
+
   /* ---------- Đường nối trượt (trang chủ): khối Ảnh Cưới ghim lại,
      frame Concept tối trượt lên phủ dần, khối bị đè lùi nhẹ và chìm tối ---------- */
   const seamPin = document.querySelector('.seam-pin');

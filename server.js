@@ -110,6 +110,11 @@ app.get('/cau-chuyen.html', (req, res) => res.redirect(301, '/cau-chuyen'));
 app.get('/tin-tuc.html', (req, res) => res.redirect(301, '/tin-tuc'));
 app.get('/post.html', (req, res) => res.redirect(301, req.query.id ? `/tin-tuc/${req.query.id}` : '/tin-tuc'));
 
+/* Thống kê truy cập tự vận hành (ẩn danh) — ghi lượt xem + nhận sự kiện liên hệ */
+const { trackMiddleware, trackRouter } = require('./src/track');
+app.use(trackMiddleware);
+app.use('/track', trackRouter);
+
 app.use('/', require('./src/routes/public'));
 app.use('/admin', require('./src/routes/admin'));
 

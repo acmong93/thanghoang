@@ -100,6 +100,25 @@ CREATE TABLE IF NOT EXISTS vips (
   sort_order INTEGER NOT NULL DEFAULT 0,
   visible    INTEGER NOT NULL DEFAULT 1
 );
+
+/* Thống kê truy cập tự vận hành — ẩn danh hoàn toàn:
+   không lưu IP, không lưu tên; vid là mã ngẫu nhiên trong cookie để đếm khách quay lại */
+CREATE TABLE IF NOT EXISTS hits (
+  id       INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts       TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+  day      TEXT NOT NULL DEFAULT (date('now','localtime')),
+  kind     TEXT NOT NULL DEFAULT 'view',  -- view (xem trang) | contact (bấm nút liên hệ)
+  path     TEXT NOT NULL DEFAULT '',
+  label    TEXT NOT NULL DEFAULT '',      -- kênh liên hệ khi kind='contact'
+  ref      TEXT NOT NULL DEFAULT '',      -- tên miền trang giới thiệu
+  src      TEXT NOT NULL DEFAULT '',      -- nguồn: facebook/google/tiktok/zalo... ('' = trực tiếp)
+  medium   TEXT NOT NULL DEFAULT '',      -- utm_medium (cpc, social...)
+  campaign TEXT NOT NULL DEFAULT '',      -- utm_campaign
+  device   TEXT NOT NULL DEFAULT '',      -- mobile | desktop
+  vid      TEXT NOT NULL DEFAULT ''
+);
+CREATE INDEX IF NOT EXISTS idx_hits_day  ON hits(day, kind);
+CREATE INDEX IF NOT EXISTS idx_hits_kind ON hits(kind, day);
 `;
 
 function openDb() {
