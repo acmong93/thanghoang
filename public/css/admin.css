@@ -238,6 +238,10 @@ td select { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px;
   table { display: block; overflow-x: auto; }
 }
 
+/* ---- Kéo thả sắp xếp ảnh trong album ---- */
+.img-cell[draggable="true"] { cursor: grab; }
+.img-cell.dragging { opacity: .4; cursor: grabbing; outline: 2px dashed var(--gold); outline-offset: 2px; }
+
 /* ---- Trang Concept: danh sách kéo thả ---- */
 .cc-list { display: grid; gap: 8px; margin-bottom: 26px; min-height: 30px; border-radius: 10px; }
 .cc-list.drag-over { outline: 2px dashed var(--gold); outline-offset: 4px; }
