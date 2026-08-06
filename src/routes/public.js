@@ -41,10 +41,41 @@ router.get('/anh-cuoi', (req, res) => {
   });
 });
 
+/* ============ CONCEPT: hub cho khách xem khi tư vấn online ============ */
+router.get('/concept', (req, res) => {
+  /* Chỉ hiện concept đã có ảnh — concept vừa tạo chưa upload không lộ thẻ rỗng ra trang khách */
+  const rows = all("SELECT * FROM albums WHERE visible = 1 AND category = 'concept' ORDER BY sort_order")
+    .map(a => ({ ...a, cover: coverOf(a.id), count: get('SELECT COUNT(*) n FROM images WHERE album_id = ?', a.id).n }))
+    .filter(a => a.count > 0);
+  /* Gom theo nhóm, giữ đúng thứ tự sort_order (kéo thả trong admin quyết định tất cả) */
+  const groups = [];
+  for (const a of rows) {
+    let g = groups.find(x => x.name === a.grp);
+    if (!g) { g = { name: a.grp, concepts: [] }; groups.push(g); }
+    g.concepts.push(a);
+  }
+  res.render('concept', { ...base(), page: 'concept', groups, total: rows.length });
+});
+
+router.get('/concept/:slug', (req, res, next) => {
+  const album = get("SELECT * FROM albums WHERE slug = ? AND visible = 1 AND category = 'concept'", req.params.slug);
+  if (!album) return next();
+  const images = all('SELECT * FROM images WHERE album_id = ? ORDER BY sort_order', album.id);
+  const others = all(
+    `SELECT * FROM albums WHERE visible = 1 AND category = 'concept' AND id != ?
+     AND EXISTS(SELECT 1 FROM images WHERE album_id = albums.id)
+     ORDER BY (grp = ?) DESC, sort_order LIMIT 3`,
+    album.id, album.grp
+  ).map(a => ({ ...a, cover: coverOf(a.id) }));
+  res.render('concept-detail', { ...base(), page: 'concept', album, images, others });
+});
+
 /* ============ ALBUM CHI TIẾT ============ */
 router.get('/album/:slug', (req, res, next) => {
   const album = get('SELECT * FROM albums WHERE slug = ? AND visible = 1', req.params.slug);
   if (!album) return next();
+  /* Concept có trang xem riêng đẹp hơn — chuyển hướng để không trùng nội dung */
+  if (album.category === 'concept') return res.redirect(301, '/concept/' + album.slug);
   const images = all('SELECT * FROM images WHERE album_id = ? ORDER BY sort_order', album.id);
   const others = albumsWithCover(album.category).filter(a => a.id !== album.id).slice(0, 3);
   album.cover = coverOf(album.id);
@@ -116,9 +147,12 @@ router.get('/robots.txt', (req, res) => {
 });
 
 router.get('/sitemap.xml', (req, res) => {
-  const urls = ['/', '/anh-cuoi', '/phong-su', '/vay-cuoi', '/cau-chuyen', '/tin-tuc'];
+  const urls = ['/', '/anh-cuoi', '/phong-su', '/vay-cuoi', '/cau-chuyen', '/tin-tuc', '/concept'];
   all('SELECT slug FROM pricing WHERE visible = 1 ORDER BY sort_order').forEach(p => urls.push(`/bang-gia/${p.slug}`));
-  all('SELECT slug FROM albums WHERE visible = 1 ORDER BY sort_order').forEach(a => urls.push(`/album/${a.slug}`));
+  all(`SELECT slug, category FROM albums WHERE visible = 1
+       AND (category != 'concept' OR EXISTS(SELECT 1 FROM images WHERE album_id = albums.id))
+       ORDER BY sort_order`)
+    .forEach(a => urls.push(a.category === 'concept' ? `/concept/${a.slug}` : `/album/${a.slug}`));
   all('SELECT slug FROM posts WHERE visible = 1 ORDER BY created_at DESC').forEach(p => urls.push(`/tin-tuc/${p.slug}`));
   const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +

@@ -286,6 +286,112 @@
     counters.forEach(el => cio.observe(el));
   }
 
+  /* ---------- Concept: gallery justified kiểu Flickr ----------
+     Xếp ảnh thành hàng theo tỉ lệ thật (data-w/data-h), mỗi hàng lấp kín bề ngang.
+     Không chờ ảnh tải vì kích thước đã lưu sẵn trong database. */
+  const jg = document.getElementById('jg');
+  if (jg) {
+    const items = [].slice.call(jg.querySelectorAll('.jg-i'));
+    const layout = () => {
+      const W = jg.clientWidth;
+      if (!W) return;
+      // Đo GAP trong từng lần xếp: CSS đổi 8px/5px qua mốc 680px (xoay máy) — chốt cứng là vỡ hàng
+      const GAP = window.matchMedia('(max-width:680px)').matches ? 5 : 8;
+      const targetH = Math.max(200, Math.min(340, W * 0.24));
+      let row = [], rowRatio = 0;
+      const flush = (isLast) => {
+        if (!row.length) return;
+        const gaps = (row.length - 1) * GAP;
+        // Trừ 1px đệm: hàng vừa khít 100% dễ bị làm tròn sub-pixel đẩy ảnh cuối rơi xuống hàng dưới
+        let h = (W - gaps - 1) / rowRatio;
+        // Hàng cuối chưa đầy: không phóng to quá 15% chiều cao chuẩn
+        if (isLast && h > targetH * 1.15) h = targetH * 1.15;
+        row.forEach(it => {
+          const r = (+it.dataset.w || 3) / (+it.dataset.h || 2);
+          it.style.width = (h * r).toFixed(2) + 'px';
+          it.style.height = h.toFixed(2) + 'px';
+          it.style.flexGrow = '0';
+        });
+        row = []; rowRatio = 0;
+      };
+      items.forEach(it => {
+        const r = (+it.dataset.w || 3) / (+it.dataset.h || 2);
+        row.push(it); rowRatio += r;
+        if (rowRatio * targetH >= W - (row.length - 1) * GAP) flush(false);
+      });
+      flush(true);
+      jg.classList.add('ready');
+    };
+    layout();
+    let jgT;
+    window.addEventListener('resize', () => { clearTimeout(jgT); jgT = setTimeout(layout, 150); });
+    /* Thanh cuộn xuất hiện sau khi ảnh tải làm bề ngang hụt ~15px — theo dõi
+       bề ngang thật của khung, đổi là xếp lại ngay (chỉ khi lệch ≥1px, tránh lặp) */
+    if (window.ResizeObserver) {
+      let lastW = jg.clientWidth;
+      new ResizeObserver(() => {
+        if (Math.abs(jg.clientWidth - lastW) >= 1) { lastW = jg.clientWidth; layout(); }
+      }).observe(jg);
+    } else {
+      window.addEventListener('load', layout);
+    }
+
+    /* ---------- Lightbox xem ảnh lớn: phím mũi tên, vuốt, đếm ảnh ---------- */
+    const lb = document.createElement('div');
+    lb.className = 'lb';
+    lb.setAttribute('role', 'dialog');
+    lb.setAttribute('aria-modal', 'true');
+    lb.setAttribute('aria-label', 'Xem ảnh lớn');
+    lb.innerHTML = '<span class="lb-count" aria-live="polite"></span>' +
+      '<button class="lb-btn lb-close" aria-label="Đóng">&times;</button>' +
+      '<button class="lb-btn lb-prev" aria-label="Ảnh trước">&lsaquo;</button>' +
+      '<img alt="" />' +
+      '<button class="lb-btn lb-next" aria-label="Ảnh sau">&rsaquo;</button>';
+    document.body.appendChild(lb);
+    const lbImg = lb.querySelector('img');
+    const lbCount = lb.querySelector('.lb-count');
+    const lbClose = lb.querySelector('.lb-close');
+    let cur = 0, lastFocus = null;
+    const srcOf = i => items[i].getAttribute('href');
+    const show = (i) => {
+      cur = (i + items.length) % items.length;
+      lbImg.src = srcOf(cur);
+      const thumbAlt = items[cur].querySelector('img');
+      lbImg.alt = thumbAlt ? thumbAlt.alt : '';
+      lbCount.textContent = (cur + 1) + ' / ' + items.length;
+      // Tải trước ảnh liền kề cho mượt
+      [cur + 1, cur - 1].forEach(j => { new Image().src = srcOf((j + items.length) % items.length); });
+    };
+    const open = (i) => {
+      lastFocus = document.activeElement;
+      show(i); lb.classList.add('open'); document.body.style.overflow = 'hidden';
+      lbClose.focus();
+    };
+    const close = () => {
+      lb.classList.remove('open'); document.body.style.overflow = '';
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    };
+    items.forEach((it, i) => it.addEventListener('click', e => { e.preventDefault(); open(i); }));
+    lbClose.addEventListener('click', close);
+    lb.querySelector('.lb-prev').addEventListener('click', () => show(cur - 1));
+    lb.querySelector('.lb-next').addEventListener('click', () => show(cur + 1));
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') show(cur - 1);
+      if (e.key === 'ArrowRight') show(cur + 1);
+    });
+    let tx = null;
+    lb.addEventListener('touchstart', e => { tx = e.changedTouches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', e => {
+      if (tx === null) return;
+      const dx = e.changedTouches[0].clientX - tx;
+      if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
+      tx = null;
+    }, { passive: true });
+  }
+
   /* ---------- Video YouTube: chỉ tải iframe khi bấm play (nhẹ trang) ---------- */
   document.querySelectorAll('.v[data-yt]').forEach(v => {
     const play = () => {

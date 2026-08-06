@@ -1,0 +1,818 @@
+[
+ {
+  "slug": "studio-phim-truong",
+  "name": "Studio Phim Trường Rosé",
+  "grp": "Studio - Phim Trường",
+  "desc": "Hệ phim trường độc quyền ngay tại Rosé: nhiều bối cảnh được dàn dựng và thay mới liên tục, chụp trọn trong một buổi không lo thời tiết.",
+  "sort": 0,
+  "images": [
+   {
+    "file": "/img/concepts/studio-phim-truong/01.webp",
+    "thumb": "/img/concepts/studio-phim-truong/01-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/02.webp",
+    "thumb": "/img/concepts/studio-phim-truong/02-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/03.webp",
+    "thumb": "/img/concepts/studio-phim-truong/03-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/04.webp",
+    "thumb": "/img/concepts/studio-phim-truong/04-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/05.webp",
+    "thumb": "/img/concepts/studio-phim-truong/05-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/06.webp",
+    "thumb": "/img/concepts/studio-phim-truong/06-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/07.webp",
+    "thumb": "/img/concepts/studio-phim-truong/07-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/08.webp",
+    "thumb": "/img/concepts/studio-phim-truong/08-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/09.webp",
+    "thumb": "/img/concepts/studio-phim-truong/09-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/10.webp",
+    "thumb": "/img/concepts/studio-phim-truong/10-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/11.webp",
+    "thumb": "/img/concepts/studio-phim-truong/11-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/12.webp",
+    "thumb": "/img/concepts/studio-phim-truong/12-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/13.webp",
+    "thumb": "/img/concepts/studio-phim-truong/13-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/14.webp",
+    "thumb": "/img/concepts/studio-phim-truong/14-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/15.webp",
+    "thumb": "/img/concepts/studio-phim-truong/15-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/16.webp",
+    "thumb": "/img/concepts/studio-phim-truong/16-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/17.webp",
+    "thumb": "/img/concepts/studio-phim-truong/17-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/18.webp",
+    "thumb": "/img/concepts/studio-phim-truong/18-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/19.webp",
+    "thumb": "/img/concepts/studio-phim-truong/19-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/20.webp",
+    "thumb": "/img/concepts/studio-phim-truong/20-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/21.webp",
+    "thumb": "/img/concepts/studio-phim-truong/21-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/22.webp",
+    "thumb": "/img/concepts/studio-phim-truong/22-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/23.webp",
+    "thumb": "/img/concepts/studio-phim-truong/23-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/24.webp",
+    "thumb": "/img/concepts/studio-phim-truong/24-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/25.webp",
+    "thumb": "/img/concepts/studio-phim-truong/25-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/26.webp",
+    "thumb": "/img/concepts/studio-phim-truong/26-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/27.webp",
+    "thumb": "/img/concepts/studio-phim-truong/27-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/28.webp",
+    "thumb": "/img/concepts/studio-phim-truong/28-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/29.webp",
+    "thumb": "/img/concepts/studio-phim-truong/29-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/30.webp",
+    "thumb": "/img/concepts/studio-phim-truong/30-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/31.webp",
+    "thumb": "/img/concepts/studio-phim-truong/31-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/32.webp",
+    "thumb": "/img/concepts/studio-phim-truong/32-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/33.webp",
+    "thumb": "/img/concepts/studio-phim-truong/33-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/34.webp",
+    "thumb": "/img/concepts/studio-phim-truong/34-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/35.webp",
+    "thumb": "/img/concepts/studio-phim-truong/35-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/36.webp",
+    "thumb": "/img/concepts/studio-phim-truong/36-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/37.webp",
+    "thumb": "/img/concepts/studio-phim-truong/37-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/38.webp",
+    "thumb": "/img/concepts/studio-phim-truong/38-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/39.webp",
+    "thumb": "/img/concepts/studio-phim-truong/39-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/40.webp",
+    "thumb": "/img/concepts/studio-phim-truong/40-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/41.webp",
+    "thumb": "/img/concepts/studio-phim-truong/41-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/42.webp",
+    "thumb": "/img/concepts/studio-phim-truong/42-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/43.webp",
+    "thumb": "/img/concepts/studio-phim-truong/43-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/44.webp",
+    "thumb": "/img/concepts/studio-phim-truong/44-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/45.webp",
+    "thumb": "/img/concepts/studio-phim-truong/45-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/46.webp",
+    "thumb": "/img/concepts/studio-phim-truong/46-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/47.webp",
+    "thumb": "/img/concepts/studio-phim-truong/47-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/48.webp",
+    "thumb": "/img/concepts/studio-phim-truong/48-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/49.webp",
+    "thumb": "/img/concepts/studio-phim-truong/49-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/50.webp",
+    "thumb": "/img/concepts/studio-phim-truong/50-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/51.webp",
+    "thumb": "/img/concepts/studio-phim-truong/51-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/52.webp",
+    "thumb": "/img/concepts/studio-phim-truong/52-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/53.webp",
+    "thumb": "/img/concepts/studio-phim-truong/53-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/54.webp",
+    "thumb": "/img/concepts/studio-phim-truong/54-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/55.webp",
+    "thumb": "/img/concepts/studio-phim-truong/55-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/56.webp",
+    "thumb": "/img/concepts/studio-phim-truong/56-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/57.webp",
+    "thumb": "/img/concepts/studio-phim-truong/57-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/58.webp",
+    "thumb": "/img/concepts/studio-phim-truong/58-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/59.webp",
+    "thumb": "/img/concepts/studio-phim-truong/59-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/60.webp",
+    "thumb": "/img/concepts/studio-phim-truong/60-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/61.webp",
+    "thumb": "/img/concepts/studio-phim-truong/61-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/62.webp",
+    "thumb": "/img/concepts/studio-phim-truong/62-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/63.webp",
+    "thumb": "/img/concepts/studio-phim-truong/63-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/64.webp",
+    "thumb": "/img/concepts/studio-phim-truong/64-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/65.webp",
+    "thumb": "/img/concepts/studio-phim-truong/65-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/66.webp",
+    "thumb": "/img/concepts/studio-phim-truong/66-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/67.webp",
+    "thumb": "/img/concepts/studio-phim-truong/67-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/68.webp",
+    "thumb": "/img/concepts/studio-phim-truong/68-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/studio-phim-truong/69.webp",
+    "thumb": "/img/concepts/studio-phim-truong/69-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   }
+  ]
+ },
+ {
+  "slug": "editorial-tap-chi",
+  "name": "Editorial - Tạp Chí",
+  "grp": "Studio - Phim Trường",
+  "desc": "Chất tạp chí thời trang: ánh sáng điện ảnh, dáng pose chủ đích, mỗi khung hình như một trang bìa dành riêng cho hai bạn.",
+  "sort": 1,
+  "images": [
+   {
+    "file": "/img/concepts/editorial-tap-chi/01.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/01-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/02.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/02-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/03.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/03-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/04.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/04-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/05.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/05-thumb.webp",
+    "w": 1540,
+    "h": 2048
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/06.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/06-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/07.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/07-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/08.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/08-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/09.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/09-thumb.webp",
+    "w": 1500,
+    "h": 2250
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/10.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/10-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/11.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/11-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/12.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/12-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/13.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/13-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/14.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/14-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/15.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/15-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/16.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/16-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/editorial-tap-chi/17.webp",
+    "thumb": "/img/concepts/editorial-tap-chi/17-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   }
+  ]
+ },
+ {
+  "slug": "ao-dai",
+  "name": "Áo Dài",
+  "grp": "Studio - Phim Trường",
+  "desc": "Vẻ đẹp Việt trong tà áo dài, tiết chế và sang trọng, để nét truyền thống tự cất lời.",
+  "sort": 2,
+  "images": [
+   {
+    "file": "/img/concepts/ao-dai/01.webp",
+    "thumb": "/img/concepts/ao-dai/01-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ao-dai/02.webp",
+    "thumb": "/img/concepts/ao-dai/02-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ao-dai/03.webp",
+    "thumb": "/img/concepts/ao-dai/03-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ao-dai/04.webp",
+    "thumb": "/img/concepts/ao-dai/04-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ao-dai/05.webp",
+    "thumb": "/img/concepts/ao-dai/05-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ao-dai/06.webp",
+    "thumb": "/img/concepts/ao-dai/06-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ao-dai/07.webp",
+    "thumb": "/img/concepts/ao-dai/07-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ao-dai/08.webp",
+    "thumb": "/img/concepts/ao-dai/08-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   }
+  ]
+ },
+ {
+  "slug": "ngoai-canh",
+  "name": "Ngoại Cảnh",
+  "grp": "Ngoại cảnh",
+  "desc": "Nắng gió và không gian thật: những địa điểm ngoại cảnh được Rosé tuyển chọn theo mùa đẹp nhất trong năm.",
+  "sort": 3,
+  "images": [
+   {
+    "file": "/img/concepts/ngoai-canh/01.webp",
+    "thumb": "/img/concepts/ngoai-canh/01-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/02.webp",
+    "thumb": "/img/concepts/ngoai-canh/02-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/03.webp",
+    "thumb": "/img/concepts/ngoai-canh/03-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/04.webp",
+    "thumb": "/img/concepts/ngoai-canh/04-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/05.webp",
+    "thumb": "/img/concepts/ngoai-canh/05-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/06.webp",
+    "thumb": "/img/concepts/ngoai-canh/06-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/07.webp",
+    "thumb": "/img/concepts/ngoai-canh/07-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/08.webp",
+    "thumb": "/img/concepts/ngoai-canh/08-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/09.webp",
+    "thumb": "/img/concepts/ngoai-canh/09-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/10.webp",
+    "thumb": "/img/concepts/ngoai-canh/10-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/11.webp",
+    "thumb": "/img/concepts/ngoai-canh/11-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/12.webp",
+    "thumb": "/img/concepts/ngoai-canh/12-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/13.webp",
+    "thumb": "/img/concepts/ngoai-canh/13-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/14.webp",
+    "thumb": "/img/concepts/ngoai-canh/14-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/15.webp",
+    "thumb": "/img/concepts/ngoai-canh/15-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/16.webp",
+    "thumb": "/img/concepts/ngoai-canh/16-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/17.webp",
+    "thumb": "/img/concepts/ngoai-canh/17-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/18.webp",
+    "thumb": "/img/concepts/ngoai-canh/18-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/19.webp",
+    "thumb": "/img/concepts/ngoai-canh/19-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/20.webp",
+    "thumb": "/img/concepts/ngoai-canh/20-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/21.webp",
+    "thumb": "/img/concepts/ngoai-canh/21-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/22.webp",
+    "thumb": "/img/concepts/ngoai-canh/22-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/23.webp",
+    "thumb": "/img/concepts/ngoai-canh/23-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/24.webp",
+    "thumb": "/img/concepts/ngoai-canh/24-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/25.webp",
+    "thumb": "/img/concepts/ngoai-canh/25-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/26.webp",
+    "thumb": "/img/concepts/ngoai-canh/26-thumb.webp",
+    "w": 1600,
+    "h": 1131
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/27.webp",
+    "thumb": "/img/concepts/ngoai-canh/27-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/28.webp",
+    "thumb": "/img/concepts/ngoai-canh/28-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/29.webp",
+    "thumb": "/img/concepts/ngoai-canh/29-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/30.webp",
+    "thumb": "/img/concepts/ngoai-canh/30-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/31.webp",
+    "thumb": "/img/concepts/ngoai-canh/31-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/32.webp",
+    "thumb": "/img/concepts/ngoai-canh/32-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/33.webp",
+    "thumb": "/img/concepts/ngoai-canh/33-thumb.webp",
+    "w": 1600,
+    "h": 1184
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/34.webp",
+    "thumb": "/img/concepts/ngoai-canh/34-thumb.webp",
+    "w": 1600,
+    "h": 1326
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/35.webp",
+    "thumb": "/img/concepts/ngoai-canh/35-thumb.webp",
+    "w": 1600,
+    "h": 1422
+   },
+   {
+    "file": "/img/concepts/ngoai-canh/36.webp",
+    "thumb": "/img/concepts/ngoai-canh/36-thumb.webp",
+    "w": 1600,
+    "h": 1600
+   }
+  ]
+ }
+]

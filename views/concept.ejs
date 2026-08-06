@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<%- include('partials/head', { title: 'Concept chụp ảnh cưới', desc: 'Kho concept chụp ảnh cưới tại Rosé Wedding: studio phim trường, editorial tạp chí, áo dài, ngoại cảnh. Xem ảnh thật từng concept để chọn phong cách cho ngày trọng đại.' }) %>
+</head>
+<body>
+<%- include('partials/header', { solidHeader: true }) %>
+
+<main id="main">
+<section class="page-hero">
+  <div class="wrap center">
+    <span class="eyebrow gold">Kho concept của Rosé</span>
+    <h1>Chọn <span class="italic">concept</span> của hai bạn</h1>
+    <p>Toàn bộ <%= total %> bộ concept đang có tại Rosé, mỗi bộ là ảnh chụp thật cho khách. Chạm vào một concept để xem trọn bộ ảnh.</p>
+  </div>
+</section>
+
+<% groups.forEach((g, gi) => { %>
+<section class="<%= gi % 2 === 0 ? 'pad-sm bg-pearl' : 'pad-sm' %>">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin-bottom:34px">
+      <span class="eyebrow"><%= g.concepts.length %> bộ concept</span>
+      <h2 style="font-size:clamp(24px,3.2vw,36px)"><%= g.name %></h2>
+    </div>
+    <div class="albums-grid">
+      <% g.concepts.forEach(c => { %>
+      <a class="album-card reveal" href="/concept/<%= c.slug %>">
+        <img loading="lazy" src="<%= c.cover.thumb || c.cover.file %>" alt="Concept <%= c.name %>" style="object-position:<%= c.cover.pos || '50% 50%' %>" />
+        <div class="meta">
+          <div class="t"><%= c.count %> ảnh thật</div>
+          <h3><%= c.name %></h3>
+          <div class="go">Xem trọn bộ&ensp;&rsaquo;</div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% }) %>
+
+<section class="cta-band reveal">
+  <div class="wrap center">
+    <h2>Chưa biết chọn concept <span class="italic">nào?</span></h2>
+    <p class="mt-14">Nhắn Rosé đôi điều về hai bạn, chúng tôi sẽ gợi ý concept hợp nhất với câu chuyện và ngân sách của bạn.</p>
+    <a href="/#booking" class="btn btn-gold mt-24">Nhận tư vấn miễn phí</a>
+  </div>
+</section>
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>
