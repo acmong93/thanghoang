@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<%- include('partials/head', { title: 'Concept ' + album.name, desc: (album.desc || ('Bộ concept ' + album.name + ' tại Rosé Wedding')).slice(0, 155) }) %>
+</head>
+<body>
+<%- include('partials/header', { solidHeader: true }) %>
+
+<main id="main">
+<section class="page-hero" style="padding-bottom:34px">
+  <div class="wrap center">
+    <span class="eyebrow gold"><%= album.grp %></span>
+    <h1><%= album.name %></h1>
+    <% if (album.desc) { %><p><%= album.desc %></p><% } %>
+    <p class="jg-meta"><%= images.length %> ảnh chụp thật tại Rosé · chạm vào ảnh để xem lớn</p>
+  </div>
+</section>
+
+<section class="pad-sm" style="padding-top:0">
+  <div class="wrap wrap-wide">
+    <!-- Bố cục justified kiểu Flickr: xếp theo tỉ lệ thật của từng ảnh, JS tính hàng -->
+    <div class="jg" id="jg">
+      <% images.forEach((im, i) => { %>
+      <a class="jg-i" href="<%= im.file %>" data-w="<%= im.w || 3 %>" data-h="<%= im.h || 2 %>" data-i="<%= i %>">
+        <img src="<%= im.thumb || im.file %>" alt="<%= album.name %> · ảnh <%= i + 1 %>" loading="<%= i < 8 ? 'eager' : 'lazy' %>" />
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band reveal">
+  <div class="wrap center">
+    <h2>Thích concept <span class="italic"><%= album.name %>?</span></h2>
+    <p class="mt-14">Nhắn Rosé để giữ lịch và nghe tư vấn chi tiết cho riêng hai bạn, hoàn toàn miễn phí.</p>
+    <a href="/#booking" class="btn btn-gold mt-24">Đặt lịch chụp concept này</a>
+  </div>
+</section>
+
+<% if (others.length) { %>
+<section class="pad-sm bg-pearl">
+  <div class="wrap">
+    <div class="sec-head center reveal" style="margin-bottom:34px">
+      <span class="eyebrow">Xem tiếp</span>
+      <h2 style="font-size:clamp(24px,3.2vw,36px)">Concept <span class="italic">khác</span></h2>
+    </div>
+    <div class="albums-grid">
+      <% others.forEach(c => { %>
+      <a class="album-card reveal" href="/concept/<%= c.slug %>">
+        <img loading="lazy" src="<%= c.cover.thumb || c.cover.file %>" alt="Concept <%= c.name %>" style="object-position:<%= c.cover.pos || '50% 50%' %>" />
+        <div class="meta">
+          <div class="t"><%= c.grp %></div>
+          <h3><%= c.name %></h3>
+          <div class="go">Xem trọn bộ&ensp;&rsaquo;</div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+    <div class="center mt-48 reveal"><a href="/concept" class="btn">Xem tất cả concept</a></div>
+  </div>
+</section>
+<% } %>
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

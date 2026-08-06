@@ -84,6 +84,9 @@ ensureAdmin();
     setSetting('restore_videos_v1', '1');
     console.log('[init] Đã khôi phục 3 video mặc định cho trang chủ');
   }
+  /* Hệ Concept: nhập bộ concept + ảnh từ manifest (chạy 1 lần; sau đó anh Thắng
+     tự quản trong admin — thêm/xoá/kéo thả không bị ghi đè lại) */
+  require('./src/concepts-import').ensureConcepts();
   /* Ghi chú bảng giá 2027: thời hạn áp dụng rõ ràng (chạy 1 lần, sau đó sửa được trong admin) */
   if (!setting('pricing_note_2027')) {
     setSetting('pricing_note', 'Bảng giá 2027 áp dụng đến hết 31/12/2027. Mỗi gói đều có thể điều chỉnh theo nhu cầu thực tế của hai bạn.');

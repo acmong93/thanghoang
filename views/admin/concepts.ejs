@@ -1,0 +1,154 @@
+<%- include('partials/top', { t: 'Concept' }) %>
+
+<h1>
+  Concept
+  <span class="muted" style="font-size:14px;font-weight:400"><%= total %> bộ</span>
+  <a class="ad-btn sm" href="/concept" target="_blank" rel="noopener">Xem trang khách ↗</a>
+</h1>
+
+<% if (err === 'trung') { %>
+<p class="panel" style="border-color:var(--danger);color:var(--danger)">Chưa tạo được: đã có album/concept khác trùng tên (đường dẫn sinh ra giống nhau). Anh đổi tên khác một chút nhé.</p>
+<% } else if (err === 'thieu') { %>
+<p class="panel" style="border-color:var(--danger);color:var(--danger)">Chưa tạo được: cần điền đủ Tên concept và Nhóm.</p>
+<% } %>
+
+<details class="panel" <%= err ? 'open' : '' %>>
+  <summary>+ Thêm concept mới</summary>
+  <form method="post" action="/admin/concepts" class="grid-form">
+    <label>Tên concept <input name="name" required placeholder="VD: Hồ Cỏ Hồng" /></label>
+    <label>Nhóm <input name="grp" required list="grp-list" placeholder="Chọn nhóm có sẵn hoặc gõ nhóm mới" />
+      <datalist id="grp-list"><% groups.forEach(g => { %><option value="<%= g.name %>"></option><% }) %></datalist>
+    </label>
+    <label class="full">Mô tả ngắn (hiện dưới tên concept) <textarea name="desc" rows="2" placeholder="Một hai câu giới thiệu concept cho khách"></textarea></label>
+    <label class="full"><button class="ad-btn primary" type="submit">Tạo concept</button>
+      <span class="muted" style="font-size:12.5px">&nbsp;Tạo xong bấm "Quản lý ảnh" để tải ảnh lên.</span></label>
+  </form>
+</details>
+
+<p class="muted" style="margin:0 0 18px;font-size:13px">
+  Kéo thả để đổi thứ tự (concept được chụp nhiều kéo lên đầu) — kéo được cả sang nhóm khác. Trên điện thoại dùng nút ▲▼. Thứ tự tự lưu ngay khi thả.
+</p>
+
+<% groups.forEach(g => { %>
+<h2><%= g.name %> <span class="muted" style="font-weight:400;font-size:13px">· <%= g.concepts.length %> concept</span></h2>
+<div class="cc-list" data-grp="<%= g.name %>">
+  <% g.concepts.forEach(c => { %>
+  <div class="cc-item" draggable="true" data-id="<%= c.id %>">
+    <span class="cc-grip" title="Kéo để sắp xếp">⠿</span>
+    <% if (c.cover) { %><img class="cc-thumb" src="<%= c.cover %>" alt="" /><% } else { %><span class="cc-thumb cc-thumb-empty">?</span><% } %>
+    <span class="cc-name">
+      <b><%= c.name %></b>
+      <small class="muted"><%= c.img_count %> ảnh · /concept/<%= c.slug %><%= c.visible ? '' : ' · ĐANG ẨN' %></small>
+    </span>
+    <span class="cc-updown">
+      <button type="button" class="ad-btn sm cc-up" title="Đưa lên">▲</button>
+      <button type="button" class="ad-btn sm cc-down" title="Đưa xuống">▼</button>
+    </span>
+    <a class="ad-btn sm" href="/admin/albums/<%= c.id %>">Quản lý ảnh</a>
+    <form method="post" action="/admin/concepts/<%= c.id %>/delete" onsubmit="return confirm('Xoá concept này cùng toàn bộ ảnh trong đó? Không thể hoàn tác.')">
+      <button class="ad-btn sm danger" type="submit">Xoá</button>
+    </form>
+  </div>
+  <% }) %>
+</div>
+<% }) %>
+
+<div class="cc-toast" id="cc-toast">Đã lưu thứ tự</div>
+
+<script>
+(function () {
+  var dragging = null;
+  var toast = document.getElementById('cc-toast');
+  var toastT;
+
+  function save() {
+    var items = [];
+    document.querySelectorAll('.cc-list').forEach(function (list) {
+      list.querySelectorAll('.cc-item').forEach(function (it) {
+        items.push({ id: it.dataset.id, grp: list.dataset.grp });
+      });
+    });
+    fetch('/admin/concepts/reorder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: items })
+    }).then(function (r) {
+      if (r.ok) {
+        toast.classList.add('show');
+        clearTimeout(toastT);
+        toastT = setTimeout(function () { toast.classList.remove('show'); }, 1600);
+      } else { alert('Chưa lưu được thứ tự, thử lại giúp anh.'); }
+    }).catch(function () { alert('Mất mạng? Chưa lưu được thứ tự.'); });
+  }
+
+  var origin = null; /* vị trí gốc để hoàn tác khi hủy kéo (Esc / thả ra ngoài) */
+  document.querySelectorAll('.cc-item').forEach(function (item) {
+    item.addEventListener('dragstart', function (e) {
+      dragging = item;
+      origin = { parent: item.parentElement, next: item.nextElementSibling };
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', item.dataset.id); } catch (err) {}
+    });
+    item.addEventListener('dragend', function (e) {
+      item.classList.remove('dragging');
+      dragging = null;
+      document.querySelectorAll('.cc-list').forEach(function (l) { l.classList.remove('drag-over'); });
+      /* Hủy kéo (dropEffect = none): trả item về đúng chỗ cũ, không lưu gì */
+      if (e.dataTransfer && e.dataTransfer.dropEffect === 'none' && origin) {
+        origin.parent.insertBefore(item, origin.next);
+        origin = null;
+        return;
+      }
+      origin = null;
+      save();
+    });
+  });
+
+  document.querySelectorAll('.cc-list').forEach(function (list) {
+    list.addEventListener('dragover', function (e) {
+      if (!dragging) return;
+      e.preventDefault();
+      list.classList.add('drag-over');
+      var after = null;
+      list.querySelectorAll('.cc-item:not(.dragging)').forEach(function (it) {
+        var r = it.getBoundingClientRect();
+        if (e.clientY < r.top + r.height / 2 && !after) after = it;
+      });
+      if (after) list.insertBefore(dragging, after);
+      else list.appendChild(dragging);
+    });
+    list.addEventListener('dragleave', function () { list.classList.remove('drag-over'); });
+  });
+
+  /* Nút ▲▼ cho điện thoại (kéo thả cảm ứng không ổn định) */
+  document.addEventListener('click', function (e) {
+    var up = e.target.closest('.cc-up');
+    var down = e.target.closest('.cc-down');
+    if (!up && !down) return;
+    var item = e.target.closest('.cc-item');
+    var list = item.parentElement;
+    if (up) {
+      var prev = item.previousElementSibling;
+      if (prev) list.insertBefore(item, prev);
+      else {
+        /* Đầu nhóm: nhảy lên cuối nhóm phía trên */
+        var lists = [].slice.call(document.querySelectorAll('.cc-list'));
+        var i = lists.indexOf(list);
+        if (i > 0) lists[i - 1].appendChild(item);
+      }
+    } else {
+      var next = item.nextElementSibling;
+      if (next) list.insertBefore(next, item);
+      else {
+        var lists2 = [].slice.call(document.querySelectorAll('.cc-list'));
+        var j = lists2.indexOf(list);
+        if (j < lists2.length - 1) lists2[j + 1].insertBefore(item, lists2[j + 1].firstChild);
+      }
+    }
+    save();
+  });
+})();
+</script>
+
+<%- include('partials/bottom') %>

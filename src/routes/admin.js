@@ -119,8 +119,69 @@ router.get('/albums', (req, res) => {
     SELECT a.*, COUNT(i.id) AS img_count,
       (SELECT thumb FROM images WHERE album_id = a.id ORDER BY is_cover DESC, sort_order LIMIT 1) AS cover
     FROM albums a LEFT JOIN images i ON i.album_id = a.id
+    WHERE a.category != 'concept'
     GROUP BY a.id ORDER BY a.sort_order`);
   res.render('admin/albums', { albums });
+});
+
+/* ---------- Concept: danh sách theo nhóm, kéo thả sắp xếp ---------- */
+router.get('/concepts', (req, res) => {
+  const rows = all(`
+    SELECT a.*, COUNT(i.id) AS img_count,
+      (SELECT thumb FROM images WHERE album_id = a.id ORDER BY is_cover DESC, sort_order LIMIT 1) AS cover
+    FROM albums a LEFT JOIN images i ON i.album_id = a.id
+    WHERE a.category = 'concept'
+    GROUP BY a.id ORDER BY a.sort_order`);
+  const groups = [];
+  for (const a of rows) {
+    let g = groups.find(x => x.name === a.grp);
+    if (!g) { g = { name: a.grp, concepts: [] }; groups.push(g); }
+    g.concepts.push(a);
+  }
+  res.render('admin/concepts', { groups, total: rows.length, err: String(req.query.err || '') });
+});
+
+router.post('/concepts', (req, res) => {
+  const name = Array.isArray(req.body.name) ? '' : String(req.body.name || '');
+  const grp = Array.isArray(req.body.grp) ? '' : String(req.body.grp || '');
+  const desc = Array.isArray(req.body.desc) ? '' : String(req.body.desc || '');
+  const cleanSlug = name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/đ/g, 'd').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  if (!name.trim() || !cleanSlug || !grp.trim()) return res.redirect('/admin/concepts?err=thieu');
+  const max = get('SELECT COALESCE(MAX(sort_order),0) m FROM albums').m;
+  try {
+    run("INSERT INTO albums(slug, name, tag, [desc], category, grp, sort_order) VALUES(?,?,?,?,'concept',?,?)",
+      cleanSlug, name.trim(), grp.trim(), desc.trim(), grp.trim(), max + 1);
+  } catch (e) {
+    /* Trùng slug (kể cả trùng với album cưới có sẵn) — báo rõ thay vì im lặng */
+    return res.redirect('/admin/concepts?err=trung');
+  }
+  res.redirect('/admin/concepts');
+});
+
+router.post('/concepts/:id/delete', (req, res) => {
+  run("DELETE FROM albums WHERE id = ? AND category = 'concept'", req.params.id);
+  res.redirect('/admin/concepts');
+});
+
+/* Kéo thả xong, trình duyệt gửi toàn bộ thứ tự mới (kể cả đổi nhóm).
+   Bọc transaction: hoặc lưu trọn bộ thứ tự, hoặc không lưu gì (tránh lưu nửa vời) */
+router.post('/concepts/reorder', express.json(), (req, res) => {
+  const items = (Array.isArray(req.body.items) ? req.body.items : [])
+    .filter(it => it && typeof it === 'object');
+  const dbm = require('../db');
+  dbm.db.exec('BEGIN');
+  try {
+    items.forEach((it, i) => {
+      run("UPDATE albums SET sort_order = ?, grp = ? WHERE id = ? AND category = 'concept'",
+        i, String(it.grp || '').trim().slice(0, 80), Number(it.id) || 0);
+    });
+    dbm.db.exec('COMMIT');
+  } catch (e) {
+    try { dbm.db.exec('ROLLBACK'); } catch (e2) { /* đã rollback */ }
+    return res.status(500).json({ ok: false });
+  }
+  res.json({ ok: true, count: items.length });
 });
 
 router.post('/albums', (req, res) => {
@@ -144,9 +205,15 @@ router.get('/albums/:id', (req, res, next) => {
 });
 
 router.post('/albums/:id', (req, res) => {
-  const { name, tag, desc, category, visible, sort_order } = req.body;
-  run('UPDATE albums SET name=?, tag=?, desc=?, category=?, visible=?, sort_order=? WHERE id=?',
-    name.trim(), (tag || '').trim(), (desc || '').trim(), category || 'wedding',
+  const { name, tag, desc, category, visible, sort_order, grp } = req.body;
+  const existing = get('SELECT category FROM albums WHERE id = ?', req.params.id);
+  if (!existing) return res.redirect('/admin/albums');
+  /* Concept không đổi được category qua form này (form không có ô đó) — giữ nguyên
+     kẻo concept âm thầm biến thành album cưới; nhóm (grp) thì sửa được */
+  const cat = existing.category === 'concept' ? 'concept' : (category || 'wedding');
+  run('UPDATE albums SET name=?, tag=?, desc=?, category=?, grp=?, visible=?, sort_order=? WHERE id=?',
+    name.trim(), (tag || '').trim(), (desc || '').trim(), cat,
+    existing.category === 'concept' ? String(grp || '').trim() : '',
     visible ? 1 : 0, Number(sort_order) || 0, req.params.id);
   res.redirect('/admin/albums/' + req.params.id);
 });
@@ -171,14 +238,14 @@ router.post('/albums/:id/images', upload.array('photos', 40), async (req, res) =
     const th = `/uploads/${album.slug}/${base}-thumb.webp`;
     try {
       const img = sharp(file.buffer, { failOn: 'none' }).rotate();
-      await img.clone().resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 82 })
+      const info = await img.clone().resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 82 })
         .toFile(path.join(dir, `${base}.webp`));
       await img.clone().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 74 })
         .toFile(path.join(dir, `${base}-thumb.webp`));
       order += 1;
-      run('INSERT INTO images(album_id,file,thumb,alt,sort_order,is_cover) VALUES(?,?,?,?,?,?)',
-        album.id, full, th, `${album.name} — Rosé Wedding`, order,
-        (!hasCover && order === 0) ? 1 : 0);
+      run('INSERT INTO images(album_id,file,thumb,alt,sort_order,is_cover,w,h) VALUES(?,?,?,?,?,?,?,?)',
+        album.id, full, th, `${album.name} · Rosé Wedding`, order,
+        (!hasCover && order === 0) ? 1 : 0, info.width || 0, info.height || 0);
     } catch (e) {
       console.error('[upload]', e.message);
     }
@@ -195,7 +262,7 @@ router.post('/images/:id/replace', upload.single('photo'), async (req, res) => {
     const base = Date.now() + '-' + Math.round(Math.random() * 1e4);
     try {
       const sh = sharp(req.file.buffer, { failOn: 'none' }).rotate();
-      await sh.clone().resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 82 })
+      const info = await sh.clone().resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 82 })
         .toFile(path.join(dir, `${base}.webp`));
       await sh.clone().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 74 })
         .toFile(path.join(dir, `${base}-thumb.webp`));
@@ -204,8 +271,11 @@ router.post('/images/:id/replace', upload.single('photo'), async (req, res) => {
           fs.rm(path.join(__dirname, '..', '..', 'public', f), { force: true }, () => {});
         }
       }
-      run("UPDATE images SET file=?, thumb=?, pos='50% 50%' WHERE id=?",
-        `/uploads/${img.album_slug}/${base}.webp`, `/uploads/${img.album_slug}/${base}-thumb.webp`, img.id);
+      /* Ghi lại cả w/h: bố cục justified của concept xếp ô theo tỉ lệ trong DB,
+         quên cập nhật là ảnh mới bị nhét vào khung tỉ lệ của ảnh cũ */
+      run("UPDATE images SET file=?, thumb=?, pos='50% 50%', w=?, h=? WHERE id=?",
+        `/uploads/${img.album_slug}/${base}.webp`, `/uploads/${img.album_slug}/${base}-thumb.webp`,
+        info.width || 0, info.height || 0, img.id);
     } catch (e) {
       console.error('[replace]', e.message);
     }
@@ -518,6 +588,8 @@ router.post('/backup/restore', uploadBackup.single('backup'), (req, res) => {
     // 2) Khôi phục database: đóng DB, chép đè, mở lại
     reopenDb(() => fs.writeFileSync(DB_PATH, dbEntry.getData()));
     ensureAdmin(); // đồng bộ lại mật khẩu quản trị theo biến môi trường hiện tại
+    /* Bản sao lưu chụp trước đợt concept: nhập lại concept từ manifest kẻo trang trống */
+    require('../concepts-import').ensureConcepts();
 
     console.log('[restore] Đã khôi phục dữ liệu từ bản sao lưu');
     res.redirect('/admin/backup?ok=1');

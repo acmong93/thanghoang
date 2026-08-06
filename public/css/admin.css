@@ -238,6 +238,33 @@ td select { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px;
   table { display: block; overflow-x: auto; }
 }
 
+/* ---- Trang Concept: danh sách kéo thả ---- */
+.cc-list { display: grid; gap: 8px; margin-bottom: 26px; min-height: 30px; border-radius: 10px; }
+.cc-list.drag-over { outline: 2px dashed var(--gold); outline-offset: 4px; }
+.cc-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 14px; cursor: grab;
+}
+.cc-item.dragging { opacity: .45; cursor: grabbing; }
+.cc-grip { color: var(--soft); font-size: 15px; letter-spacing: 2px; user-select: none; }
+.cc-thumb { width: 54px; height: 54px; object-fit: cover; border-radius: 6px; flex: none; }
+.cc-thumb-empty { display: flex; align-items: center; justify-content: center; background: var(--bg); color: var(--soft); }
+.cc-name { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.cc-name b { font-weight: 600; }
+.cc-name small { font-size: 12px; }
+.cc-updown { display: flex; gap: 4px; }
+.cc-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 12px);
+  background: var(--ink); color: #fff; padding: 10px 22px; border-radius: 8px;
+  font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 60;
+}
+.cc-toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 760px) {
+  .cc-item { flex-wrap: wrap; }
+  .cc-grip { display: none; }
+}
+
 /* ---- Trang Thống kê truy cập ---- */
 .kfilter { display: inline-flex; gap: 8px; font-weight: 400; }
 .chartwrap svg { width: 100%; height: auto; display: block; }

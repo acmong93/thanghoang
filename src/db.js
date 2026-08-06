@@ -131,6 +131,11 @@ function openDb() {
   /* Migration: vị trí hiển thị khi ảnh bị cắt (object-position, VD '50% 30%') */
   try { d.exec("ALTER TABLE images ADD COLUMN pos TEXT NOT NULL DEFAULT '50% 50%'"); } catch (e) { /* đã có */ }
   try { d.exec("ALTER TABLE vips ADD COLUMN pos TEXT NOT NULL DEFAULT '50% 50%'"); } catch (e) { /* đã có */ }
+  /* Migration cho hệ Concept: album có nhóm (grp); ảnh lưu kích thước
+     để xếp bố cục justified kiểu Flickr không bị nhảy layout */
+  try { d.exec("ALTER TABLE albums ADD COLUMN grp TEXT NOT NULL DEFAULT ''"); } catch (e) { /* đã có */ }
+  try { d.exec('ALTER TABLE images ADD COLUMN w INTEGER NOT NULL DEFAULT 0'); } catch (e) { /* đã có */ }
+  try { d.exec('ALTER TABLE images ADD COLUMN h INTEGER NOT NULL DEFAULT 0'); } catch (e) { /* đã có */ }
   return d;
 }
 
