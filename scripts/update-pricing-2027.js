@@ -7,9 +7,10 @@ require('dotenv').config();
 const { run, get, setting, setSetting } = require('../src/db');
 
 /* Chỉ áp 1 lần (server gọi lúc khởi động); anh Thắng sửa giá qua admin sẽ không bị ghi đè.
-   Muốn áp lại từ đầu: node scripts/update-pricing-2027.js --force */
-if (setting('pricing_2027_applied') === '1' && !process.argv.includes('--force')) {
-  console.log('[pricing] Bảng giá 2027 đã áp trước đó — bỏ qua (dùng --force để áp lại).');
+   Muốn áp lại từ đầu: node scripts/update-pricing-2027.js --force
+   v2 (04/09/2026): cập nhật đợt điều chỉnh giá prewedding + combo theo sheet mới */
+if (setting('pricing_2027_v2') === '1' && !process.argv.includes('--force')) {
+  console.log('[pricing] Bảng giá 2027 v2 đã áp trước đó — bỏ qua (dùng --force để áp lại).');
   process.exit(0);
 }
 
@@ -17,7 +18,7 @@ const data = {
   'anh-cuoi': {
     intro: 'Các gói pre-wedding từ studio tối giản đến luxury thiết kế riêng. Giá đã gồm váy vest, trang điểm và ekip chỉ phục vụ một cặp đôi. Book founder Mr.Thắng chụp +8.000.000đ.',
     tiers: [
-      { name: 'Package 1', price: '5.990.000đ', note: 'Studio · 3,5 giờ', highlight: false, items: [
+      { name: 'Package 1', price: '6.500.000đ', note: 'Studio miễn phí · 3,5 giờ', highlight: false, items: [
         '01 váy chụp cao cấp, 01 vest kèm phụ kiện',
         'Ekip riêng phục vụ 1 cặp đôi, trang điểm và làm tóc cô dâu',
         '02 ảnh phóng 50x75 ép gỗ Laminate',
@@ -38,17 +39,16 @@ const data = {
         '01 video slide Basic, 02 ảnh để bàn 15x21',
         'Album 20x30 Ultra HD 20 trang'
       ]},
-      { name: 'Package 4', price: '12.800.000đ', note: 'Được chọn nhiều nhất', highlight: true, items: [
-        '02 địa điểm nội thành · 8 giờ làm việc',
-        '02 váy + 01 set tự chuẩn bị, 02 vest + 01 set',
+      { name: 'Package 4', price: '11.800.000đ', note: 'Được chọn nhiều nhất', highlight: true, items: [
+        '02 địa điểm nội thành · 6,5 giờ làm việc',
+        '02 váy chụp cao cấp, 02 vest kèm phụ kiện',
         '02 ảnh 60x90, file gốc + 40 file photoshop',
-        'Album 20x30 giấy Silk 30 trang, 02 ảnh để bàn',
+        'Album 20x30 Ultra HD 30 trang, 02 ảnh để bàn',
         'Tặng thiệp cưới điện tử trị giá tối đa 2.000.000đ',
         'Tặng 02 clip TikTok (báo trước để sắp xếp ekip)'
       ]},
       { name: 'Package 5', price: '14.800.000đ', note: '02-03 địa điểm nội thành · 10 giờ', highlight: false, items: [
         '02 váy + 01 set tự chuẩn bị, 02 vest + 01 set',
-        '02-03 địa điểm nội thành · 10 giờ làm việc',
         '02 ảnh 60x90, file gốc + 40 file photoshop',
         'Album 25x35 giấy Silk 30 trang, 04 ảnh để bàn',
         'Tặng thiệp điện tử 2.000.000đ và 02 clip TikTok'
@@ -61,8 +61,8 @@ const data = {
         'Album 25x35 bìa tạp giấy Silk 30 trang + hộp thiết kế',
         'Thiệp điện tử 2.000.000đ, 02 clip TikTok'
       ]},
-      { name: 'VIP 2', price: '28.000.000đ', note: '03 địa điểm · 10 giờ · tặng gói chụp tối', highlight: false, items: [
-        '01 váy cao cấp + 01 váy VIP, 02 vest',
+      { name: 'VIP 2', price: '32.800.000đ', note: '03 địa điểm · 10 giờ · tặng gói chụp tối', highlight: false, items: [
+        '01 váy cao cấp + 01 váy VIP + 01 set, 02 vest + 01 set',
         'Team stylist Phy Creative Agency với 02 concept chính',
         '02 ảnh Meka khung nhập, file gốc + 50 file photoshop',
         'Video slide Hàn Quốc, 04 ảnh để bàn khung nhập',
@@ -77,12 +77,12 @@ const data = {
         'Album 25x35 bìa da nổi 40 trang giấy Silk + hộp',
         '03 địa điểm · 10 giờ · 02 clip TikTok'
       ]},
-      { name: 'Luxury 2', price: '60.000.000đ', note: 'Founder + Ximona Makeup + stylist Phy', highlight: false, items: [
+      { name: 'Luxury 2', price: '80.000.000đ', note: 'Founder + Ximona Makeup + stylist Phy', highlight: false, items: [
         '02 váy VIP + 01 váy Luxury thiết kế riêng',
-        'Founder Mr.Thắng chụp, Ximona Makeup & Academy',
+        'Founder Mr.Thắng chụp, Ximona Makeup và Academy',
         'Team stylist Phy Creative Agency với 03 concept',
-        'File gốc + 60 file photoshop Mr.Thắng hậu kỳ',
-        'Album 25x35 bìa da nổi 50 trang + hộp thiết kế',
+        'File gốc + 60 file photoshop Mr.Thắng hậu kỳ, video slide Hàn Quốc',
+        '06 ảnh để bàn khung nhập, album 25x35 bìa da nổi 50 trang + hộp',
         '03 địa điểm · 10 giờ · 02 clip TikTok'
       ]},
       { name: 'Ngoại Thành', price: '18.800.000đ', note: 'Chụp 1 ngày ngoại thành (thêm ngày +4.000.000đ)', highlight: false, items: [
@@ -97,6 +97,13 @@ const data = {
         'Video slide Hàn Quốc, 04 ảnh để bàn khung nhập',
         'Album 25x35 bìa tạp giấy Silk 30 trang + hộp',
         'Thiệp điện tử 2.000.000đ, 02 clip TikTok'
+      ]},
+      { name: 'Dịch Vụ Bổ Sung', price: 'Cộng thêm', note: 'Tuỳ chọn nâng cấp cho mọi gói chụp', highlight: false, items: [
+        'Chụp thêm địa điểm 2.500.000đ/địa điểm',
+        'Thêm trang phục tự chuẩn bị 1.500.000đ/set',
+        'Quay video prewedding 10.000.000đ',
+        'Chụp thêm máy film 2.500.000đ (chưa gồm film và tráng phim)',
+        'Book Founder chụp +8.000.000đ nửa ngày, +12.000.000đ cả ngày'
       ]}
     ]
   },
@@ -162,31 +169,31 @@ const data = {
         'Niêm yết 23.800.000đ: gói chụp + váy áo ngày cưới',
         'Gói chụp 9.800.000đ (02 váy, 01 vest)',
         'Mượn 01 váy ngày cưới 8-10 triệu',
-        'Mượn 01 áo dài ăn hỏi hoặc 01 vest tối đa 4 triệu',
+        'Mượn 01 váy đi bàn hoặc 01 vest tối đa 4 triệu',
         '02 ảnh 60x90, 30 file photoshop, album 20x30 Ultra HD 20 trang'
       ]},
-      { name: 'Combo 2', price: '19.500.000đ', note: 'Được chọn nhiều nhất', highlight: true, items: [
-        'Niêm yết 26.800.000đ: gói chụp + váy áo ngày cưới',
-        'Gói chụp 12.800.000đ',
-        'Mượn 01 váy ngày cưới 8-10 triệu + áo dài hoặc vest tối đa 4 triệu',
-        'Album 20x30 Silk 30 trang, 40 file photoshop',
+      { name: 'Combo 2', price: '18.800.000đ', note: 'Được chọn nhiều nhất', highlight: true, items: [
+        'Niêm yết 25.800.000đ: gói chụp + váy áo ngày cưới',
+        'Gói chụp 11.800.000đ',
+        'Mượn 01 váy ngày cưới 8-10 triệu + váy đi bàn hoặc vest tối đa 4 triệu',
+        'Album 20x30 Ultra HD 30 trang, 40 file photoshop',
         'Tặng thiệp cưới điện tử 2.000.000đ'
       ]},
-      { name: 'Combo 3', price: '24.800.000đ', note: 'Niêm yết 27.600.000đ · chụp + phóng sự cưới', highlight: false, items: [
-        'Gói chụp 12.800.000đ (02 váy + 02 vest)',
+      { name: 'Combo 3', price: '24.000.000đ', note: 'Niêm yết 26.600.000đ · chụp + phóng sự cưới', highlight: false, items: [
+        'Gói chụp 11.800.000đ (02 váy + 02 vest)',
         'Phóng sự JA Studio 14.800.000đ: 02 máy ngày cưới + 02 máy ăn hỏi',
-        'Album 20x30 Silk 30 trang, 40 file photoshop, thiệp điện tử'
+        'Album 20x30 Ultra HD 30 trang, 40 file photoshop, thiệp điện tử'
       ]},
       { name: 'Combo 4', price: '28.800.000đ', note: 'Niêm yết 38.800.000đ · chụp + váy áo cao cấp', highlight: false, items: [
         'Gói chụp 14.800.000đ',
         'Mượn 01 váy ngày cưới 15-20 triệu',
-        'Mượn 01 áo dài ăn hỏi hoặc vest tối đa 4 triệu',
+        'Mượn 01 váy đi bàn hoặc vest tối đa 4 triệu',
         'Album 25x35 Silk 30 trang, 04 ảnh để bàn'
       ]},
       { name: 'Combo 5', price: '35.000.000đ', note: 'Niêm yết 43.600.000đ · chụp + phóng sự + váy áo', highlight: false, items: [
         'Gói chụp 14.800.000đ',
         'Phóng sự JA Studio 14.800.000đ (02 máy cưới + 02 máy hỏi)',
-        'Mượn váy ngày cưới 8-10 triệu + áo dài hoặc vest tối đa 4 triệu',
+        'Mượn váy ngày cưới 8-10 triệu + váy đi bàn hoặc vest tối đa 4 triệu',
         'Album 25x35 Silk 30 trang'
       ]},
       { name: 'Combo VIP 1', price: '40.800.000đ', note: 'Niêm yết 45.600.000đ · chụp + phóng sự 4 máy', highlight: false, items: [
@@ -196,7 +203,7 @@ const data = {
       ]},
       { name: 'Combo VIP 2', price: '48.600.000đ', note: 'Niêm yết 61.600.000đ · thêm váy áo + makeup', highlight: false, items: [
         'Gói chụp 14.800.000đ + phóng sự JA 14.800.000đ',
-        'Mượn váy ngày cưới 15-20 triệu + áo dài hoặc vest tối đa 4 triệu',
+        'Mượn váy ngày cưới 15-20 triệu + váy đi bàn hoặc vest tối đa 4 triệu',
         'Trang điểm ăn hỏi + ngày cưới 8.000.000đ'
       ]},
       { name: 'Combo VIP 3', price: '60.800.000đ', note: 'Niêm yết 68.800.000đ · Founder chụp + PSC 4 máy', highlight: false, items: [
@@ -210,21 +217,21 @@ const data = {
         'Mượn váy ngày cưới 15-20 triệu + áo dài hoặc vest tối đa 4 triệu',
         'Album 25x35 bìa tạp giấy Silk 30 trang + hộp'
       ]},
-      { name: 'Combo VIP 5', price: '68.600.000đ', note: 'Niêm yết 83.600.000đ · VIP 4 + trang điểm 2 buổi', highlight: false, items: [
+      { name: 'Combo VIP 5', price: '70.600.000đ', note: 'Niêm yết 83.600.000đ · VIP 4 + trang điểm 2 buổi', highlight: false, items: [
         'Gói chụp 20.800.000đ + phóng sự JA 30.800.000đ',
-        'Mượn váy ngày cưới 15-20 triệu + áo dài hoặc vest tối đa 4 triệu',
+        'Mượn váy ngày cưới 15-20 triệu + váy đi bàn hoặc vest tối đa 4 triệu',
         'Trang điểm ăn hỏi + ngày cưới 8.000.000đ'
       ]},
-      { name: 'Combo Luxury 1', price: '82.800.000đ', note: 'Niêm yết 100.800.000đ · Founder toàn trình', highlight: false, items: [
+      { name: 'Combo Luxury 1', price: '85.800.000đ', note: 'Niêm yết 100.800.000đ · Founder toàn trình', highlight: false, items: [
         'Gói chụp 38.000.000đ: Mr.Thắng trực tiếp chụp, hậu kỳ 50 file',
         'Phóng sự JA 30.800.000đ (4 máy cả hai buổi)',
-        'Mượn váy 15-20 triệu + áo dài hoặc vest, makeup 2 buổi 8.000.000đ',
-        'Album 25x35 bìa da nổi 40 trang giấy Silk'
+        'Mượn váy 15-20 triệu + váy đi bàn hoặc vest, makeup 2 buổi 8.000.000đ',
+        'Album 25x35 bìa da nổi 40 trang giấy Silk + hộp'
       ]},
-      { name: 'Combo Luxury 2', price: '186.800.000đ', note: 'Niêm yết 206.000.000đ · mọi hạng mục thiết kế riêng', highlight: false, items: [
-        'Gói chụp 60.000.000đ: Founder + Ximona Makeup + stylist Phy 03 concept',
-        'Váy cưới thiết kế 50 triệu, cặp áo dài đôi 20 triệu, vest thiết kế 5 triệu theo số đo',
-        'Phóng sự JA Luxury 55.000.000đ: ngày cưới 03 chụp + 03 quay (Mr.Thắng), ăn hỏi 02 + 02',
+      { name: 'Combo Luxury 2', price: '200.000.000đ', note: 'Niêm yết 213.000.000đ · mọi hạng mục thiết kế riêng', highlight: false, items: [
+        'Gói chụp Luxury 80.000.000đ: Founder chụp, Ximona Makeup, stylist Phy 03 concept',
+        'Váy cưới thiết kế 50 triệu + váy đi bàn VIP 12 triệu',
+        'Phóng sự JA Luxury 55.000.000đ: ngày cưới 03 chụp + 03 quay (Founder chụp), ăn hỏi 02 + 02',
         'Trang điểm Leader Team 2 buổi 16.000.000đ',
         'Album 25x35 bìa da nổi 50 trang + hộp thiết kế'
       ]}
@@ -268,5 +275,5 @@ for (const [slug, d] of Object.entries(data)) {
   run('UPDATE pricing SET intro = ?, tiers_json = ? WHERE slug = ?', d.intro, JSON.stringify(d.tiers), slug);
   console.log('Đã cập nhật', slug + ':', d.tiers.length, 'gói');
 }
-setSetting('pricing_2027_applied', '1');
+setSetting('pricing_2027_v2', '1');
 console.log('Xong. Nhóm váy cưới giữ nguyên.');
