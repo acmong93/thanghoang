@@ -9,8 +9,8 @@ const { run, get, setting, setSetting } = require('../src/db');
 /* Chỉ áp 1 lần (server gọi lúc khởi động); anh Thắng sửa giá qua admin sẽ không bị ghi đè.
    Muốn áp lại từ đầu: node scripts/update-pricing-2027.js --force
    v2 (04/09/2026): cập nhật đợt điều chỉnh giá prewedding + combo theo sheet mới */
-if (setting('pricing_2027_v2') === '1' && !process.argv.includes('--force')) {
-  console.log('[pricing] Bảng giá 2027 v2 đã áp trước đó — bỏ qua (dùng --force để áp lại).');
+if (setting('pricing_2027_v3') === '1' && !process.argv.includes('--force')) {
+  console.log('[pricing] Bảng giá 2027 v3 đã áp trước đó — bỏ qua (dùng --force để áp lại).');
   process.exit(0);
 }
 
@@ -25,7 +25,7 @@ const data = {
         'Toàn bộ file gốc và 15 file photoshop hoàn thiện',
         '01 video slide ảnh Basic'
       ]},
-      { name: 'Package 2', price: '7.900.000đ', note: 'Studio phim trường độc quyền · 4 giờ', highlight: false, items: [
+      { name: 'Package 2', price: '8.800.000đ', note: 'Studio phim trường độc quyền miễn phí · 5 giờ', highlight: false, items: [
         '01 váy cao cấp + 01 set tự chuẩn bị, 01 vest + 01 set',
         'Trang điểm và làm tóc theo váy ngày chụp',
         '02 ảnh phóng 60x90 ép gỗ Laminate',
@@ -54,7 +54,7 @@ const data = {
         'Tặng thiệp điện tử 2.000.000đ và 02 clip TikTok'
       ]},
       { name: 'VIP 1', price: '20.800.000đ', note: '02-03 địa điểm · 10 giờ · tặng gói chụp tối', highlight: false, items: [
-        '01 váy cao cấp + 01 váy VIP + 01 set, 02 vest',
+        '01 váy cao cấp + 01 váy VIP + 01 set, 02 vest + 01 set',
         '02 ảnh 60x90 ép gỗ Meka, khung nhập khẩu',
         'File gốc + 45 file photoshop, video slide Hàn Quốc',
         '04 ảnh để bàn khung nhập khẩu',
@@ -70,7 +70,7 @@ const data = {
         'Thiệp điện tử 2.000.000đ, 02 clip TikTok'
       ]},
       { name: 'Luxury 1', price: '38.000.000đ', note: 'Founder Mr.Thắng trực tiếp chụp và tư vấn', highlight: false, items: [
-        '02 váy chụp VIP + 01 set, 02 vest cao cấp',
+        '02 váy chụp VIP + 01 set, 02 vest cao cấp + 01 set',
         'Mr.Thắng chụp và hậu kỳ 50 file photoshop',
         '02 ảnh Meka khung nhập, video slide Hàn Quốc',
         '06 ảnh để bàn khung nhập khẩu',
@@ -92,7 +92,7 @@ const data = {
         'Thiệp điện tử 2.000.000đ, 02 clip TikTok'
       ]},
       { name: 'Ngoại Thành VIP', price: '25.800.000đ', note: 'Chụp 1 ngày ngoại thành, sản phẩm chuẩn VIP', highlight: false, items: [
-        '01 váy cao cấp + 01 váy VIP + 01 set, 02 vest',
+        '01 váy cao cấp + 01 váy VIP + 01 set, 02 vest + 01 set',
         '02 ảnh Meka khung nhập, file gốc + 45 file photoshop',
         'Video slide Hàn Quốc, 04 ảnh để bàn khung nhập',
         'Album 25x35 bìa tạp giấy Silk 30 trang + hộp',
@@ -103,7 +103,15 @@ const data = {
         'Thêm trang phục tự chuẩn bị 1.500.000đ/set',
         'Quay video prewedding 10.000.000đ',
         'Chụp thêm máy film 2.500.000đ (chưa gồm film và tráng phim)',
-        'Book Founder chụp +8.000.000đ nửa ngày, +12.000.000đ cả ngày'
+        'Book Founder chụp +8.000.000đ nửa ngày, +12.000.000đ cả ngày',
+        'Không lấy album: quy đổi sang bộ ảnh treo tường hoặc vật phẩm khác'
+      ]},
+      { name: 'In Ấn Và Chỉnh Sửa Thêm', price: 'Theo cỡ', note: 'In ảnh, in album, chỉnh sửa ngoài gói', highlight: false, items: [
+        'In ảnh ép gỗ lụa kèm khung: 15x21 150.000đ · 20x30 200.000đ · 50x75 500.000đ · 60x90 1.000.000đ · 70x110 1.500.000đ',
+        'Nâng Meka HD hoặc khung nhập khẩu: +75.000đ tới +1.000.000đ theo cỡ',
+        'In thêm album 30 trang: cỡ 20x30 2.500.000đ, cỡ 25x35 3.500.000đ',
+        'Thêm trang album 250.000đ/tờ 2 trang, nâng bìa da +500.000đ',
+        'Chỉnh sửa thêm ảnh 80.000đ/ảnh · combo 10 ảnh 600.000đ · combo 20 ảnh 1.000.000đ'
       ]}
     ]
   },
@@ -275,5 +283,5 @@ for (const [slug, d] of Object.entries(data)) {
   run('UPDATE pricing SET intro = ?, tiers_json = ? WHERE slug = ?', d.intro, JSON.stringify(d.tiers), slug);
   console.log('Đã cập nhật', slug + ':', d.tiers.length, 'gói');
 }
-setSetting('pricing_2027_v2', '1');
+setSetting('pricing_2027_v3', '1');
 console.log('Xong. Nhóm váy cưới giữ nguyên.');
