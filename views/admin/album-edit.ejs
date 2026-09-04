@@ -37,11 +37,11 @@
   <span class="muted">Chọn được nhiều ảnh cùng lúc · tối đa 30MB/ảnh</span>
 </form>
 
-<p class="muted" style="margin:-6px 0 14px">Di chuột lên ảnh để thấy nút thao tác. Thanh kéo dưới mỗi ảnh dùng để <b>căn phần ảnh được giữ lại</b> khi thumbnail bị cắt (VD ảnh dọc bị mất mặt: kéo về phía trên).</p>
+<p class="muted" style="margin:-6px 0 14px"><b>Giữ chuột vào ảnh rồi kéo thả</b> để đưa tới thẳng vị trí muốn (thả là tự lưu). Nút ← → vẫn dùng được để nhích từng nấc. Thanh kéo dưới mỗi ảnh dùng để <b>căn phần ảnh được giữ lại</b> khi thumbnail bị cắt (VD ảnh dọc bị mất mặt: kéo về phía trên).</p>
 
-<div class="img-grid">
+<div class="img-grid" id="img-grid">
   <% images.forEach(im => { %>
-  <div class="img-cell <%= im.is_cover ? 'cover' : '' %>">
+  <div class="img-cell <%= im.is_cover ? 'cover' : '' %>" draggable="true" data-id="<%= im.id %>">
     <img src="<%= im.thumb || im.file %>" alt="" loading="lazy" style="object-position:<%= im.pos || '50% 50%' %>" id="imprev-<%= im.id %>" />
     <% if (im.is_cover) { %><span class="cover-tag">Ảnh bìa</span><% } %>
     <div class="img-actions">
@@ -68,7 +68,69 @@
   <% }) %>
 </div>
 
+<div class="cc-toast" id="img-toast">Đã lưu thứ tự ảnh</div>
+
 <script>
+// Kéo thả sắp xếp ảnh: nhấc ảnh thả vào vị trí bất kỳ (VD ảnh 59 lên vị trí 2),
+// thả là lưu cả dãy thứ tự; Esc hoặc thả ra ngoài là hoàn tác
+(function () {
+  var grid = document.getElementById('img-grid');
+  if (!grid) return;
+  var dragging = null, origin = null, toastT;
+  var toast = document.getElementById('img-toast');
+
+  function save() {
+    var ids = [].map.call(grid.querySelectorAll('.img-cell'), function (c) { return c.dataset.id; });
+    fetch('/admin/albums/<%= album.id %>/images/reorder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids: ids })
+    }).then(function (r) {
+      if (r.ok) {
+        toast.classList.add('show');
+        clearTimeout(toastT);
+        toastT = setTimeout(function () { toast.classList.remove('show'); }, 1600);
+      } else { alert('Chưa lưu được thứ tự ảnh, thử lại giúp anh.'); }
+    }).catch(function () { alert('Mất mạng? Chưa lưu được thứ tự ảnh.'); });
+  }
+
+  grid.querySelectorAll('.img-cell').forEach(function (cell) {
+    cell.addEventListener('dragstart', function (e) {
+      dragging = cell;
+      origin = { next: cell.nextElementSibling };
+      cell.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', cell.dataset.id); } catch (err) {}
+    });
+    cell.addEventListener('dragend', function (e) {
+      cell.classList.remove('dragging');
+      dragging = null;
+      if (e.dataTransfer && e.dataTransfer.dropEffect === 'none' && origin) {
+        grid.insertBefore(cell, origin.next); // hủy kéo: trả về chỗ cũ, không lưu
+        origin = null;
+        return;
+      }
+      origin = null;
+      save();
+    });
+  });
+
+  grid.addEventListener('dragover', function (e) {
+    if (!dragging) return;
+    e.preventDefault();
+    // Lưới nhiều cột: chèn trước ô đầu tiên nằm "sau" con trỏ theo trật tự đọc (trái→phải, trên→xuống)
+    var after = null;
+    grid.querySelectorAll('.img-cell:not(.dragging)').forEach(function (c) {
+      if (after) return;
+      var r = c.getBoundingClientRect();
+      if (e.clientY < r.top + r.height / 2 ||
+          (e.clientY < r.bottom && e.clientX < r.left + r.width / 2)) after = c;
+    });
+    if (after) grid.insertBefore(dragging, after);
+    else grid.appendChild(dragging);
+  });
+})();
+
 // Căn vị trí crop: xem trước ngay trên thumbnail, tự lưu sau khi ngừng kéo 0.4s
 document.querySelectorAll('.pos-slider').forEach(sl => {
   let t;

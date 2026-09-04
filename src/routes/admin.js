@@ -253,6 +253,25 @@ router.post('/albums/:id/images', upload.array('photos', 40), async (req, res) =
   res.redirect('/admin/albums/' + album.id);
 });
 
+/* Kéo thả sắp xếp ảnh trong album/concept: nhận toàn bộ thứ tự mới một lần.
+   Chỉ nhận id thuộc đúng album (chặn payload lạ), bọc transaction */
+router.post('/albums/:id/images/reorder', express.json(), (req, res) => {
+  const albumId = Number(req.params.id) || 0;
+  const own = new Set(all('SELECT id FROM images WHERE album_id = ?', albumId).map(r => r.id));
+  const ids = (Array.isArray(req.body.ids) ? req.body.ids : [])
+    .map(Number).filter(id => own.has(id));
+  const dbm = require('../db');
+  dbm.db.exec('BEGIN');
+  try {
+    ids.forEach((id, i) => run('UPDATE images SET sort_order = ? WHERE id = ? AND album_id = ?', i, id, albumId));
+    dbm.db.exec('COMMIT');
+  } catch (e) {
+    try { dbm.db.exec('ROLLBACK'); } catch (e2) { /* đã rollback */ }
+    return res.status(500).json({ ok: false });
+  }
+  res.json({ ok: true, count: ids.length });
+});
+
 /* Thay ảnh tại chỗ: giữ nguyên thứ tự + ảnh bìa, xoá file cũ nếu là ảnh upload */
 router.post('/images/:id/replace', upload.single('photo'), async (req, res) => {
   const img = get('SELECT i.*, a.slug AS album_slug FROM images i JOIN albums a ON a.id = i.album_id WHERE i.id = ?', req.params.id);
