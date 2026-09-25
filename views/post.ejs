@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<%- include('partials/head', { title: post.title, desc: post.excerpt.slice(0, 155), og: post.cover || '', ogType: 'article' }) %>
+<%- include('partials/head', { title: post.title, desc: post.excerpt.slice(0, 155), og: post.cover || '', ogType: 'article',
+  crumbs: [['Tin Tức', '/tin-tuc'], [post.title, null]] }) %>
 </head>
 <body>
 <%- include('partials/header', { solidHeader: true }) %>

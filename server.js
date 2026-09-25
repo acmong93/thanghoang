@@ -94,6 +94,20 @@ ensureAdmin();
   }
 }
 
+/* SEO: gom về một địa chỉ chuẩn duy nhất — www chuyển 301 về non-www,
+   URL thừa dấu / cuối chuyển 301 về bản không dấu / (tránh trùng lặp nội dung) */
+app.use((req, res, next) => {
+  const host = req.get('host') || '';
+  if (host.startsWith('www.')) {
+    return res.redirect(301, `${req.protocol}://${host.slice(4)}${req.originalUrl}`);
+  }
+  if (req.path.length > 1 && req.path.endsWith('/')) {
+    const query = req.originalUrl.slice(req.path.length);
+    return res.redirect(301, req.path.replace(/\/+$/, '') + query);
+  }
+  next();
+});
+
 /* URL gốc cho SEO (canonical, og:url, sitemap).
    Ưu tiên: biến môi trường SITE_URL > cài đặt site_url trong admin > host của request */
 app.use((req, res, next) => {

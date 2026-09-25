@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<%- include('partials/head', { title: current.name, desc: current.intro.slice(0, 155) }) %>
+<%- include('partials/head', { title: current.name, desc: current.intro.slice(0, 155),
+  crumbs: [['Bảng Giá', '/bang-gia/anh-cuoi'], [current.name, null]] }) %>
 </head>
 <body>
 <%- include('partials/header', { solidHeader: true }) %>

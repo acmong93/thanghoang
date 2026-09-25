@@ -73,10 +73,23 @@
     address: { '@type': 'PostalAddress', streetAddress: s.address, addressLocality: 'Hà Nội', addressCountry: 'VN' },
     geo: geoMatch ? { '@type': 'GeoCoordinates', latitude: Number(geoMatch[1]), longitude: Number(geoMatch[2]) } : undefined,
     openingHours: 'Mo-Su 09:00-21:00',
-    sameAs: [s.instagram, s.facebook].filter(Boolean),
+    sameAs: [s.instagram, s.facebook, s.tiktok, s.youtube].filter(Boolean),
     priceRange: '$$'
   };
   Object.keys(ld).forEach(k => ld[k] === undefined && delete ld[k]);
 %>
 <script type="application/ld+json"><%- JSON.stringify(ld) %></script>
+<% } %>
+<% /* BreadcrumbList: trang con truyền crumbs = [[tên, đường dẫn hoặc null nếu là trang hiện tại], ...] */
+if (typeof crumbs !== 'undefined' && Array.isArray(crumbs) && crumbs.length) {
+  const bl = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [['Trang chủ', '/']].concat(crumbs).map((c, i) => {
+      const item = { '@type': 'ListItem', position: i + 1, name: c[0] };
+      if (c[1]) item.item = baseUrl + c[1];
+      return item;
+    })
+  };
+%><script type="application/ld+json"><%- JSON.stringify(bl) %></script>
 <% } %>
