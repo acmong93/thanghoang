@@ -11,6 +11,9 @@ const PORT = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.disable('x-powered-by');
+/* Chạy sau proxy của hosting: đọc đúng https từ X-Forwarded-Proto,
+   để redirect www và canonical trỏ thẳng https (không qua bậc http trung gian) */
+app.set('trust proxy', 1);
 
 /* Đổi số này mỗi lần deploy để trình duyệt tải lại CSS/JS mới */
 app.locals.v = require('./package.json').version;
