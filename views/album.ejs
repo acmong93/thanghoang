@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<%- include('partials/head', { title: album.name, desc: album.desc.slice(0, 155), og: album.cover.file || '' }) %>
+<%- include('partials/head', { title: album.name, desc: album.desc.slice(0, 155), og: album.cover.file || '',
+  crumbs: [album.category === 'phong-su' ? ['Phóng Sự Cưới', '/phong-su'] : ['Ảnh Cưới', '/anh-cuoi'], [album.name, null]] }) %>
 </head>
 <body>
 <%- include('partials/header', { solidHeader: true }) %>

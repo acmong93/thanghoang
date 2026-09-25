@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<%- include('partials/head', { title: 'Concept ' + album.name, desc: (album.desc || ('Bộ concept ' + album.name + ' tại Rosé Wedding')).slice(0, 155) }) %>
+<%- include('partials/head', { title: 'Concept ' + album.name, desc: (album.desc || ('Bộ concept ' + album.name + ' tại Rosé Wedding')).slice(0, 155),
+  og: images.length ? images[0].file : '',
+  crumbs: [['Concept', '/concept'], ['Concept ' + album.name, null]] }) %>
 </head>
 <body>
 <%- include('partials/header', { solidHeader: true }) %>
