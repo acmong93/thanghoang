@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<%- include('partials/head', { title: post.title, desc: post.excerpt.slice(0, 155), og: post.cover || '', ogType: 'article',
+<%- include('partials/head', { title: post.title, desc: post.excerpt, og: post.cover || '', ogType: 'article',
   crumbs: [['Tin Tức', '/tin-tuc'], [post.title, null]] }) %>
 </head>
 <body>
@@ -29,11 +29,11 @@
   headline: post.title,
   description: post.excerpt,
   image: post.cover ? (post.cover.startsWith('http') ? post.cover : baseUrl + post.cover) : undefined,
-  datePublished: post.created_at,
+  datePublished: (d => isNaN(d) ? undefined : d.toISOString())(new Date(String(post.created_at).replace(' ', 'T'))),
   author: { '@type': 'Organization', name: s.site_name, url: baseUrl },
   publisher: { '@type': 'Organization', name: s.site_name },
   mainEntityOfPage: pageUrl
-}) %></script>
+}).replace(/</g, '\\u003c') %></script>
 
 <% if (others.length) { %>
 <section class="pad bg-pearl">

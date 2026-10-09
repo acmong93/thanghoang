@@ -604,8 +604,12 @@ router.post('/backup/restore', uploadBackup.single('backup'), (req, res) => {
       fs.writeFileSync(dest, e.getData());
     }
 
-    // 2) Khôi phục database: đóng DB, chép đè, mở lại
+    // 2) Khôi phục database: đóng DB, chép đè, mở lại.
+    //    Giữ trạng thái kiểm tra tên miền hiện tại (là trạng thái thật của hosting, không phải nội dung):
+    //    bản sao lưu cũ mà đè vào thì chuyển hướng .net → .vn bị tắt hoặc bỏ qua 24 giờ chờ
+    const keepDomain = allSettings();
     reopenDb(() => fs.writeFileSync(DB_PATH, dbEntry.getData()));
+    for (const k of ['domain_check', 'domain_check_token']) if (keepDomain[k]) setSetting(k, keepDomain[k]);
     ensureAdmin(); // đồng bộ lại mật khẩu quản trị theo biến môi trường hiện tại
     /* Bản sao lưu chụp trước đợt concept: nhập lại concept từ manifest kẻo trang trống */
     require('../concepts-import').ensureConcepts();

@@ -2,7 +2,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <%
   const pageTitle = (typeof title !== 'undefined' && title ? title + ' · ' : '') + s.site_name + ' · Ảnh cưới Editorial · Quiet Luxury Hà Nội';
-  const pageDesc = typeof desc !== 'undefined' && desc ? desc : 'Rosé Wedding · Ảnh cưới phong cách tối giản, editorial, quiet luxury tại Hà Nội. Lấy khách hàng làm trọng tâm trong từng khung hình.';
+  /* Mô tả cho Google tối đa ~155 ký tự, cắt ở ranh giới từ (không cụt giữa chữ) */
+  const clip = (t, n = 155) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length <= n ? t : t.slice(0, n - 1).replace(/\s+\S*$/, '') + '…'; };
+  const pageDesc = clip(typeof desc !== 'undefined' && desc ? desc : 'Rosé Wedding · Ảnh cưới phong cách tối giản, editorial, quiet luxury tại Hà Nội. Lấy khách hàng làm trọng tâm trong từng khung hình.');
+  /* JSON-LD nhúng trong <script>: đổi "<" thành < để chuỗi nào cũng không đóng được thẻ script */
+  const ldJson = o => JSON.stringify(o).replace(/</g, '\\u003c');
   let ogImage = typeof og !== 'undefined' && og ? og : '';
   if (!ogImage) { try { ogImage = JSON.parse(s.hero_images || '[]')[0] || ''; } catch (e) {} }
   const ogImageAbs = ogImage ? (ogImage.startsWith('http') ? ogImage : baseUrl + ogImage) : '';
@@ -85,7 +89,7 @@ gscCodes.forEach(c => { %><meta name="google-site-verification" content="<%= c %
   };
   Object.keys(ld).forEach(k => ld[k] === undefined && delete ld[k]);
 %>
-<script type="application/ld+json"><%- JSON.stringify(ld) %></script>
+<script type="application/ld+json"><%- ldJson(ld) %></script>
 <% } %>
 <% /* BreadcrumbList: trang con truyền crumbs = [[tên, đường dẫn hoặc null nếu là trang hiện tại], ...] */
 if (typeof crumbs !== 'undefined' && Array.isArray(crumbs) && crumbs.length) {
@@ -98,5 +102,5 @@ if (typeof crumbs !== 'undefined' && Array.isArray(crumbs) && crumbs.length) {
       return item;
     })
   };
-%><script type="application/ld+json"><%- JSON.stringify(bl) %></script>
+%><script type="application/ld+json"><%- ldJson(bl) %></script>
 <% } %>

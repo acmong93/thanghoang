@@ -16,6 +16,9 @@
         Chưa đặt tên miền chính: website dùng đúng địa chỉ khách đang truy cập.
       <% } else if (domain.active) { %>
         Đang là tên miền chính: <b><%= dh %></b>. Mọi tên miền khác của Rosé (www, .net, .vn) tự chuyển về đây.
+        <% if (domain.failing) { %><br />Kiểm tra trượt liên tục từ sau <%= fmt(domain.lastOkAt) %> (lần gần nhất <%= fmt(domain.lastFailAt) %>: <%= domain.lastError %>). Nếu đến <%= fmt(domain.pausesAt) %> vẫn chưa đạt, website sẽ tạm ngừng chuyển hướng cho an toàn.<% } %>
+      <% } else if (domain.paused) { %>
+        Tạm ngừng chuyển hướng về <b><%= dh %></b> vì quá 3 giờ không kiểm tra đạt (lần đạt gần nhất <%= domain.lastOkAt ? fmt(domain.lastOkAt) : 'chưa có' %>). Các tên miền đang chạy song song.<% if (domain.lastError) { %><br />Lỗi gần nhất<% if (domain.lastFailAt) { %> (<%= fmt(domain.lastFailAt) %>)<% } %>: <%= domain.lastError %>.<% } %>
       <% } else if (domain.firstOkAt) { %>
         <b><%= dh %></b> đã chạy ổn định từ <%= fmt(domain.firstOkAt) %> (hệ thống tự kiểm tra mỗi 15 phút). Sẽ chính thức thành tên miền chính lúc <b><%= fmt(domain.activatesAt) %></b>, sau 24 giờ chạy liên tục để DNS mới cập nhật ở mọi nhà mạng.
       <% } else { %>

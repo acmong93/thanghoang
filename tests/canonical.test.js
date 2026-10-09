@@ -114,7 +114,7 @@ test('KHÔNG đụng tới đường dẫn của web mới', () => {
 test('toàn bộ đường dẫn web cũ lưu trên Wayback đều có đích hợp lệ', () => {
   const file = path.join(__dirname, 'fixtures', 'wayback-rosewedding-vn.txt');
   const paths = fs.readFileSync(file, 'utf8').split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-  const valid = /^\/(tin-tuc(\/[\w-]+)?|bang-gia\/(anh-cuoi|combo|phong-su)|cau-chuyen|phong-su|anh-cuoi|concept(\/[\w-]+)?|album\/[\w-]+|#booking|#video)?$/;
+  const valid = /^\/(tin-tuc(\/[\w-]+)?|bang-gia\/(anh-cuoi|combo|phong-su)|cau-chuyen|phong-su|anh-cuoi|vay-cuoi|concept(\/[\w-]+)?|album\/[\w-]+|#booking|#video)?$/;
   for (const raw of paths) {
     const p = raw.split('?')[0];
     const to = legacyTarget(p, noLookups);
@@ -214,7 +214,7 @@ test('server: header Host giả KHÔNG thể kích hoạt tên miền chính (ch
   assert.equal(db.st.domain_check, undefined);
 });
 
-test('server: tự kiểm tra đạt liên tục 24 giờ thì .net chuyển về .vn, kèm giới hạn nhớ 1 ngày', async () => {
+test('server: tự kiểm tra đạt liên tục 24 giờ thì .net chuyển về .vn, kèm giới hạn nhớ 1 giờ', async () => {
   const db = fakeDb({ site_url: 'https://rosewedding.vn' });
   let t = 1000;
   const c = createCanonical({ db, env: {}, now: () => t, autoCheck: false, fetchImpl: fakeFetch(db) });
@@ -229,7 +229,7 @@ test('server: tự kiểm tra đạt liên tục 24 giờ thì .net chuyển v�
   const { res } = run1(c, fakeReq({ host: 'rosewedding.net', path: '/x', url: '/x?a=1' }));
   assert.equal(res.statusCode, 301);
   assert.equal(res.location, 'https://rosewedding.vn/x?a=1');
-  assert.equal(res.headers['cache-control'], 'public, max-age=86400');
+  assert.equal(res.headers['cache-control'], 'public, max-age=3600');
   const vn = run1(c, fakeReq({ host: 'rosewedding.vn', path: '/x' }));
   assert.equal(vn.nexted, true);
   assert.equal(vn.res.locals.baseUrl, 'https://rosewedding.vn');
@@ -300,4 +300,157 @@ test('/album/<concept> đi thẳng một bước về /concept/<slug>', () => {
   assert.equal(legacyTarget('/album/lam-diep', lk), null);
   const d = decide({ method: 'GET', protocol: 'https', search: '', primary: VN, primaryActive: true, lookups: lk, hostHeader: 'rosewedding.net', path: '/album/ao-dai' });
   assert.equal(d, 'https://rosewedding.vn/concept/ao-dai');
+});
+
+/* ---------- Bổ sung sau đợt rà soát 09/10/2026 ---------- */
+const { oldHtmlTarget, checkPrimary } = require('../src/canonical');
+
+test('link cũ: bài album Haravan về đúng album/concept tương ứng (tra database), mất album thì lùi về danh sách', () => {
+  const albums = { 'fine-art': 'signature', 'han-quoc': 'signature', 'editorial-tap-chi': 'concept', 'phim-truong': 'signature', 'studio-phim-truong': 'concept' };
+  const lk = { postExists: () => false, albumBySlug: s => (albums[s] ? { slug: s, category: albums[s] } : null) };
+  const cases = {
+    '/blogs/anh-cuoi/concept-fine-art-200-bong-hong-white-roses': '/album/fine-art',
+    '/blogs/anh-cuoi/concept-han-quoc-nhe-nhang': '/album/han-quoc',
+    '/blogs/anh-cuoi/anh-cuoi-tap-chi': '/concept/editorial-tap-chi',
+    '/blogs/anh-cuoi/concept-co-dien-sang-trong': '/album/phim-truong',
+    '/anh-cuoi/phim-truong-santorini-preweddingmot': '/concept/studio-phim-truong',
+    '/blogs/anh-cuoi/studio-tuong-hoa': '/concept/studio-phim-truong'
+  };
+  for (const [from, to] of Object.entries(cases)) assert.equal(legacyTarget(from, lk), to, from);
+  assert.equal(legacyTarget('/blogs/anh-cuoi/concept-han-quoc-nhe-nhang', noLookups), '/concept', 'album bị ẩn/xoá: về danh sách concept');
+});
+
+test('link cũ: váy cưới, /pages/news, sản phẩm Haravan, /bang-gia trần', () => {
+  assert.equal(legacyTarget('/blogs/news/xu-huong-vay-cuoi-2020', noLookups), '/vay-cuoi');
+  assert.equal(legacyTarget('/pages/news', noLookups), '/tin-tuc');
+  assert.equal(legacyTarget('/collections/news', noLookups), '/tin-tuc');
+  assert.equal(legacyTarget('/products/goi-chup-abc', noLookups), '/bang-gia/anh-cuoi');
+  assert.equal(legacyTarget('/products/bang-gia-combo-chup-anh-cuoi', noLookups), '/bang-gia/combo');
+  assert.equal(legacyTarget('/bang-gia', noLookups), '/bang-gia/anh-cuoi');
+  assert.equal(legacyTarget('/bang-gia/combo', noLookups), null);
+});
+
+test('web tĩnh đời đầu (*.html): một bước tới trang mới, chặn tham số lạ', () => {
+  const lk = { postExists: () => false, albumBySlug: s => (s === 'studio-phim-truong' ? { slug: s, category: 'concept' } : s === 'lam-diep' ? { slug: s, category: 'signature' } : null) };
+  assert.equal(oldHtmlTarget('/index.html', '', lk), '/');
+  assert.equal(oldHtmlTarget('/album.html', '?key=studio-phim-truong', lk), '/concept/studio-phim-truong');
+  assert.equal(oldHtmlTarget('/album.html', '?key=lam-diep', lk), '/album/lam-diep');
+  assert.equal(oldHtmlTarget('/album.html', '?key=khong-co', lk), '/anh-cuoi');
+  assert.equal(oldHtmlTarget('/bang-gia.html', '?type=combo', lk), '/bang-gia/combo');
+  assert.equal(oldHtmlTarget('/bang-gia.html', '?type=//evil.com', lk), '/bang-gia/anh-cuoi');
+  assert.equal(oldHtmlTarget('/post.html', '?id=chuan-bi-chup-cuoi', lk), '/tin-tuc/chuan-bi-chup-cuoi');
+  assert.equal(oldHtmlTarget('/post.html', '', lk), '/tin-tuc');
+  assert.equal(oldHtmlTarget('/concept', '', lk), null);
+  const d = decide({ method: 'GET', protocol: 'https', search: '?key=studio-phim-truong', primary: VN, primaryActive: true, lookups: lk, hostHeader: 'www.rosewedding.net', path: '/album.html' });
+  assert.equal(d, 'https://rosewedding.vn/concept/studio-phim-truong', 'đổi host + đường dẫn trong MỘT bước');
+});
+
+test('host có cổng hoặc dấu chấm cuối không tự chuyển về chính nó', () => {
+  assert.equal(run({ hostHeader: 'rosewedding.vn:443', path: '/concept' }), null);
+  assert.equal(run({ hostHeader: 'rosewedding.vn.', path: '/concept' }), null);
+  assert.equal(run({ hostHeader: 'rosewedding.net:443', path: '/concept' }), 'https://rosewedding.vn/concept');
+});
+
+test('đường dẫn dài toàn dấu / không làm treo server', () => {
+  const t0 = Date.now();
+  run({ hostHeader: 'rosewedding.vn', path: '/a' + '/'.repeat(200000) + 'x' });
+  run({ hostHeader: 'rosewedding.vn', path: '/a' + '/'.repeat(200000) });
+  assert.ok(Date.now() - t0 < 500, 'phải xử lý gần như tức thì');
+  assert.equal(run({ hostHeader: 'rosewedding.vn', path: '/concept///' }), '/concept');
+});
+
+test('ô site_url gõ thiếu https:// vẫn hiểu; tên miền Rosé luôn https', () => {
+  assert.equal(parseSiteUrl('rosewedding.vn').origin, 'https://rosewedding.vn');
+  assert.equal(parseSiteUrl('http://rosewedding.vn').origin, 'https://rosewedding.vn');
+  assert.equal(parseSiteUrl('www.rosewedding.vn/').host, 'rosewedding.vn');
+  assert.equal(parseSiteUrl('abc'), null);
+  assert.equal(parseSiteUrl('ftp://rosewedding.vn'), null);
+});
+
+test('kích hoạt đúng lúc một lần kiểm tra XÁC NHẬN đủ 24 giờ (không sớm hơn)', () => {
+  const st = { host: 'rosewedding.vn', firstOkAt: 1000, lastOkAt: 1000 + GRACE_MS - 60000 };
+  assert.equal(isActive(VN, st, 1000 + GRACE_MS + 30000), false, 'đồng hồ đã qua 24 giờ nhưng chưa có lần đạt xác nhận');
+  assert.equal(isActive(VN, { ...st, lastOkAt: 1000 + GRACE_MS }, 1000 + GRACE_MS + 30000), true);
+});
+
+test('sau đợt trượt dài hơn 3 giờ (VD tên miền hết hạn rồi gia hạn): đếm lại đủ 24 giờ', () => {
+  const T = 1000;
+  let s = nextState({}, 'rosewedding.vn', true, '', T);
+  s = nextState(s, 'rosewedding.vn', true, '', T + GRACE_MS);
+  assert.equal(isActive(VN, s, T + GRACE_MS), true);
+  s = nextState(s, 'rosewedding.vn', false, 'NXDOMAIN', T + GRACE_MS + 60000);
+  s = nextState(s, 'rosewedding.vn', false, 'NXDOMAIN', T + GRACE_MS + STALE_MS + 60000);
+  assert.equal(isActive(VN, s, T + GRACE_MS + STALE_MS + 60000), false, 'quá 3 giờ: tạm ngừng');
+  s = nextState(s, 'rosewedding.vn', true, '', T + GRACE_MS + 3 * STALE_MS);
+  assert.equal(isActive(VN, s, T + GRACE_MS + 3 * STALE_MS), false, 'đạt lại nhưng phải chờ thêm 24 giờ');
+  assert.equal(s.firstOkAt, T + GRACE_MS + 3 * STALE_MS);
+  let r = nextState({}, 'rosewedding.vn', true, '', T);
+  r = nextState(r, 'rosewedding.vn', true, '', T + GRACE_MS);
+  r = nextState(r, 'rosewedding.vn', true, '', T + GRACE_MS + 5 * STALE_MS);
+  assert.equal(isActive(VN, r, T + GRACE_MS + 5 * STALE_MS), true, 'server chỉ tắt (không có lần trượt nào): không đếm lại');
+});
+
+test('DNS công khai: một bên tạm không hỏi được thì dựa bên còn lại; trả lời "không có IP"/NXDOMAIN là trượt', async () => {
+  const p = parseSiteUrl('https://rosewedding.vn');
+  const site = { status: 200, text: async () => 'rose-domain-check:tok' };
+  const mk = (google, cloudflare) => async url => {
+    const pick = url.includes('dns.google') ? google : url.includes('cloudflare-dns') ? cloudflare : null;
+    if (!pick) return site;
+    if (pick === 'down') throw Object.assign(new Error('fetch failed'), { cause: { code: 'ECONNRESET' } });
+    if (pick === 'http500') return { ok: false, status: 500 };
+    if (pick === 'nx') return { ok: true, json: async () => ({ Status: 3 }) };
+    if (pick === 'empty') return { ok: true, json: async () => ({ Status: 0 }) };
+    return { ok: true, json: async () => ({ Status: 0, Answer: [{ type: 1, data: '1.2.3.4' }] }) };
+  };
+  await checkPrimary(p, 'tok', mk('ip', 'down'));
+  await checkPrimary(p, 'tok', mk('http500', 'ip'));
+  await assert.rejects(checkPrimary(p, 'tok', mk('down', 'down')), /ECONNRESET/);
+  await assert.rejects(checkPrimary(p, 'tok', mk('ip', 'empty')), /chưa thấy địa chỉ IP/);
+  await assert.rejects(checkPrimary(p, 'tok', mk('nx', 'ip')), /NXDOMAIN/);
+});
+
+test('server: trạng thái admin báo "tạm ngừng" khi đã kích hoạt mà quá 3 giờ không đạt', async () => {
+  const db = fakeDb({ site_url: 'https://rosewedding.vn' });
+  let t = 1000;
+  let mode = { dnsOk: true, siteOk: true };
+  const c = createCanonical({ db, env: {}, now: () => t, autoCheck: false, fetchImpl: (u, o) => fakeFetch(db, mode)(u, o) });
+  await c.runCheck();
+  t += GRACE_MS;
+  await c.runCheck();
+  assert.equal(c.status().active, true);
+  mode = { dnsOk: true, siteOk: false };
+  t += 60000;
+  await c.runCheck();
+  assert.equal(c.status().active, true);
+  assert.equal(c.status().failing, true, 'đang trượt nhưng chưa quá 3 giờ');
+  t += STALE_MS;
+  await c.runCheck();
+  const st = c.status();
+  assert.equal(st.active, false);
+  assert.equal(st.paused, true);
+});
+
+test('server: canonical luôn chữ thường', () => {
+  const db = fakeDb({ site_url: 'https://rosewedding.vn' });
+  const c = createCanonical({ db, env: {}, now: () => 0, autoCheck: false, fetchImpl: fakeFetch(db) });
+  const { res } = run1(c, fakeReq({ host: 'Rosewedding.VN', path: '/Concept', url: '/Concept?a=1' }));
+  assert.equal(res.locals.pageUrl, 'https://rosewedding.vn/concept');
+});
+
+test('header X-Forwarded-Proto giả không đưa được địa chỉ lạ vào Location', () => {
+  const d = decide({ method: 'GET', protocol: 'https://evil.example/x?', search: '', primary: VN, primaryActive: false, lookups: noLookups, hostHeader: 'www.rosewedding.net', path: '/concept' });
+  assert.equal(d, 'https://rosewedding.net/concept');
+});
+
+test('DNS công khai trả SERVFAIL: coi như tạm không hỏi được, bên còn lại quyết định', async () => {
+  const p = parseSiteUrl('https://rosewedding.vn');
+  const site = { status: 200, text: async () => 'rose-domain-check:tok' };
+  const mk = (google, cloudflare) => async url => {
+    const pick = url.includes('dns.google') ? google : url.includes('cloudflare-dns') ? cloudflare : null;
+    if (!pick) return site;
+    if (pick === 'servfail') return { ok: true, json: async () => ({ Status: 2, Comment: ['EDE(9): DNSKEY Missing'] }) };
+    return { ok: true, json: async () => ({ Status: 0, Answer: [{ type: 1, data: '1.2.3.4' }] }) };
+  };
+  await checkPrimary(p, 'tok', mk('ip', 'servfail'));
+  await assert.rejects(checkPrimary(p, 'tok', mk('servfail', 'servfail')), /lỗi DNS mã 2/);
 });

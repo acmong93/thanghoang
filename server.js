@@ -119,15 +119,7 @@ if (ensureAdmin() && sessionStore) {
 }
 
 
-/* Chuyển hướng URL kiểu cũ (web tĩnh) sang URL mới */
-app.get('/index.html', (req, res) => res.redirect(301, '/'));
-app.get('/album.html', (req, res) => res.redirect(301, req.query.key ? `/album/${req.query.key}` : '/anh-cuoi'));
-app.get('/bang-gia.html', (req, res) => res.redirect(301, `/bang-gia/${req.query.type || 'anh-cuoi'}`));
-app.get('/anh-cuoi.html', (req, res) => res.redirect(301, '/anh-cuoi'));
-app.get('/vay-cuoi.html', (req, res) => res.redirect(301, '/vay-cuoi'));
-app.get('/cau-chuyen.html', (req, res) => res.redirect(301, '/cau-chuyen'));
-app.get('/tin-tuc.html', (req, res) => res.redirect(301, '/tin-tuc'));
-app.get('/post.html', (req, res) => res.redirect(301, req.query.id ? `/tin-tuc/${req.query.id}` : '/tin-tuc'));
+/* URL kiểu cũ của web tĩnh (*.html) do src/canonical.js chuyển thẳng một bước (oldHtmlTarget) */
 
 /* Thống kê truy cập tự vận hành (ẩn danh) — ghi lượt xem + nhận sự kiện liên hệ */
 const { trackMiddleware, trackRouter } = require('./src/track');
