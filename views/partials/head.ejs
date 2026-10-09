@@ -23,6 +23,12 @@
 <meta name="twitter:description" content="<%= pageDesc %>" />
 <% if (ogImageAbs) { %><meta name="twitter:image" content="<%= ogImageAbs %>" /><% } %>
 <link rel="icon" type="image/png" href="/img/logo/favicon.png" />
+<% /* Chấp nhận cả thẻ meta đầy đủ lẫn chỉ phần mã */
+  const gscRaw = String(s.gsc_verify || '').trim();
+  const gscMatch = gscRaw.match(/content=["']([^"']+)["']/);
+  const gscCode = gscMatch ? gscMatch[1] : (/^[\w-]+$/.test(gscRaw) ? gscRaw : '');
+if (gscCode) { %><meta name="google-site-verification" content="<%= gscCode %>" />
+<% } %>
 <% if (typeof preload !== 'undefined' && preload) { %><link rel="preload" as="image" href="<%= preload %>" fetchpriority="high" /><% } %>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

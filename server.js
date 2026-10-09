@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const session = require('express-session');
-const { ensureAdmin, allSettings } = require('./src/db');
+const { ensureAdmin } = require('./src/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,13 +19,20 @@ app.set('trust proxy', 1);
 app.locals.v = require('./package.json').version;
 
 app.use(compression());
+/* SEO: địa chỉ chuẩn duy nhất (tên miền chính, link web cũ Haravan, dấu / cuối) và URL gốc
+   cho canonical / og:url / sitemap. Đặt trước file tĩnh để ảnh trên .net cũng về tên miền chính.
+   Cơ chế tự kiểm tra chống sập web khi đổi tên miền: src/canonical.js */
+const canonical = require('./src/canonical').canonical();
+canonical.ensurePrimaryDefault();
+app.use(canonical.middleware);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+/* redirect: false để thư mục không tự thêm dấu / (tránh lặp với bước bỏ dấu / của canonical) */
 /* Khi UPLOADS_DIR trỏ ra ngoài app (thư mục sống sót qua deploy), vẫn phục vụ ảnh tại /uploads */
 if (process.env.UPLOADS_DIR) {
-  app.use('/uploads', express.static(process.env.UPLOADS_DIR, { maxAge: '7d' }));
+  app.use('/uploads', express.static(process.env.UPLOADS_DIR, { maxAge: '7d', redirect: false }));
 }
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d', redirect: false }));
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'rose-wedding-dev-secret',
@@ -97,28 +104,6 @@ ensureAdmin();
   }
 }
 
-/* SEO: gom về một địa chỉ chuẩn duy nhất — www chuyển 301 về non-www,
-   URL thừa dấu / cuối chuyển 301 về bản không dấu / (tránh trùng lặp nội dung) */
-app.use((req, res, next) => {
-  const host = req.get('host') || '';
-  if (host.startsWith('www.')) {
-    return res.redirect(301, `${req.protocol}://${host.slice(4)}${req.originalUrl}`);
-  }
-  if (req.path.length > 1 && req.path.endsWith('/')) {
-    const query = req.originalUrl.slice(req.path.length);
-    return res.redirect(301, req.path.replace(/\/+$/, '') + query);
-  }
-  next();
-});
-
-/* URL gốc cho SEO (canonical, og:url, sitemap).
-   Ưu tiên: biến môi trường SITE_URL > cài đặt site_url trong admin > host của request */
-app.use((req, res, next) => {
-  const base = (process.env.SITE_URL || allSettings().site_url || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
-  res.locals.baseUrl = base;
-  res.locals.pageUrl = base + req.originalUrl.split('?')[0];
-  next();
-});
 
 /* Chuyển hướng URL kiểu cũ (web tĩnh) sang URL mới */
 app.get('/index.html', (req, res) => res.redirect(301, '/'));
