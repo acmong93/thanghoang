@@ -23,12 +23,12 @@
 <meta name="twitter:description" content="<%= pageDesc %>" />
 <% if (ogImageAbs) { %><meta name="twitter:image" content="<%= ogImageAbs %>" /><% } %>
 <link rel="icon" type="image/png" href="/img/logo/favicon.png" />
-<% /* Chấp nhận cả thẻ meta đầy đủ lẫn chỉ phần mã */
-  const gscRaw = String(s.gsc_verify || '').trim();
-  const gscMatch = gscRaw.match(/content=["']([^"']+)["']/);
-  const gscCode = gscMatch ? gscMatch[1] : (/^[\w-]+$/.test(gscRaw) ? gscRaw : '');
-if (gscCode) { %><meta name="google-site-verification" content="<%= gscCode %>" />
-<% } %>
+<% /* Chấp nhận thẻ meta đầy đủ hoặc chỉ phần mã; nhiều mã (VD cho .vn và .net) cách nhau bằng dấu cách */
+  const gscRaw = String(s.gsc_verify || '');
+  const gscTags = [...gscRaw.matchAll(/content=["']([^"']+)["']/g)].map(m => m[1]);
+  const gscCodes = (gscTags.length ? gscTags : gscRaw.split(/[\s,]+/)).filter(c => /^[\w-]+$/.test(c));
+gscCodes.forEach(c => { %><meta name="google-site-verification" content="<%= c %>" />
+<% }) %>
 <% if (typeof preload !== 'undefined' && preload) { %><link rel="preload" as="image" href="<%= preload %>" fetchpriority="high" /><% } %>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
