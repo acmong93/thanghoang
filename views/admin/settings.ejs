@@ -19,7 +19,7 @@
       <% } else if (domain.firstOkAt) { %>
         <b><%= dh %></b> đã chạy ổn định từ <%= fmt(domain.firstOkAt) %> (hệ thống tự kiểm tra mỗi 15 phút). Sẽ chính thức thành tên miền chính lúc <b><%= fmt(domain.activatesAt) %></b>, sau 24 giờ chạy liên tục để DNS mới cập nhật ở mọi nhà mạng.
       <% } else { %>
-        <b><%= dh %></b> chưa hoạt động, nên các tên miền vẫn chạy song song, chưa chuyển hướng. Hệ thống tự kiểm tra mỗi 15 phút; khi tên miền chạy ổn định 24 giờ liên tục sẽ tự chuyển.<% if (domain.lastError) { %><br />Lần kiểm tra gần nhất: <%= domain.lastError %>.<% } %>
+        <b><%= dh %></b> chưa qua kiểm tra, nên các tên miền vẫn chạy song song, chưa chuyển hướng. Hệ thống tự kiểm tra mỗi 15 phút; khi tên miền chạy ổn định 24 giờ liên tục sẽ tự chuyển.<% if (domain.lastError) { %><br />Lần kiểm tra gần nhất<% if (domain.lastFailAt) { %> (<%= fmt(domain.lastFailAt) %>)<% } %>: <%= domain.lastError %>.<% } %>
       <% } %>
       <% if (domain.primary && domain.primary.source === 'env') { %><br />(Đang lấy từ biến môi trường SITE_URL trên Hostinger. Điền ô này sẽ được ưu tiên hơn.)<% } %>
     </span>
