@@ -185,7 +185,9 @@ function ensureAdmin() {
   } else if (process.env.ADMIN_PASSWORD && !bcrypt.compareSync(pass, existing.password_hash)) {
     run('UPDATE users SET password_hash = ? WHERE id = ?', bcrypt.hashSync(pass, 10), existing.id);
     console.log(`[db] Đã cập nhật mật khẩu quản trị "${user}" theo ADMIN_PASSWORD`);
+    return true; // mật khẩu vừa đổi
   }
+  return false;
 }
 
 module.exports = {

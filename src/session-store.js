@@ -2,7 +2,9 @@
  * Lưu phiên đăng nhập admin vào file SQLite riêng (DATA_DIR/sessions.db) thay cho bộ nhớ RAM:
  * deploy hay hosting khởi động lại không còn đăng xuất anh Thắng.
  * File riêng nên không lọt vào bản sao lưu (chỉ chứa rose.db + uploads) và không bị khôi phục đè.
+ * Không có touch(): phiên hết hạn cứng 8 giờ sau đăng nhập (đúng hạn cookie), không tự kéo dài.
  */
+const fs = require('fs');
 const path = require('path');
 const { DatabaseSync } = require('node:sqlite');
 const session = require('express-session');
@@ -14,19 +16,41 @@ const FALLBACK_TTL_MS = 8 * 60 * 60 * 1000;
 class SqliteSessionStore extends session.Store {
   constructor({ file = path.join(DATA_DIR, 'sessions.db'), now = () => Date.now() } = {}) {
     super();
+    this.file = file;
     this.now = now;
-    this.db = new DatabaseSync(file);
-    this.db.exec('PRAGMA journal_mode = WAL;');
-    this.db.exec('CREATE TABLE IF NOT EXISTS sessions (sid TEXT PRIMARY KEY, sess TEXT NOT NULL, expires INTEGER NOT NULL)');
-    this.sql = {
-      get: this.db.prepare('SELECT sess, expires FROM sessions WHERE sid = ?'),
-      set: this.db.prepare('INSERT INTO sessions(sid, sess, expires) VALUES(?,?,?) ON CONFLICT(sid) DO UPDATE SET sess = excluded.sess, expires = excluded.expires'),
-      touch: this.db.prepare('UPDATE sessions SET expires = ? WHERE sid = ?'),
-      destroy: this.db.prepare('DELETE FROM sessions WHERE sid = ?'),
-      prune: this.db.prepare('DELETE FROM sessions WHERE expires <= ?')
-    };
+    try {
+      this.open();
+    } catch (e) {
+      /* Phiên chỉ là dữ liệu tạm: file hỏng thì cất sang bên cạnh rồi mở file mới, web vẫn chạy */
+      console.error('[session] sessions.db lỗi, tạo file mới:', e.message);
+      const bad = `${file}.bad-${this.now()}`;
+      for (const sfx of ['', '-wal', '-shm']) {
+        try { fs.renameSync(file + sfx, bad + sfx); } catch (_) { /* file phụ có thể không tồn tại */ }
+      }
+      this.open();
+    }
     this.prune();
     setInterval(() => this.prune(), PRUNE_EVERY_MS).unref();
+  }
+
+  open() {
+    const db = new DatabaseSync(this.file);
+    try {
+      db.exec('PRAGMA busy_timeout = 3000;');
+      db.exec('PRAGMA journal_mode = WAL;');
+      db.exec('CREATE TABLE IF NOT EXISTS sessions (sid TEXT PRIMARY KEY, sess TEXT NOT NULL, expires INTEGER NOT NULL)');
+      this.sql = {
+        get: db.prepare('SELECT sess, expires FROM sessions WHERE sid = ?'),
+        set: db.prepare('INSERT INTO sessions(sid, sess, expires) VALUES(?,?,?) ON CONFLICT(sid) DO UPDATE SET sess = excluded.sess, expires = excluded.expires'),
+        destroy: db.prepare('DELETE FROM sessions WHERE sid = ?'),
+        prune: db.prepare('DELETE FROM sessions WHERE expires <= ?'),
+        clear: db.prepare('DELETE FROM sessions')
+      };
+    } catch (e) {
+      try { db.close(); } catch (_) { /* đóng để đổi tên được file trên Windows */ }
+      throw e;
+    }
+    this.db = db;
   }
 
   expiresOf(sess) {
@@ -49,12 +73,13 @@ class SqliteSessionStore extends session.Store {
     try { this.sql.set.run(sid, JSON.stringify(sess), this.expiresOf(sess)); cb(null); } catch (e) { cb(e); }
   }
 
-  touch(sid, sess, cb = () => {}) {
-    try { this.sql.touch.run(this.expiresOf(sess), sid); cb(null); } catch (e) { cb(e); }
-  }
-
   destroy(sid, cb = () => {}) {
     try { this.sql.destroy.run(sid); cb(null); } catch (e) { cb(e); }
+  }
+
+  /* Đăng xuất mọi phiên (VD khi đổi mật khẩu quản trị) */
+  clear(cb = () => {}) {
+    try { this.sql.clear.run(); cb(null); } catch (e) { cb(e); }
   }
 
   prune() {

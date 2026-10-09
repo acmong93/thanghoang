@@ -20,25 +20,32 @@ const crypto = require('crypto');
 const GRACE_MS = 24 * 60 * 60 * 1000;
 const STALE_MS = 3 * 60 * 60 * 1000;   /* lâu hơn mức này không kiểm tra đạt thì thôi chuyển hướng */
 const CHECK_EVERY_MS = 15 * 60 * 1000;
-/* Trình duyệt và CDN chỉ nhớ lệnh chuyển hướng 1 ngày: có sự cố thì tự gỡ được */
-const REDIRECT_CACHE = 'public, max-age=86400';
+/* Trình duyệt và CDN Hostinger (hcdn) chỉ nhớ lệnh chuyển hướng 1 giờ: CDN có lưu 301,
+   để lâu thì sau khi kích hoạt khách đi 2 bước, và khi tự ngừng chuyển (STALE_MS) khách
+   vẫn bị đẩy theo lệnh cũ. Google vẫn coi 301 là vĩnh viễn, không phụ thuộc thời gian nhớ */
+const REDIRECT_CACHE = 'public, max-age=3600';
 
 /* Tên miền gốc thuộc Rosé. Chỉ đổi host khi request đến từ các tên miền này,
    và đích đến luôn là tên miền chính trong cài đặt (không lấy từ header của request) */
 const OWN_DOMAINS = ['rosewedding.vn', 'rosewedding.net'];
 const DEFAULT_PRIMARY = 'https://rosewedding.vn';
 
-const bare = h => String(h || '').toLowerCase().replace(/^www\./, '');
+/* Chuẩn hoá host: chữ thường, bỏ cổng, bỏ dấu chấm cuối (FQDN), bỏ www */
+const hostOnly = h => String(h || '').toLowerCase().replace(/:\d+$/, '').replace(/\.$/, '');
+const bare = h => hostOnly(h).replace(/^www\./, '');
 
+/* Ô site_url do anh Thắng gõ tay: thiếu https:// vẫn hiểu; tên miền của Rosé luôn dùng https */
 function parseSiteUrl(siteUrl) {
-  const raw = String(siteUrl || '').trim();
+  let raw = String(siteUrl || '').trim();
   if (!raw) return null;
+  if (!raw.includes('://')) raw = 'https://' + raw;
   try {
     const u = new URL(raw);
     if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
     const host = bare(u.hostname);
-    if (!host) return null;
-    return { protocol: u.protocol, host, origin: `${u.protocol}//${host}` };
+    if (!host || !host.includes('.')) return null;
+    const protocol = OWN_DOMAINS.includes(host) ? 'https:' : u.protocol;
+    return { protocol, host, origin: `${protocol}//${host}` };
   } catch (e) {
     return null;
   }
@@ -62,22 +69,30 @@ function parseJson(raw) {
   }
 }
 
+/* Đã có một lần kiểm tra đạt XÁC NHẬN đủ GRACE_MS chạy liên tục (cùng quy tắc với nextState) */
+function confirmed(state) {
+  const first = Number(state && state.firstOkAt);
+  const last = Number(state && state.lastOkAt);
+  return first > 0 && last > 0 && last - first >= GRACE_MS;
+}
+
 /**
  * Tên miền chính "đang hoạt động" khi: kết quả kiểm tra thuộc đúng tên miền đó,
- * đã đạt liên tục từ firstOkAt đủ GRACE_MS, và lần đạt gần nhất chưa quá STALE_MS.
+ * đã có lần kiểm tra đạt xác nhận đủ GRACE_MS liên tục, và lần đạt gần nhất chưa quá STALE_MS.
  */
 function isActive(primary, state, now) {
   if (!primary || !state || state.host !== primary.host) return false;
-  const first = Number(state.firstOkAt);
-  const last = Number(state.lastOkAt);
-  return first > 0 && last > 0 && now - first >= GRACE_MS && now - last <= STALE_MS;
+  return confirmed(state) && now - Number(state.lastOkAt) <= STALE_MS;
 }
 
 /* Cập nhật trạng thái sau một lần kiểm tra (hàm thuần) */
 function nextState(prev, host, ok, error, now) {
   const s = prev && prev.host === host ? { ...prev } : { host };
   if (ok) {
-    if (!s.firstOkAt) s.firstOkAt = now;
+    /* Lần đầu đạt, hoặc vừa qua một đợt trượt liên tục dài hơn STALE_MS (VD tên miền hết hạn
+       rồi gia hạn lại): đếm lại đủ 24 giờ, vì DNS của các nhà mạng có thể chưa cập nhật lại */
+    const longOutage = Number(s.lastFailAt) > Number(s.lastOkAt || 0) && now - Number(s.lastOkAt || 0) > STALE_MS;
+    if (!s.firstOkAt || longOutage) s.firstOkAt = now;
     s.lastOkAt = now;
     s.lastError = '';
   } else {
@@ -94,15 +109,52 @@ function nextState(prev, host, ok, error, now) {
 /* ---------- Đường dẫn web cũ Haravan (rosewedding.vn trước 2026) ---------- */
 const PRICE = /(bang|bao)-gia/;
 const LISTING = new Set(['news', 'index', 'frontpage', 'all']);
+/* Bài album cũ trên Haravan → album/concept tương ứng của web mới (tra qua database:
+   album bị ẩn hoặc xoá thì tự lùi về trang danh sách) */
+const LEGACY_ALBUM = {
+  'concept-fine-art-200-bong-hong-white-roses': 'fine-art',
+  'concept-fine-art-chau-au': 'fine-art',
+  'concept-han-quoc-nhe-nhang': 'han-quoc',
+  'concept-han-quoc-tuong-hoa-flowers-wall': 'han-quoc',
+  'anh-cuoi-tap-chi': 'editorial-tap-chi',
+  'concept-phim-truong-sang-trong-nhung-khong-kem-phan-lang-man': 'phim-truong',
+  'concept-co-dien-sang-trong': 'phim-truong',
+  'phim-truong-santorini-preweddingmot': 'studio-phim-truong',
+  'concept-vuon-hoa-phim-truong': 'studio-phim-truong',
+  'studio-less-is-more': 'studio-phim-truong',
+  'studio-tuong-hoa': 'studio-phim-truong'
+};
+/* Trang của web tĩnh đời đầu (*.html) → trang mới, gộp vào cùng một bước 301 */
+const OLD_HTML = {
+  '/index.html': '/', '/anh-cuoi.html': '/anh-cuoi', '/vay-cuoi.html': '/vay-cuoi',
+  '/cau-chuyen.html': '/cau-chuyen', '/tin-tuc.html': '/tin-tuc'
+};
+const SLUG = /^[a-z0-9-]+$/;
 
 function isLegacyPath(segs) {
   if (!segs.length) return false;
   const first = segs[0];
-  return first === 'blogs' || first === 'collections' || first === 'pages' ||
+  return first === 'blogs' || first === 'collections' || first === 'pages' || first === 'products' ||
     /^news/.test(first) || /^index/.test(first) ||
     ['hot-products', 'lien-he', 'about-us', 'video-cuoi', 'search'].includes(first) ||
     /^(bang|bao)-gia-/.test(first) ||
     (first === 'anh-cuoi' && segs.length > 1);
+}
+
+/* Web tĩnh đời đầu: album.html?key=..., bang-gia.html?type=..., post.html?id=... */
+function oldHtmlTarget(pathname, search, lookups) {
+  const p = String(pathname || '').toLowerCase();
+  if (!p.endsWith('.html')) return null;
+  if (OLD_HTML[p]) return OLD_HTML[p];
+  const q = new URLSearchParams(String(search || '').replace(/^\?/, ''));
+  const pick = k => String(q.get(k) || '').trim().toLowerCase();
+  if (p === '/album.html') {
+    const a = SLUG.test(pick('key')) ? lookups.albumBySlug(pick('key')) : null;
+    return a ? (a.category === 'concept' ? '/concept/' : '/album/') + a.slug : '/anh-cuoi';
+  }
+  if (p === '/bang-gia.html') return '/bang-gia/' + (SLUG.test(pick('type')) ? pick('type') : 'anh-cuoi');
+  if (p === '/post.html') return SLUG.test(pick('id')) ? '/tin-tuc/' + pick('id') : '/tin-tuc';
+  return null;
 }
 
 /**
@@ -118,6 +170,8 @@ function legacyTarget(pathname, lookups) {
     const a = lookups.albumBySlug(segs[1]);
     return a && a.category === 'concept' ? '/concept/' + a.slug : null;
   }
+  /* /bang-gia trần trùng nội dung /bang-gia/anh-cuoi: gom về một địa chỉ */
+  if (segs.length === 1 && segs[0] === 'bang-gia') return '/bang-gia/anh-cuoi';
 
   if (!isLegacyPath(segs)) return null;
   const first = segs[0];
@@ -138,16 +192,22 @@ function legacyTarget(pathname, lookups) {
 
   if (/^news/.test(first) || blogHandle === 'news') {
     if (articleSlug && !LISTING.has(articleSlug) && lookups.postExists(articleSlug)) return '/tin-tuc/' + articleSlug;
+    if (articleSlug && /vay-cuoi/.test(articleSlug)) return '/vay-cuoi';
     return '/tin-tuc';
   }
   if (/^phong-su/.test(blogHandle)) return '/phong-su';
   if (/^video/.test(blogHandle) || first === 'video-cuoi') return '/#video';
   if (/^anh-cuoi/.test(blogHandle) || first === 'anh-cuoi') {
-    const album = articleSlug && !LISTING.has(articleSlug) ? lookups.albumBySlug(articleSlug) : null;
+    const album = articleSlug && !LISTING.has(articleSlug)
+      ? lookups.albumBySlug(articleSlug) || (LEGACY_ALBUM[articleSlug] ? lookups.albumBySlug(LEGACY_ALBUM[articleSlug]) : null)
+      : null;
     if (album) return (album.category === 'concept' ? '/concept/' : '/album/') + album.slug;
     if (articleSlug && /concept|studio|phim-truong/.test(articleSlug)) return '/concept';
     return '/anh-cuoi';
   }
+  if (last === 'news') return '/tin-tuc';
+  /* Sản phẩm Haravan cũ đều là gói dịch vụ chụp */
+  if (first === 'products') return '/bang-gia/anh-cuoi';
   return '/';
 }
 
@@ -160,48 +220,86 @@ function decide({ method, hostHeader, protocol, path, search, primary, primaryAc
   /* Admin và trang tự kiểm tra miễn mọi chuyển hướng: luôn vào được để sửa cài đặt */
   if (path === '/admin' || path.startsWith('/admin/') || path === '/__domain-check') return null;
 
-  const host = String(hostHeader || '').toLowerCase();
-  const hostname = host.replace(/:\d+$/, '');
+  const hostname = hostOnly(hostHeader);
   const ownHost = OWN_DOMAINS.includes(bare(hostname)) || (primary && bare(hostname) === primary.host);
 
-  let targetHost = host;
-  let targetProtocol = `${protocol}:`;
+  let targetHost = null; /* null = giữ nguyên host của request */
+  /* Chỉ nhận http/https: giao thức lấy từ header X-Forwarded-Proto, người lạ có thể gửi giá trị bất kỳ */
+  let targetProtocol = protocol === 'http' ? 'http:' : 'https:';
   if (ownHost) {
     if (primary && primaryActive) {
-      targetHost = primary.host;
-      targetProtocol = primary.protocol;
+      if (hostname !== primary.host) {
+        targetHost = primary.host;
+        targetProtocol = primary.protocol;
+      }
     } else if (hostname.startsWith('www.')) {
       targetHost = bare(hostname); /* chỉ bỏ www trong cùng tên miền (tên miền chính luôn không www) */
     }
   }
 
-  const mapped = legacyTarget(path, lookups);
+  const mapped = oldHtmlTarget(path, search, lookups) || legacyTarget(path, lookups);
   let newPath = mapped || path;
   const newSearch = mapped ? '' : (search || '');
-  if (!mapped && newPath.length > 1 && newPath.endsWith('/')) newPath = newPath.replace(/\/+$/, '') || '/';
+  if (!mapped) newPath = stripTrailingSlashes(newPath);
   /* Gộp các dấu / hoặc \ ở đầu thành một: "//trang-la.com" trong Location sẽ đưa khách
      sang web khác (open redirect) */
   newPath = '/' + newPath.replace(/^[\/\\]+/, '');
 
-  const hostChanged = targetHost !== host;
-  if (!hostChanged && newPath === path && newSearch === (search || '')) return null;
-  return hostChanged ? `${targetProtocol}//${targetHost}${newPath}${newSearch}` : `${newPath}${newSearch}`;
+  if (!targetHost && newPath === path && newSearch === (search || '')) return null;
+  return targetHost ? `${targetProtocol}//${targetHost}${newPath}${newSearch}` : `${newPath}${newSearch}`;
+}
+
+/* Bỏ các dấu / ở cuối (giữ "/" cho trang chủ). Vòng lặp thay regex /\/+$/ vì regex đó
+   chạy rất chậm với chuỗi dài toàn dấu / (đường dẫn do người lạ gửi lên) */
+function stripTrailingSlashes(p) {
+  let end = p.length;
+  while (end > 1 && p.charCodeAt(end - 1) === 47) end--;
+  return p.slice(0, end);
 }
 
 /* ---------- Tự kiểm tra tên miền chính ---------- */
+/* Lỗi mạng của fetch chỉ ghi "fetch failed": kèm mã nguyên nhân (ENOTFOUND, cert...) cho dễ đoán bệnh */
+function errText(e) {
+  if (e && e.name === 'TimeoutError') return 'quá thời gian chờ phản hồi';
+  const cause = e && e.cause && (e.cause.code || e.cause.message);
+  return ((e && e.message) || String(e)) + (cause ? ` (${cause})` : '');
+}
+
+/* Hỏi một DNS công khai. Trả { ips } khi DNS đó trả lời, { error } khi không hỏi được
+   (mạng, HTTP lỗi): không hỏi được thì chưa kết luận gì về tên miền */
+async function askResolver(name, url, host, fetchImpl) {
+  let j;
+  try {
+    const r = await fetchImpl(url, { headers: { accept: 'application/dns-json' }, signal: AbortSignal.timeout(8000) });
+    if (r.ok === false) return { error: `${name} lỗi HTTP ${r.status}` };
+    j = await r.json();
+  } catch (e) {
+    return { error: `${name}: ${errText(e)}` };
+  }
+  /* SERVFAIL/REFUSED...: DNS đó tạm không trả lời được, chưa kết luận (NXDOMAIN = 3 mới là "không tồn tại") */
+  if (j && j.Status && j.Status !== 3) {
+    return { error: `${name}: lỗi DNS mã ${j.Status}${j.Comment ? ' (' + [].concat(j.Comment).join(' ') + ')' : ''}` };
+  }
+  if (j && j.Status === 3) {
+    throw new Error(`${name}: ${host} không tồn tại (NXDOMAIN), kiểm tra hạn và trạng thái tên miền`);
+  }
+  const ips = ((j && j.Answer) || []).filter(a => a.type === 1).map(a => a.data);
+  /* Nameserver vừa đổi: nhà mạng còn nhớ nameserver cũ tới hết TTL (.vn là 12 giờ) */
+  if (!ips.length) throw new Error(`${name} chưa thấy địa chỉ IP của ${host} (còn nhớ DNS cũ, tự hết trong tối đa 12 giờ sau khi đổi nameserver)`);
+  return { ips };
+}
+
 async function checkPrimary(primary, token, fetchImpl) {
   const q = encodeURIComponent(primary.host);
   const resolvers = [
     ['Google DNS', `https://dns.google/resolve?name=${q}&type=A`],
     ['Cloudflare DNS', `https://cloudflare-dns.com/dns-query?name=${q}&type=A`]
   ];
-  for (const [name, url] of resolvers) {
-    const r = await fetchImpl(url, { headers: { accept: 'application/dns-json' }, signal: AbortSignal.timeout(8000) });
-    const j = await r.json();
-    const ips = (j.Answer || []).filter(a => a.type === 1).map(a => a.data);
-    /* Nameserver vừa đổi: nhà mạng còn nhớ nameserver cũ tới hết TTL (.vn là 12 giờ) */
-    if (!ips.length) throw new Error(`${name} chưa thấy địa chỉ IP của ${primary.host} (còn nhớ DNS cũ, tự hết trong tối đa 12 giờ sau khi đổi nameserver)`);
-  }
+  /* DNS nào trả lời "không có IP" là trượt ngay. Một DNS tạm không hỏi được thì dựa vào DNS
+     còn lại; cả hai đều không hỏi được thì trượt (chưa có bằng chứng tên miền chạy) */
+  const answers = [];
+  for (const [name, url] of resolvers) answers.push(await askResolver(name, url, primary.host, fetchImpl));
+  if (!answers.some(a => a.ips)) throw new Error(answers.map(a => a.error).join('; '));
   /* Gọi chính mình qua tên miền chính: fetch kiểm chứng chỉ SSL, mã bí mật chứng minh
      tên miền đi đúng vào website này (không phải trang đỗ của nhà cung cấp) */
   const r = await fetchImpl(`${primary.origin}/__domain-check?n=${Date.now()}`, {
@@ -235,6 +333,8 @@ function createCanonical({ db, env = process.env, now = () => Date.now(), fetchI
     return t;
   };
 
+  let lastActive = null; /* { host, active } để ghi log đúng lúc bắt đầu / ngừng chuyển hướng */
+
   const lookups = {
     postExists: slug => !!db.get('SELECT 1 FROM posts WHERE slug = ? AND visible = 1', slug),
     albumBySlug: slug => db.get('SELECT slug, category FROM albums WHERE slug = ? AND visible = 1', slug) || null
@@ -261,20 +361,32 @@ function createCanonical({ db, env = process.env, now = () => Date.now(), fetchI
       await checkPrimary(primary, token(), fetchImpl);
       ok = true;
     } catch (e) {
-      error = e && e.name === 'TimeoutError' ? 'quá thời gian chờ phản hồi' : (e && e.message) || String(e);
+      error = errText(e);
     } finally {
       checking = false;
     }
     const prev = parseJson(db.setting('domain_check'));
-    const wasActive = isActive(primary, prev, now());
     const next = nextState(prev, primary.host, ok, error, now());
     db.setSetting('domain_check', JSON.stringify(next));
     state = next;
     stateAt = now();
     const active = isActive(primary, next, now());
-    if (ok && !prev.firstOkAt) console.log(`[domain] ${primary.host} đã chạy; sẽ thành tên miền chính sau 24 giờ ổn định`);
-    if (!ok && prev.firstOkAt && !next.firstOkAt) console.log(`[domain] ${primary.host} kiểm tra trượt (${error}); đếm lại 24 giờ`);
-    if (active && !wasActive) console.log(`[domain] ${primary.host} chính thức là tên miền chính`);
+    const h = primary.host;
+    if (ok && next.firstOkAt !== prev.firstOkAt) console.log(`[domain] ${h} đã chạy; sẽ thành tên miền chính sau 24 giờ ổn định`);
+    if (!ok && prev.firstOkAt && !next.firstOkAt) console.log(`[domain] ${h} kiểm tra trượt (${error}); đếm lại 24 giờ`);
+    if (!ok && confirmed(next) && !(Number(prev.lastFailAt) > Number(prev.lastOkAt || 0))) {
+      console.log(`[domain] ${h} bắt đầu kiểm tra trượt (${error}); quá 3 giờ không đạt sẽ tạm ngừng chuyển hướng`);
+    }
+    /* Lần đầu sau khởi động (hoặc vừa đổi tên miền chính): lấy trạng thái tại lần kiểm tra
+       gần nhất đã lưu, không phải "bây giờ", kẻo bỏ sót log NGỪNG khi server tắt quá 3 giờ */
+    const wasActive = lastActive && lastActive.host === h
+      ? lastActive.active
+      : isActive(primary, prev, Math.max(Number(prev.lastOkAt) || 0, Number(prev.lastFailAt) || 0));
+    if (active !== wasActive) {
+      console.log(active ? `[domain] ${h} chính thức là tên miền chính: các tên miền khác chuyển về đây`
+        : `[domain] ${h} NGỪNG chuyển hướng (${error || 'quá lâu không kiểm tra đạt'}); các tên miền chạy song song`);
+    }
+    lastActive = { host: h, active };
     return { ok, error, active };
   }
 
@@ -282,14 +394,22 @@ function createCanonical({ db, env = process.env, now = () => Date.now(), fetchI
     const primary = intendedPrimary(settings(), env);
     const s = loadState();
     const mine = primary && s.host === primary.host ? s : {};
+    const active = isActive(primary, s, now());
+    const lastOkAt = Number(mine.lastOkAt) || null;
+    const lastFailAt = Number(mine.lastFailAt) || null;
     return {
       primary,
-      active: isActive(primary, s, now()),
+      active,
+      /* đã từng kích hoạt nhưng quá STALE_MS không kiểm tra đạt: đang tạm ngừng chuyển hướng */
+      paused: !active && confirmed(mine),
+      failing: !!lastFailAt && lastFailAt > (lastOkAt || 0),
       firstOkAt: Number(mine.firstOkAt) || null,
-      lastOkAt: Number(mine.lastOkAt) || null,
-      lastFailAt: Number(mine.lastFailAt) || null,
+      lastOkAt,
+      lastFailAt,
       lastError: mine.lastError || '',
-      activatesAt: mine.firstOkAt ? Number(mine.firstOkAt) + GRACE_MS : null
+      activatesAt: mine.firstOkAt ? Number(mine.firstOkAt) + GRACE_MS : null,
+      /* đang chuyển hướng mà kiểm tra trượt liên tục: tới mốc này sẽ tạm ngừng */
+      pausesAt: lastOkAt ? lastOkAt + STALE_MS : null
     };
   }
 
@@ -303,14 +423,16 @@ function createCanonical({ db, env = process.env, now = () => Date.now(), fetchI
     const primaryActive = isActive(primary, loadState(), now());
 
     res.set('X-Served-Host', String(req.get('host') || '').toLowerCase());
-    res.locals.baseUrl = primary && primaryActive ? primary.origin : `${req.protocol}://${req.get('host')}`;
-    res.locals.pageUrl = res.locals.baseUrl + req.originalUrl.split('?')[0];
+    const proto = req.protocol === 'http' ? 'http' : 'https';
+    res.locals.baseUrl = primary && primaryActive ? primary.origin : `${proto}://${String(req.get('host') || '').toLowerCase()}`;
+    /* Canonical luôn chữ thường: /Concept và /concept là một trang (slug trên web đều chữ thường) */
+    res.locals.pageUrl = res.locals.baseUrl + req.path.toLowerCase();
 
     const qIndex = req.originalUrl.indexOf('?');
     const location = decide({
       method: req.method,
       hostHeader: req.get('host'),
-      protocol: req.protocol,
+      protocol: proto,
       path: req.path,
       search: qIndex >= 0 ? req.originalUrl.slice(qIndex) : '',
       primary,
@@ -347,6 +469,6 @@ function canonical() {
 }
 
 module.exports = {
-  canonical, createCanonical, decide, legacyTarget, intendedPrimary, isActive, nextState,
-  parseSiteUrl, checkPrimary, GRACE_MS, STALE_MS, OWN_DOMAINS
+  canonical, createCanonical, decide, legacyTarget, oldHtmlTarget, intendedPrimary, isActive, nextState,
+  parseSiteUrl, checkPrimary, GRACE_MS, STALE_MS, OWN_DOMAINS, REDIRECT_CACHE
 };
