@@ -609,6 +609,7 @@ router.post('/backup/restore', uploadBackup.single('backup'), (req, res) => {
     ensureAdmin(); // đồng bộ lại mật khẩu quản trị theo biến môi trường hiện tại
     /* Bản sao lưu chụp trước đợt concept: nhập lại concept từ manifest kẻo trang trống */
     require('../concepts-import').ensureConcepts();
+    require('../canonical').canonical().afterRestore();
 
     console.log('[restore] Đã khôi phục dữ liệu từ bản sao lưu');
     res.redirect('/admin/backup?ok=1');
@@ -642,13 +643,15 @@ router.get('/backup/env-info', (req, res) => {
 const SETTING_KEYS = [
   'site_name', 'tagline', 'slogan', 'hotline', 'hotline_tel', 'cskh', 'cskh_tel',
   'email', 'address', 'hours', 'instagram', 'facebook', 'map_embed', 'pricing_note',
-  'about_stats', 'site_url', 'zalo', 'messenger', 'tiktok', 'youtube', 'ga_id', 'fb_pixel_id', 'tiktok_pixel_id'
+  'about_stats', 'site_url', 'zalo', 'messenger', 'tiktok', 'youtube', 'ga_id', 'fb_pixel_id', 'tiktok_pixel_id',
+  'gsc_verify'
 ];
 
 router.get('/settings', (req, res) => {
   res.render('admin/settings', {
     s: allSettings(),
-    videos: all('SELECT * FROM videos ORDER BY sort_order')
+    videos: all('SELECT * FROM videos ORDER BY sort_order'),
+    domain: require('../canonical').canonical().status()
   });
 });
 
