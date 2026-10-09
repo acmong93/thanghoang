@@ -34,7 +34,10 @@ if (process.env.UPLOADS_DIR) {
 }
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d', redirect: false }));
 
+/* Phiên đăng nhập lưu ra file (src/session-store.js): deploy/khởi động lại không bị đăng xuất */
+const { SqliteSessionStore } = require('./src/session-store');
 app.use(session({
+  store: new SqliteSessionStore(),
   secret: process.env.SESSION_SECRET || 'rose-wedding-dev-secret',
   resave: false,
   saveUninitialized: false,
@@ -101,6 +104,11 @@ ensureAdmin();
   if (!setting('pricing_note_2027')) {
     setSetting('pricing_note', 'Bảng giá 2027 áp dụng đến hết 31/12/2027. Mỗi gói đều có thể điều chỉnh theo nhu cầu thực tế của hai bạn.');
     setSetting('pricing_note_2027', '1');
+  }
+  /* Mã xác minh Google Search Console cho https://rosewedding.vn (09/10/2026, chạy 1 lần; sau đó sửa trong admin) */
+  if (!setting('gsc_vn_v1')) {
+    if (!setting('gsc_verify')) setSetting('gsc_verify', '1UMNPyc4NZAP4nwylqg3Juf2AfihI_cnqcmuQcOALqU');
+    setSetting('gsc_vn_v1', '1');
   }
 }
 
