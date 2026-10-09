@@ -36,15 +36,21 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d', redirect:
 
 /* Phiên đăng nhập lưu ra file (src/session-store.js): deploy/khởi động lại không bị đăng xuất */
 const { SqliteSessionStore } = require('./src/session-store');
+let sessionStore; // undefined → express-session tự dùng bộ nhớ RAM (dự phòng, web vẫn chạy)
+try { sessionStore = new SqliteSessionStore(); } catch (e) { console.error('[session] tạm lưu phiên trong RAM:', e.message); }
 app.use(session({
-  store: new SqliteSessionStore(),
+  store: sessionStore,
   secret: process.env.SESSION_SECRET || 'rose-wedding-dev-secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: 'lax', maxAge: 1000 * 60 * 60 * 8 }
+  cookie: { httpOnly: true, sameSite: 'lax', secure: 'auto', maxAge: 1000 * 60 * 60 * 8 }
 }));
 
-ensureAdmin();
+/* Phiên giờ sống qua khởi động lại: đổi ADMIN_PASSWORD thì đăng xuất mọi phiên cũ */
+if (ensureAdmin() && sessionStore) {
+  sessionStore.clear();
+  console.log('[session] Mật khẩu quản trị đã đổi: đăng xuất mọi phiên cũ');
+}
 
 /* Khởi tạo dữ liệu lần đầu trên môi trường mới (VD: vừa deploy lên hosting):
    database trống thì seed nội dung chuẩn + áp bảng giá 2027 (có marker, chỉ chạy 1 lần) */
