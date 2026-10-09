@@ -199,7 +199,8 @@ async function checkPrimary(primary, token, fetchImpl) {
     const r = await fetchImpl(url, { headers: { accept: 'application/dns-json' }, signal: AbortSignal.timeout(8000) });
     const j = await r.json();
     const ips = (j.Answer || []).filter(a => a.type === 1).map(a => a.data);
-    if (!ips.length) throw new Error(`${name} chưa thấy địa chỉ IP của ${primary.host}`);
+    /* Nameserver vừa đổi: nhà mạng còn nhớ nameserver cũ tới hết TTL (.vn là 12 giờ) */
+    if (!ips.length) throw new Error(`${name} chưa thấy địa chỉ IP của ${primary.host} (còn nhớ DNS cũ, tự hết trong tối đa 12 giờ sau khi đổi nameserver)`);
   }
   /* Gọi chính mình qua tên miền chính: fetch kiểm chứng chỉ SSL, mã bí mật chứng minh
      tên miền đi đúng vào website này (không phải trang đỗ của nhà cung cấp) */
