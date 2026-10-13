@@ -1,0 +1,116 @@
+/* Rosé · Kho concept: trang hạng mục (/concept) và trang xem concept (/concept/<hạng mục>).
+   Ảnh concept là bảng ghép nhiều khung hình kèm chữ, nên LUÔN hiển thị trọn ảnh (không cắt),
+   to và rõ trên cả điện thoại. */
+
+/* ---------- Đầu trang ---------- */
+.cc-hero{padding-bottom:44px}
+.cc-hero-cat{padding-top:150px;padding-bottom:36px}
+.cc-back{display:inline-block;margin-bottom:18px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:var(--gold-deep);transition:color .3s var(--ease)}
+.cc-back:hover{color:var(--ink)}
+.cc-hero .cc-count{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin-top:16px}
+
+/* ---------- 4 hạng mục ---------- */
+.cc-cats-sec{padding:0 0 110px}
+.cc-cats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:46px 22px}
+.cc-cat{display:block;color:inherit}
+.cc-cat-frame{display:block;position:relative;aspect-ratio:5/4;background:var(--paper);overflow:hidden}
+/* Bảng concept nằm trọn trong khung như một tấm ảnh in trên nền giấy */
+.cc-cat-frame img{position:absolute;inset:6%;width:88%;height:88%;object-fit:contain;transition:transform 1.4s var(--ease)}
+.cc-cat:hover .cc-cat-frame img{transform:scale(1.04)}
+.cc-cat-meta{display:block;padding:24px 2px 0}
+.cc-cat-count{display:block;font-size:11px;letter-spacing:.32em;text-transform:uppercase;font-weight:500;color:var(--gold-deep);font-variant-numeric:tabular-nums}
+.cc-cat h2{font-size:clamp(24px,2.5vw,34px);margin-top:10px;line-height:1.2;text-wrap:balance}
+.cc-cat-desc{display:block;max-width:560px;margin-top:10px;font-size:14.5px;color:var(--muted);line-height:1.7}
+.cc-cat-go{display:inline-flex;align-items:center;margin-top:18px;padding-bottom:6px;border-bottom:1px solid var(--line);font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;color:var(--ink);transition:color .4s var(--ease),border-color .4s var(--ease)}
+.cc-cat-go span{display:inline-block;transition:transform .4s var(--ease)}
+.cc-cat:hover .cc-cat-go{color:var(--gold-deep);border-color:var(--gold)}
+.cc-cat:hover .cc-cat-go span{transform:translateX(5px)}
+
+/* ---------- Thanh tab hạng mục (dính dưới header khi cuộn) ---------- */
+.cc-tabs{position:sticky;top:var(--hdr,74px);z-index:40;background:rgba(250,248,244,.97);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cc-tabs-in{display:flex;justify-content:center;gap:0 38px;max-width:1400px;margin:0 auto;padding:0 28px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cc-tabs-in::-webkit-scrollbar{display:none}
+.cc-tab{flex:none;display:flex;align-items:baseline;gap:8px;padding:18px 0 16px;margin-bottom:-1px;border-bottom:1px solid transparent;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:var(--muted);white-space:nowrap;transition:color .3s var(--ease),border-color .3s var(--ease)}
+.cc-tab:hover{color:var(--ink)}
+.cc-tab.on{color:var(--ink);border-bottom-color:var(--gold)}
+.cc-tab-n{font-size:10.5px;letter-spacing:.06em;color:var(--gold-deep);font-variant-numeric:tabular-nums}
+
+/* ---------- Lưới concept so le ---------- */
+.cc-gal-sec{background:var(--paper);padding:30px 0 96px}
+.cc-gal{display:flex;align-items:flex-start;gap:12px}
+.cc-col{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:12px}
+/* Chưa có JS: CSS columns vẫn xếp so le, đủ ảnh */
+.cc-gal:not(.ready){display:block;columns:3 300px;column-gap:12px}
+.cc-gal:not(.ready) .cc-it{break-inside:avoid;margin-bottom:12px}
+.cc-it{display:block;position:relative;overflow:hidden;background:var(--pearl);cursor:zoom-in}
+.cc-it img{display:block;width:100%;height:100%;object-fit:contain;transition:transform 1.4s var(--ease)}
+.cc-it:hover img{transform:scale(1.025)}
+.cc-it-n{position:absolute;right:10px;bottom:10px;padding:6px 10px 5px;background:rgba(20,18,16,.62);color:var(--cream);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;font-variant-numeric:tabular-nums;opacity:0;transform:translateY(4px);transition:opacity .4s var(--ease),transform .4s var(--ease);pointer-events:none}
+.cc-it:hover .cc-it-n,.cc-it:focus-visible .cc-it-n{opacity:1;transform:none}
+@media(hover:none){.cc-it-n{opacity:1;transform:none}}
+
+/* ---------- Hạng mục tiếp theo ---------- */
+.cc-next{border-top:1px solid var(--line);background:var(--cream)}
+.cc-next-in{display:flex;flex-direction:column;align-items:center;text-align:center;padding:70px 28px;color:inherit}
+.cc-next-name{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);line-height:1.2;margin-top:14px}
+.cc-next-arrow{display:inline-block;margin-left:.3em;color:var(--gold-deep);transition:transform .4s var(--ease)}
+.cc-next-in:hover .cc-next-arrow{transform:translateX(8px)}
+.cc-next-count{margin-top:12px;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- Xem ảnh lớn ---------- */
+.cl{position:fixed;inset:0;z-index:130;display:flex;flex-direction:column;background:#0d0c0b;color:rgba(250,248,244,.78);opacity:0;visibility:hidden;transition:opacity .35s var(--ease),visibility .35s}
+.cl.open{opacity:1;visibility:visible}
+.cl-top{flex:none;display:flex;align-items:center;gap:16px;height:58px;padding:0 6px 0 24px}
+.cl-count{min-width:84px;font-size:11.5px;letter-spacing:.24em;font-variant-numeric:tabular-nums}
+.cl-title{flex:1;min-width:0;text-align:center;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl-btn{display:flex;align-items:center;justify-content:center;background:none;border:0;color:rgba(250,248,244,.82);cursor:pointer;line-height:1;transition:color .3s var(--ease)}
+.cl-btn:hover{color:var(--gold)}
+.cl-close{width:52px;height:52px;font-size:32px;font-weight:300;margin-left:32px}
+.cl-stage{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:pan-y pinch-zoom}
+.cl-img{display:block;max-width:calc(100vw - 168px);max-height:100%;object-fit:contain;cursor:zoom-in;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.cl.zoom .cl-stage{display:block;overflow:auto;touch-action:auto}
+/* Ảnh chung của web mặc định rộng/cao 100%: khi phóng to phải trả về cỡ thật của ảnh */
+.cl.zoom .cl-img{width:auto;height:auto;max-width:none;max-height:none;margin:0 auto;cursor:zoom-out}
+.cl-nav{position:absolute;top:50%;transform:translateY(-50%);width:76px;height:120px;font-size:48px;font-weight:200;z-index:2}
+.cl-prev{left:4px}
+.cl-next{right:4px}
+.cl.zoom .cl-nav{display:none}
+.cl-bottom{flex:none;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 22px;padding:14px 16px calc(16px + env(safe-area-inset-bottom))}
+.cl-hint{font-size:11px;letter-spacing:.08em;color:rgba(250,248,244,.5)}
+.cl-zalo{display:inline-flex;align-items:center;padding:12px 22px;border:1px solid rgba(192,160,98,.7);color:var(--gold);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;transition:background .4s var(--ease),color .4s var(--ease)}
+.cl-zalo:hover{background:var(--gold);color:#0d0c0b}
+
+/* ---------- Máy tính bảng ---------- */
+@media(max-width:980px){
+  .cc-cats{gap:40px 18px}
+  .cc-tabs-in{justify-content:flex-start;gap:0 30px}
+}
+
+/* ---------- Điện thoại: một cột, ảnh gần tràn viền để thấy rõ chữ trên bảng concept ---------- */
+@media(max-width:680px){
+  .cc-hero{padding-bottom:30px}
+  .cc-hero-cat{padding-top:112px;padding-bottom:24px}
+  .cc-count-hint{display:none}
+  .cc-cats-sec{padding-bottom:70px}
+  .cc-cats{grid-template-columns:1fr;gap:38px}
+  .cc-cat-frame{aspect-ratio:1/1}
+  .cc-cat-frame img{inset:5%;width:90%;height:90%}
+  .cc-cat-meta{padding-top:18px}
+  .cc-tabs-in{padding:0 18px;gap:0 26px;mask-image:linear-gradient(90deg,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent)}
+  .cc-tab{padding:15px 0 13px;font-size:11px;letter-spacing:.16em}
+  .cc-gal-sec{padding:12px 0 60px}
+  .cc-gal-sec .wrap-wide{padding:0 8px}
+  .cc-gal,.cc-col{gap:8px}
+  .cc-gal:not(.ready){columns:1}
+  .cc-gal:not(.ready) .cc-it{margin-bottom:8px}
+  .cc-it-n{right:8px;bottom:8px}
+  .cc-next-in{padding:52px 20px}
+  .cl-top{height:52px;padding-left:16px}
+  .cl-close{margin-left:8px}
+  .cl-img{max-width:100vw}
+}
+@media(hover:none){.cl-nav{display:none}}
+
+@media(prefers-reduced-motion:reduce){
+  .cc-cat-frame img,.cc-it img,.cc-it-n,.cl,.cc-next-arrow,.cc-cat-go span{transition:none}
+}
