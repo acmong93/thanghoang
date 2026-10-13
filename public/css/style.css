@@ -512,6 +512,40 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
 .cta-band p{color:rgba(250,248,244,.72);max-width:560px;margin:14px auto 0;font-size:15px}
 
 /* ===== Responsive ===== */
+/* Menu burger dùng cho cả máy tính bảng và laptop nhỏ: thanh menu ngang (8 mục + nút đặt lịch)
+   cần ~1170px mới nằm gọn 1 dòng, hẹp hơn sẽ xuống dòng, vỡ nút và tràn ngang.
+   main.js đọc trạng thái hiện/ẩn của .burger nên không phải sửa mốc ở hai nơi */
+@media(max-width:1199px){
+  /* Ẩn bằng mờ dần thay vì đẩy sang phải: tránh tạo vùng tràn ngang trên trang con.
+     pointer-events chặn "click xuyên" khi menu đang mờ dần đóng lại */
+  /* justify-content:flex-start + margin auto ở mục đầu/cuối: nội dung vẫn nằm giữa
+     màn hình khi đủ chỗ, nhưng khi mở menu con dài thì cuộn được tới mọi mục
+     (flexbox center + overflow sẽ cắt cụt phần đầu, không cuộn lên được) */
+  .menu{position:fixed;inset:0;z-index:65;background:var(--cream);flex-direction:column;justify-content:flex-start;gap:26px;opacity:0;transform:scale(.98);transition:.45s var(--ease);overflow-y:auto;padding:80px 0;visibility:hidden;pointer-events:none}
+  .menu>:first-child{margin-top:auto}
+  .menu>:last-child{margin-bottom:auto}
+  .menu.open{opacity:1;transform:none;visibility:visible;pointer-events:auto}
+  .menu a{color:var(--ink)!important;font-size:15px}
+  /* Menu con: thu gọn mặc định, chạm vào mục cha mới mở */
+  .drop{display:none;position:static;transform:none;opacity:1;visibility:visible;box-shadow:none;border:none;background:transparent;padding:6px 0 0;min-width:0}
+  .has-drop{text-align:center}
+  .has-drop.open .drop{display:block}
+  /* Mục cha vừa chạm còn giữ hover/focus: bỏ dịch -50% của dropdown desktop, không thì menu con lệch trái */
+  .has-drop:hover .drop,.has-drop:focus-within .drop{transform:none}
+  /* Mũi tên đặt tuyệt đối bên phải chữ để chữ của mục cha căn giữa
+     thẳng hàng với các mục con (nằm trong luồng sẽ đẩy chữ lệch trái) */
+  .has-drop>.drop-toggle{display:block;width:max-content;margin:0 auto;position:relative}
+  .has-drop>.drop-toggle::after{content:"\203A";position:absolute;left:100%;margin-left:10px;top:50%;bottom:auto;width:auto;height:auto;background:none;font-size:15px;line-height:1;color:var(--gold-deep);transform:translateY(-55%) rotate(90deg);transition:transform .3s var(--ease)}
+  .has-drop>.drop-toggle:hover::after{width:auto}
+  .has-drop.open>.drop-toggle::after{transform:translateY(-55%) rotate(-90deg)}
+  .drop a{color:var(--muted)!important;font-size:12px;padding:8px 0;text-align:center}
+  /* Ẩn nút liên hệ nổi khi menu đang mở để không đè lên menu */
+  body.menu-open .quick-dock{opacity:0;pointer-events:none}
+  .burger{display:flex;z-index:70}
+  .burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);background:var(--ink)}
+  .burger.open span:nth-child(2){opacity:0}
+  .burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);background:var(--ink)}
+}
 @media(max-width:980px){
   .booking{grid-template-columns:1fr;gap:46px}
   .albums-grid{grid-template-columns:1fr 1fr}
@@ -534,34 +568,6 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
   .about-row.rev .about-ph{order:0}
 }
 @media(max-width:680px){
-  /* Ẩn bằng mờ dần thay vì đẩy sang phải: tránh tạo vùng tràn ngang trên trang con.
-     pointer-events chặn "click xuyên" khi menu đang mờ dần đóng lại */
-  /* justify-content:flex-start + margin auto ở mục đầu/cuối: nội dung vẫn nằm giữa
-     màn hình khi đủ chỗ, nhưng khi mở menu con dài thì cuộn được tới mọi mục
-     (flexbox center + overflow sẽ cắt cụt phần đầu, không cuộn lên được) */
-  .menu{position:fixed;inset:0;z-index:65;background:var(--cream);flex-direction:column;justify-content:flex-start;gap:26px;opacity:0;transform:scale(.98);transition:.45s var(--ease);overflow-y:auto;padding:80px 0;visibility:hidden;pointer-events:none}
-  .menu>:first-child{margin-top:auto}
-  .menu>:last-child{margin-bottom:auto}
-  .menu.open{opacity:1;transform:none;visibility:visible;pointer-events:auto}
-  .menu a{color:var(--ink)!important;font-size:15px}
-  /* Menu con: thu gọn mặc định, chạm vào mục cha mới mở */
-  .drop{display:none;position:static;transform:none;opacity:1;visibility:visible;box-shadow:none;border:none;background:transparent;padding:6px 0 0;min-width:0}
-  .has-drop{text-align:center}
-  .has-drop.open .drop{display:block}
-  /* Mũi tên đặt tuyệt đối bên phải chữ để chữ của mục cha căn giữa
-     thẳng hàng với các mục con (nằm trong luồng sẽ đẩy chữ lệch trái) */
-  .has-drop>.drop-toggle{display:block;width:max-content;margin:0 auto;position:relative}
-  .has-drop>.drop-toggle::after{content:"\203A";position:absolute;left:100%;margin-left:10px;top:50%;bottom:auto;width:auto;height:auto;background:none;font-size:15px;line-height:1;color:var(--gold-deep);transform:translateY(-55%) rotate(90deg);transition:transform .3s var(--ease)}
-  .has-drop>.drop-toggle:hover::after{width:auto}
-  .has-drop.open>.drop-toggle::after{transform:translateY(-55%) rotate(-90deg)}
-  .drop a{color:var(--muted)!important;font-size:12px;padding:8px 0;text-align:center}
-  /* Ẩn nút liên hệ nổi khi menu đang mở để không đè lên menu */
-  body.menu-open .quick-dock{opacity:0;pointer-events:none}
-  .burger{display:flex;z-index:70}
-  .burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);background:var(--ink)}
-  .burger.open span:nth-child(2){opacity:0}
-  .burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);background:var(--ink)}
-
   /* Gọn chiều dọc: giảm khoảng thở, lưới 2 cột thay vì 1 cột dài dằng dặc */
   .pad{padding:54px 0}
   .pad.dark{padding:54px 0}

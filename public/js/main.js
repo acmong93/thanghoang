@@ -31,10 +31,16 @@
       document.body.classList.toggle('menu-open', open);
       if (!open) menu.querySelectorAll('.has-drop.open').forEach(d => d.classList.remove('open'));
     });
+    // Đang ở khổ menu burger (điện thoại, máy tính bảng): mốc do CSS quyết định
+    const burgerMode = () => getComputedStyle(burger).display !== 'none';
+    // Xoay máy / kéo rộng cửa sổ sang khổ desktop khi menu đang mở: đóng lại để trang không bị khoá cuộn
+    window.addEventListener('resize', () => {
+      if (menu.classList.contains('open') && !burgerMode()) closeMenu();
+    });
     // Dropdown trên mobile: chạm lần 1 mở menu con, chạm lần 2 đi tới link
     menu.querySelectorAll('.has-drop > .drop-toggle').forEach(t => {
       t.addEventListener('click', e => {
-        if (window.innerWidth <= 680) {
+        if (burgerMode()) {
           const parent = t.parentElement;
           if (!parent.classList.contains('open')) {
             e.preventDefault();
