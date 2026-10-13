@@ -4,66 +4,69 @@
 <%- include('partials/head', { title: 'Concept ' + album.name, desc: album.desc || ('Bộ concept ' + album.name + ' tại Rosé Wedding'),
   og: images.length ? images[0].file : '',
   crumbs: [['Concept', '/concept'], ['Concept ' + album.name, null]] }) %>
+<link rel="stylesheet" href="/css/concept.css?v=<%= v %>" />
 </head>
 <body>
 <%- include('partials/header', { solidHeader: true }) %>
 
 <main id="main">
-<section class="page-hero" style="padding-bottom:34px">
+<section class="page-hero cc-hero cc-hero-cat">
   <div class="wrap center">
-    <span class="eyebrow gold"><%= album.grp %></span>
+    <a class="cc-back" href="/concept"><span aria-hidden="true">&lsaquo;&ensp;</span>Tất cả hạng mục</a>
     <h1><%= album.name %></h1>
     <% if (album.desc) { %><p><%= album.desc %></p><% } %>
-    <p class="jg-meta"><%= images.length %> ảnh chụp thật tại Rosé · chạm vào ảnh để xem lớn</p>
+    <p class="cc-count"><%= images.length %> concept chụp thật tại Rosé<span class="cc-count-hint"> · chạm vào concept để xem ảnh lớn</span></p>
   </div>
 </section>
 
-<section class="pad-sm" style="padding-top:0">
-  <div class="wrap wrap-wide">
-    <!-- Bố cục justified kiểu Flickr: xếp theo tỉ lệ thật của từng ảnh, JS tính hàng -->
-    <div class="jg" id="jg">
-      <% images.forEach((im, i) => { %>
-      <a class="jg-i" href="<%= im.file %>" data-w="<%= im.w || 3 %>" data-h="<%= im.h || 2 %>" data-i="<%= i %>">
-        <img src="<%= im.thumb || im.file %>" alt="<%= album.name %> · ảnh <%= i + 1 %>" loading="<%= i < 8 ? 'eager' : 'lazy' %>" />
+<% if (categories.length > 1) { %>
+<nav class="cc-tabs" aria-label="Hạng mục concept">
+  <div class="cc-tabs-in">
+    <% categories.forEach(c => { const on = c.id === album.id; %>
+    <a href="/concept/<%= c.slug %>" class="cc-tab<%= on ? ' on' : '' %>"<%- on ? ' aria-current="page"' : '' %>><%= c.name %><span class="cc-tab-n"><%= c.count %></span></a>
+    <% }) %>
+  </div>
+</nav>
+<% } %>
+
+<section class="cc-gal-sec" id="concept-list">
+  <div class="wrap-wide">
+    <!-- Lưới so le theo tỉ lệ thật của từng bảng concept (không cắt ảnh). JS xếp ô vào cột thấp nhất,
+         giữ thứ tự kéo thả: 3 concept đầu nằm trên cùng. Không JS thì CSS columns vẫn hiển thị đủ. -->
+    <div class="cc-gal" id="ccGal" data-name="<%= album.name %>" data-zalo="<%= (s.zalo || '').replace(/\D/g, '') %>">
+      <% images.forEach((im, i) => { const w = im.w || 1, h = im.h || 1; %>
+      <a class="cc-it" href="<%= im.file %>" data-i="<%= i %>" data-w="<%= w %>" data-h="<%= h %>"<% if (im.thumb) { %> data-thumb="<%= im.thumb %>"<% } %> style="aspect-ratio:<%= w %>/<%= h %>">
+        <img src="<%= im.thumb || im.file %>"
+          <% if (im.thumb) { %>srcset="<%= im.thumb %> 640w, <%= im.file %> 1600w" sizes="(max-width:680px) 96vw, (max-width:1100px) 48vw, 460px"<% } %>
+          width="<%= w %>" height="<%= h %>"
+          alt="<%= album.name %> · concept <%= i + 1 %>" loading="<%= i < 6 ? 'eager' : 'lazy' %>" decoding="async" />
+        <span class="cc-it-n">Concept <%= i + 1 %></span>
       </a>
       <% }) %>
     </div>
   </div>
 </section>
+
+<% if (nextCat) { %>
+<section class="cc-next">
+  <a class="cc-next-in wrap" href="/concept/<%= nextCat.slug %>">
+    <span class="eyebrow">Hạng mục tiếp theo</span>
+    <span class="cc-next-name"><%= nextCat.name %><span class="cc-next-arrow" aria-hidden="true">&rsaquo;</span></span>
+    <span class="cc-next-count"><%= nextCat.count %> concept</span>
+  </a>
+</section>
+<% } %>
 
 <section class="cta-band reveal">
   <div class="wrap center">
-    <h2>Thích concept <span class="italic"><%= album.name %>?</span></h2>
-    <p class="mt-14">Nhắn Rosé để giữ lịch và nghe tư vấn chi tiết cho riêng hai bạn, hoàn toàn miễn phí.</p>
-    <a href="/#booking" class="btn btn-gold mt-24">Đặt lịch chụp concept này</a>
+    <h2>Thích concept <span class="italic">nào?</span></h2>
+    <p class="mt-14">Gửi Rosé số concept hai bạn ưng ý (ví dụ “Concept 12”), chúng tôi tư vấn chi tiết và giữ lịch cho riêng hai bạn, hoàn toàn miễn phí.</p>
+    <a href="/#booking" class="btn btn-gold mt-24">Đặt lịch tư vấn</a>
   </div>
 </section>
-
-<% if (others.length) { %>
-<section class="pad-sm bg-pearl">
-  <div class="wrap">
-    <div class="sec-head center reveal" style="margin-bottom:34px">
-      <span class="eyebrow">Xem tiếp</span>
-      <h2 style="font-size:clamp(24px,3.2vw,36px)">Concept <span class="italic">khác</span></h2>
-    </div>
-    <div class="albums-grid">
-      <% others.forEach(c => { %>
-      <a class="album-card reveal" href="/concept/<%= c.slug %>">
-        <img loading="lazy" src="<%= c.cover.thumb || c.cover.file %>" alt="Concept <%= c.name %>" style="object-position:<%= c.cover.pos || '50% 50%' %>" />
-        <div class="meta">
-          <div class="t"><%= c.grp %></div>
-          <h3><%= c.name %></h3>
-          <div class="go">Xem trọn bộ&ensp;&rsaquo;</div>
-        </div>
-      </a>
-      <% }) %>
-    </div>
-    <div class="center mt-48 reveal"><a href="/concept" class="btn">Xem tất cả concept</a></div>
-  </div>
-</section>
-<% } %>
 </main>
 
 <%- include('partials/footer') %>
+<script src="/js/concept.js?v=<%= v %>" defer></script>
 </body>
 </html>

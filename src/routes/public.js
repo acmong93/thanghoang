@@ -41,33 +41,31 @@ router.get('/anh-cuoi', (req, res) => {
   });
 });
 
-/* ============ CONCEPT: hub cho khách xem khi tư vấn online ============ */
-router.get('/concept', (req, res) => {
-  /* Chỉ hiện concept đã có ảnh — concept vừa tạo chưa upload không lộ thẻ rỗng ra trang khách */
-  const rows = all("SELECT * FROM albums WHERE visible = 1 AND category = 'concept' ORDER BY sort_order")
+/* ============ CONCEPT: hub cho khách xem khi tư vấn online ============
+   Mỗi album concept là một HẠNG MỤC (Studio Phim Trường, Editorial, Áo Dài, Ngoại Cảnh);
+   mỗi ảnh trong album là một bảng concept. Thứ tự theo kéo thả trong admin. */
+function conceptCategories() {
+  /* Chỉ hiện hạng mục đã có ảnh — vừa tạo chưa upload không lộ thẻ rỗng ra trang khách */
+  return all("SELECT * FROM albums WHERE visible = 1 AND category = 'concept' ORDER BY sort_order")
     .map(a => ({ ...a, cover: coverOf(a.id), count: get('SELECT COUNT(*) n FROM images WHERE album_id = ?', a.id).n }))
     .filter(a => a.count > 0);
-  /* Gom theo nhóm, giữ đúng thứ tự sort_order (kéo thả trong admin quyết định tất cả) */
-  const groups = [];
-  for (const a of rows) {
-    let g = groups.find(x => x.name === a.grp);
-    if (!g) { g = { name: a.grp, concepts: [] }; groups.push(g); }
-    g.concepts.push(a);
-  }
-  res.render('concept', { ...base(), page: 'concept', groups, total: rows.length });
+}
+
+router.get('/concept', (req, res) => {
+  const categories = conceptCategories();
+  const total = categories.reduce((n, c) => n + c.count, 0);
+  res.render('concept', { ...base(), page: 'concept', categories, total });
 });
 
 router.get('/concept/:slug', (req, res, next) => {
   const album = get("SELECT * FROM albums WHERE slug = ? AND visible = 1 AND category = 'concept'", req.params.slug);
   if (!album) return next();
   const images = all('SELECT * FROM images WHERE album_id = ? ORDER BY sort_order', album.id);
-  const others = all(
-    `SELECT * FROM albums WHERE visible = 1 AND category = 'concept' AND id != ?
-     AND EXISTS(SELECT 1 FROM images WHERE album_id = albums.id)
-     ORDER BY (grp = ?) DESC, sort_order LIMIT 3`,
-    album.id, album.grp
-  ).map(a => ({ ...a, cover: coverOf(a.id) }));
-  res.render('concept-detail', { ...base(), page: 'concept', album, images, others });
+  const categories = conceptCategories();
+  /* Hạng mục kế tiếp (vòng lại đầu) để khách xem tiếp không phải quay về trang chính */
+  const at = categories.findIndex(c => c.id === album.id);
+  const nextCat = categories.length > 1 && at >= 0 ? categories[(at + 1) % categories.length] : null;
+  res.render('concept-detail', { ...base(), page: 'concept', album, images, categories, nextCat });
 });
 
 /* ============ ALBUM CHI TIẾT ============ */
