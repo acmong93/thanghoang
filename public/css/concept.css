@@ -28,7 +28,7 @@
 
 /* ---------- Thanh tab hạng mục (dính dưới header khi cuộn) ---------- */
 .cc-tabs{position:sticky;top:var(--hdr,74px);z-index:40;background:rgba(250,248,244,.97);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.cc-tabs-in{display:flex;justify-content:center;gap:0 38px;max-width:1400px;margin:0 auto;padding:0 28px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cc-tabs-in{display:flex;justify-content:center;gap:0 38px;max-width:1400px;margin:0 auto -1px;padding:0 28px 1px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .cc-tabs-in::-webkit-scrollbar{display:none}
 .cc-tab{flex:none;display:flex;align-items:baseline;gap:8px;padding:18px 0 16px;margin-bottom:-1px;border-bottom:1px solid transparent;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:var(--muted);white-space:nowrap;transition:color .3s var(--ease),border-color .3s var(--ease)}
 .cc-tab:hover{color:var(--ink)}
@@ -37,11 +37,13 @@
 
 /* ---------- Lưới concept so le ---------- */
 .cc-gal-sec{background:var(--paper);padding:30px 0 96px}
-.cc-gal{display:flex;align-items:flex-start;gap:12px}
-.cc-col{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:12px}
+.cc-gal{--cc-gap:12px;overflow-anchor:none}
 /* Chưa có JS: CSS columns vẫn xếp so le, đủ ảnh */
-.cc-gal:not(.ready){display:block;columns:3 300px;column-gap:12px}
-.cc-gal:not(.ready) .cc-it{break-inside:avoid;margin-bottom:12px}
+.cc-gal:not(.ready){columns:3 300px;column-gap:var(--cc-gap)}
+.cc-gal:not(.ready) .cc-it{break-inside:avoid;margin-bottom:var(--cc-gap)}
+/* Có JS: mỗi ô định vị tại chỗ (thứ tự trong trang giữ 1, 2, 3...) */
+.cc-gal.ready{position:relative}
+.cc-gal.ready .cc-it{position:absolute}
 .cc-it{display:block;position:relative;overflow:hidden;background:var(--pearl);cursor:zoom-in}
 .cc-it img{display:block;width:100%;height:100%;object-fit:contain;transition:transform 1.4s var(--ease)}
 .cc-it:hover img{transform:scale(1.025)}
@@ -59,7 +61,7 @@
 
 /* ---------- Xem ảnh lớn ---------- */
 .cl{position:fixed;inset:0;z-index:130;display:flex;flex-direction:column;background:#0d0c0b;color:rgba(250,248,244,.78);opacity:0;visibility:hidden;transition:opacity .35s var(--ease),visibility .35s}
-.cl.open{opacity:1;visibility:visible}
+.cl.open{opacity:1;visibility:visible;transition:opacity .35s var(--ease),visibility 0s}
 .cl-top{flex:none;display:flex;align-items:center;gap:16px;height:58px;padding:0 6px 0 24px}
 .cl-count{min-width:84px;font-size:11.5px;letter-spacing:.24em;font-variant-numeric:tabular-nums}
 .cl-title{flex:1;min-width:0;text-align:center;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -77,8 +79,9 @@
 .cl.zoom .cl-nav{display:none}
 .cl-bottom{flex:none;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 22px;padding:14px 16px calc(16px + env(safe-area-inset-bottom))}
 .cl-hint{font-size:11px;letter-spacing:.08em;color:rgba(250,248,244,.5)}
-.cl-zalo{display:inline-flex;align-items:center;padding:12px 22px;border:1px solid rgba(192,160,98,.7);color:var(--gold);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;transition:background .4s var(--ease),color .4s var(--ease)}
+.cl-zalo{display:inline-block;padding:12px 22px;border:1px solid rgba(192,160,98,.7);color:var(--gold);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;transition:background .4s var(--ease),color .4s var(--ease)}
 .cl-zalo:hover{background:var(--gold);color:#0d0c0b}
+
 
 /* ---------- Máy tính bảng ---------- */
 @media(max-width:980px){
@@ -96,21 +99,33 @@
   .cc-cat-frame{aspect-ratio:1/1}
   .cc-cat-frame img{inset:5%;width:90%;height:90%}
   .cc-cat-meta{padding-top:18px}
-  .cc-tabs-in{padding:0 18px;gap:0 26px;mask-image:linear-gradient(90deg,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent)}
+  .cc-tabs-in{padding:0 48px 1px 18px;gap:0 26px;mask-image:linear-gradient(90deg,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent)}
+  .cc-tabs-in.at-end{mask-image:none;-webkit-mask-image:none}
   .cc-tab{padding:15px 0 13px;font-size:11px;letter-spacing:.16em}
   .cc-gal-sec{padding:12px 0 60px}
   .cc-gal-sec .wrap-wide{padding:0 8px}
-  .cc-gal,.cc-col{gap:8px}
+  .cc-gal{--cc-gap:8px}
   .cc-gal:not(.ready){columns:1}
-  .cc-gal:not(.ready) .cc-it{margin-bottom:8px}
   .cc-it-n{right:8px;bottom:8px}
   .cc-next-in{padding:52px 20px}
   .cl-top{height:52px;padding-left:16px}
   .cl-close{margin-left:8px}
   .cl-img{max-width:100vw}
+  .cl-title-cat,.cl-zalo-cat{display:none}
 }
-@media(hover:none){.cl-nav{display:none}}
+@media(hover:none){
+  .cl-nav{width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+  .cl-img{max-width:100vw}
+}
+/* Điện thoại xoay ngang: thu gọn thanh trên/dưới để ảnh to nhất có thể */
+@media(max-height:520px){
+  .cl-top{height:40px}
+  .cl-close{width:44px;height:40px}
+  .cl-hint{display:none}
+  .cl-bottom{padding:4px 12px calc(8px + env(safe-area-inset-bottom))}
+  .cl-zalo{padding:9px 16px}
+}
 
 @media(prefers-reduced-motion:reduce){
-  .cc-cat-frame img,.cc-it img,.cc-it-n,.cl,.cc-next-arrow,.cc-cat-go span{transition:none}
+  .cc-cat-frame img,.cc-it img,.cc-it-n,.cl,.cl.open,.cc-next-arrow,.cc-cat-go span{transition:none}
 }
