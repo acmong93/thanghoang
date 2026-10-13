@@ -40,7 +40,7 @@
           <% if (im.thumb) { %>srcset="<%= im.thumb %> 640w, <%= im.file %> 1600w" sizes="(max-width:680px) 96vw, (max-width:1100px) 48vw, 460px"<% } %>
           width="<%= w %>" height="<%= h %>"
           alt="<%= album.name %> · concept <%= i + 1 %>" loading="<%= i < 6 ? 'eager' : 'lazy' %>" decoding="async" />
-        <span class="cc-it-n">Concept <%= i + 1 %></span>
+        <span class="cc-it-n" aria-hidden="true">Concept <%= i + 1 %></span>
       </a>
       <% }) %>
     </div>
@@ -60,7 +60,7 @@
 <section class="cta-band reveal">
   <div class="wrap center">
     <h2>Thích concept <span class="italic">nào?</span></h2>
-    <p class="mt-14">Gửi Rosé số concept hai bạn ưng ý (ví dụ “Concept 12”), chúng tôi tư vấn chi tiết và giữ lịch cho riêng hai bạn, hoàn toàn miễn phí.</p>
+    <p class="mt-14">Gửi Rosé concept hai bạn ưng ý (ví dụ “<%= album.name %> · Concept 12”), chúng tôi tư vấn chi tiết và giữ lịch cho riêng hai bạn, hoàn toàn miễn phí.</p>
     <a href="/#booking" class="btn btn-gold mt-24">Đặt lịch tư vấn</a>
   </div>
 </section>
