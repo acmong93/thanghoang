@@ -4,6 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const multer = require('multer');
 const sharp = require('sharp');
+const variants = require('../image-variants');
 const bcrypt = require('bcryptjs');
 const AdmZip = require('adm-zip');
 const { all, get, run, allSettings, setSetting, DB_PATH, checkpoint, reopenDb, ensureAdmin } = require('../db');
@@ -250,6 +251,8 @@ router.post('/albums/:id/images', upload.array('photos', 40), async (req, res) =
       console.error('[upload]', e.message);
     }
   }
+  /* Concept: tạo các cỡ ảnh trung gian ở nền (trang khách tải đúng cỡ theo màn hình) */
+  if (album.category === 'concept') variants.queueSync();
   res.redirect('/admin/albums/' + album.id);
 });
 
@@ -285,19 +288,21 @@ router.post('/images/:id/replace', upload.single('photo'), async (req, res) => {
         .toFile(path.join(dir, `${base}.webp`));
       await sh.clone().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 74 })
         .toFile(path.join(dir, `${base}-thumb.webp`));
+      /* Xoá file cũ trong thư mục uploads THẬT (UPLOADS_DIR ngoài app trên hosting) + các cỡ trung gian cũ */
       for (const f of [img.file, img.thumb]) {
-        if (f && f.startsWith('/uploads/')) {
-          fs.rm(path.join(__dirname, '..', '..', 'public', f), { force: true }, () => {});
-        }
+        const p = f && f.startsWith('/uploads/') ? variants.absOf(f) : null;
+        if (p) fs.rm(p, { force: true }, () => {});
       }
+      variants.removeFor(img.file);
       /* Ghi lại cả w/h: bố cục justified của concept xếp ô theo tỉ lệ trong DB,
          quên cập nhật là ảnh mới bị nhét vào khung tỉ lệ của ảnh cũ */
-      run("UPDATE images SET file=?, thumb=?, pos='50% 50%', w=?, h=? WHERE id=?",
+      run("UPDATE images SET file=?, thumb=?, pos='50% 50%', w=?, h=?, sizes='' WHERE id=?",
         `/uploads/${img.album_slug}/${base}.webp`, `/uploads/${img.album_slug}/${base}-thumb.webp`,
         info.width || 0, info.height || 0, img.id);
     } catch (e) {
       console.error('[replace]', e.message);
     }
+    variants.queueSync();
   }
   res.redirect(req.get('referer') || '/admin/albums');
 });
@@ -316,11 +321,10 @@ router.post('/images/:id/delete', (req, res) => {
   if (img) {
     // Chỉ xoá file vật lý nếu là ảnh upload (không đụng vào /img gốc)
     for (const f of [img.file, img.thumb]) {
-      if (f && f.startsWith('/uploads/')) {
-        const p = path.join(__dirname, '..', '..', 'public', f);
-        fs.rm(p, { force: true }, () => {});
-      }
+      const p = f && f.startsWith('/uploads/') ? variants.absOf(f) : null;
+      if (p) fs.rm(p, { force: true }, () => {});
     }
+    variants.removeFor(img.file);
     run('DELETE FROM images WHERE id = ?', img.id);
   }
   res.redirect(req.get('referer') || '/admin/albums');
@@ -566,7 +570,7 @@ router.get('/backup', (req, res) => {
   res.render('admin/backup', {
     ok: req.query.ok, err: req.query.err,
     dbSize: fs.existsSync(DB_PATH) ? fs.statSync(DB_PATH).size : 0,
-    uploadCount: fs.existsSync(UPLOAD_DIR) ? fs.readdirSync(UPLOAD_DIR, { recursive: true }).length : 0
+    uploadCount: fs.existsSync(UPLOAD_DIR) ? fs.readdirSync(UPLOAD_DIR, { recursive: true }).filter(p => !/^_v([\\/]|$)/.test(p)).length : 0
   });
 });
 
@@ -575,7 +579,8 @@ router.get('/backup/download', (req, res) => {
     checkpoint(); // gom WAL về file chính để bản sao lưu đầy đủ
     const zip = new AdmZip();
     zip.addLocalFile(DB_PATH, '', 'rose.db');
-    if (fs.existsSync(UPLOAD_DIR)) zip.addLocalFolder(UPLOAD_DIR, 'uploads');
+    /* Bỏ thư mục _v (cỡ ảnh trung gian, tạo lại được) cho bản sao lưu gọn */
+    if (fs.existsSync(UPLOAD_DIR)) zip.addLocalFolder(UPLOAD_DIR, 'uploads', p => !/^uploads[\\/]_v([\\/]|$)/.test(p));
     const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
     res.setHeader('Content-Type', 'application/zip');
     res.setHeader('Content-Disposition', `attachment; filename="rose-backup-${stamp}.zip"`);
@@ -614,6 +619,8 @@ router.post('/backup/restore', uploadBackup.single('backup'), (req, res) => {
     /* Bản sao lưu chụp trước đợt concept: nhập lại concept từ manifest kẻo trang trống */
     require('../concepts-import').ensureConcepts();
     require('../canonical').canonical().afterRestore();
+    variants.reconcile(); /* bản sao lưu không kèm cỡ trung gian: dùng tạm bản thường... */
+    variants.queueSync(2000); /* ...rồi tạo bù ở nền */
 
     console.log('[restore] Đã khôi phục dữ liệu từ bản sao lưu');
     res.redirect('/admin/backup?ok=1');

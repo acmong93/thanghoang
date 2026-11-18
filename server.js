@@ -17,6 +17,8 @@ app.set('trust proxy', 1);
 
 /* Đổi số này mỗi lần deploy để trình duyệt tải lại CSS/JS mới */
 app.locals.v = require('./package.json').version;
+/* srcset nhiều cỡ cho ảnh concept (src/image-variants.js) — dùng trong view */
+app.locals.srcsetFor = require('./src/image-variants').srcsetFor;
 
 app.use(compression());
 /* SEO: địa chỉ chuẩn duy nhất (tên miền chính, link web cũ Haravan, dấu / cuối) và URL gốc
@@ -135,7 +137,12 @@ app.use((req, res) => {
   res.status(404).render('404', { s: allSettings(), page: '404' });
 });
 
+/* Ảnh concept thiếu cỡ trung gian thì dùng tạm bản thường, không bao giờ trỏ tới file không có */
+require('./src/image-variants').reconcile();
+
 app.listen(PORT, () => {
   console.log(`Rosé Wedding đang chạy tại http://localhost:${PORT}`);
   console.log(`Trang quản trị:            http://localhost:${PORT}/admin`);
+  /* Tạo bù các cỡ ảnh concept còn thiếu (lần đầu sau deploy, sau khôi phục sao lưu), chạy nền */
+  require('./src/image-variants').queueSync(5000);
 });

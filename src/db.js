@@ -136,6 +136,8 @@ function openDb() {
   try { d.exec("ALTER TABLE albums ADD COLUMN grp TEXT NOT NULL DEFAULT ''"); } catch (e) { /* đã có */ }
   try { d.exec('ALTER TABLE images ADD COLUMN w INTEGER NOT NULL DEFAULT 0'); } catch (e) { /* đã có */ }
   try { d.exec('ALTER TABLE images ADD COLUMN h INTEGER NOT NULL DEFAULT 0'); } catch (e) { /* đã có */ }
+  /* Các cỡ ảnh trung gian đã tạo (src/image-variants.js), VD "480,800,1200" */
+  try { d.exec("ALTER TABLE images ADD COLUMN sizes TEXT NOT NULL DEFAULT ''"); } catch (e) { /* đã có */ }
   return d;
 }
 
