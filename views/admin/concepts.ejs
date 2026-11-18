@@ -7,16 +7,12 @@
 </h1>
 
 <div class="panel share-link">
-  <p><b>Link gửi khách</b> · kho concept không hiện công khai trên web, chỉ ai có link này mới xem được. Khách mở một lần là xem được toàn bộ hạng mục trong 180 ngày.</p>
+  <p><b>Link gửi khách</b> · kho concept không có trên menu và không hiện trên Google; gửi link này cho khách khi tư vấn.</p>
   <div class="share-row">
     <input id="shareUrl" value="<%= shareUrl %>" readonly onclick="this.select()" />
     <button type="button" class="ad-btn primary" id="copyShare">Sao chép</button>
   </div>
   <p class="muted" style="margin-top:8px">Gửi thẳng một concept: mở concept đó trên web rồi bấm <b>Nhắn Rosé về Concept…</b>, link kèm số concept được chép sẵn.</p>
-  <% if (rotated) { %><p style="color:var(--ok, #4A7A4C);margin-top:8px">Đã đổi link mới. Link cũ đã gửi trước đây không còn xem được.</p><% } %>
-  <form method="post" action="/admin/concepts/share/rotate" onsubmit="return confirm('Đổi link mới? Mọi link đã gửi khách trước đây sẽ không xem được nữa.')" style="margin-top:10px">
-    <button type="submit" class="ad-btn sm">Đổi link mới (vô hiệu link cũ)</button>
-  </form>
 </div>
 <script>
 document.getElementById('copyShare').addEventListener('click', function () {

@@ -222,9 +222,7 @@
   if (zaloBtn) zaloBtn.addEventListener('click', () => {
     if (window.roseTrack) window.roseTrack('zalo');
     const label = albumName + ' · Concept ' + (cur + 1);
-    /* Kho concept không công khai: link chép kèm mã xem (data-share) để Rosé/khách mở được ngay đúng concept */
-    const share = gal.dataset.share ? '?k=' + encodeURIComponent(gal.dataset.share) : '';
-    const text = 'Rosé ơi, mình thích ' + label + ': ' + location.origin + location.pathname + share + '#concept-' + (cur + 1);
+    const text = 'Rosé ơi, mình thích ' + label + ': ' + location.origin + location.pathname + '#concept-' + (cur + 1);
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(text).then(() => {
         hintEl.textContent = 'Đã chép “' + label + '”, dán vào Zalo để gửi Rosé';
