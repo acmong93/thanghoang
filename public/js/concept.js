@@ -39,7 +39,9 @@
      Mỗi bảng concept vào cột đang thấp nhất, chiều cao tính từ tỉ lệ thật lưu sẵn trong database (không chờ ảnh tải).
      Định vị tại chỗ nên thứ tự trong trang (phím Tab, trình đọc màn hình) vẫn là 1, 2, 3...
      Hàng trên cùng luôn là các concept đầu tiên theo thứ tự kéo thả trong admin. */
-  const colsFor = w => (w < 600 ? 1 : w < 1000 ? 2 : 3);
+  /* Số cột theo bề ngang cửa sổ, khớp đúng các mốc trong thuộc tính sizes của ảnh (concept-detail.ejs),
+     để trình duyệt luôn chọn cỡ ảnh không nhỏ hơn ô thật (kể cả khi có thanh cuộn) */
+  const colsFor = () => { const vw = window.innerWidth; return vw < 616 ? 1 : vw < 1036 ? 2 : vw < 1336 ? 3 : vw < 2296 ? 4 : 5; };
   let lastW = 0;
   const layout = () => {
     const W = gal.clientWidth;
@@ -51,7 +53,7 @@
     const anchor = !firstRun && !isOpen ? items.find(it => it.getBoundingClientRect().bottom > topLine) : null;
     const anchorTop = anchor ? anchor.getBoundingClientRect().top : 0;
 
-    const n = colsFor(W);
+    const n = colsFor();
     const gap = parseFloat(getComputedStyle(gal).getPropertyValue('--cc-gap')) || 12;
     const colW = (W - gap * (n - 1)) / n;
     const tops = new Array(n).fill(0);
@@ -106,6 +108,22 @@
   const total = items.length;
   const fullOf = i => items[i].getAttribute('href');
   const wrapIdx = i => (i + total) % total;
+  /* Cỡ vừa đủ nét cho khung xem: bề ngang hiển thị × mật độ điểm ảnh của màn hình.
+     Có sẵn các cỡ trung gian (data-sizes, src/image-variants.js) thì không tải bản 1600px khi chưa cần */
+  const fitSrc = i => {
+    const it = items[i];
+    const full = fullOf(i);
+    const parts = (it.dataset.sizes || '').split('@');
+    const sizes = parts[0].split(',').map(Number).filter(Boolean);
+    const sig = parts[1] ? '?v=' + parts[1] : '';
+    if (!sizes.length) return full;
+    const w = +it.dataset.w || 1600, h = +it.dataset.h || 1600;
+    const boxW = stage.clientWidth || window.innerWidth;
+    const boxH = stage.clientHeight || window.innerHeight;
+    const need = Math.min(boxW, boxH * w / h, w) * (window.devicePixelRatio || 1);
+    const pick = sizes.find(s => s >= need * 0.95);
+    return pick ? '/uploads/_v' + full.replace(/\.webp$/i, '-' + pick + '.webp') + sig : full;
+  };
   const isZoom = () => cl.classList.contains('zoom');
 
   let cur = 0;
@@ -122,27 +140,30 @@
     }
   };
 
+  /* Tải ngầm rồi mới thay ảnh (không nháy trắng); bỏ qua nếu khách đã chuyển sang concept khác */
+  const swapTo = src => {
+    const want = cur;
+    const pre = new Image();
+    pre.onload = () => { if (want === cur && img.getAttribute('src') !== src) img.src = src; };
+    pre.src = src;
+  };
+
   const show = i => {
     cur = wrapIdx(i);
     setZoom(false);
     const it = items[cur];
     const grid = it.querySelector('img');
-    const full = fullOf(cur);
-    /* Hiện ngay bản đang có trong lưới, bản nét nhất tải xong thì thay vào (giữ nguyên cỡ đang phóng to) */
-    const placeholder = (grid && (grid.currentSrc || grid.src)) || full;
+    const target = fitSrc(cur);
+    /* Hiện ngay bản đang có trong lưới, bản vừa đủ nét tải xong thì thay vào */
+    const placeholder = (grid && (grid.currentSrc || grid.src)) || target;
     img.src = placeholder;
     img.alt = albumName + ' · concept ' + (cur + 1);
-    if (placeholder !== full) {
-      const want = cur;
-      const pre = new Image();
-      pre.onload = () => { if (want === cur) img.src = full; };
-      pre.src = full;
-    }
+    if (placeholder !== target && placeholder.split('?')[0].slice(-fullOf(cur).length) !== fullOf(cur)) swapTo(target);
     countEl.textContent = (cur + 1) + ' / ' + total;
     cl.querySelector('.cl-title-n').textContent = 'Concept ' + (cur + 1);
     if (zaloBtn) zaloBtn.querySelector('.cl-zalo-n').textContent = 'Concept ' + (cur + 1);
     hintEl.textContent = HINT;
-    [cur + 1, cur - 1].forEach(j => { new Image().src = fullOf(wrapIdx(j)); });
+    [cur + 1, cur - 1].forEach(j => { new Image().src = fitSrc(wrapIdx(j)); });
     if (isOpen) history.replaceState(history.state, '', '#concept-' + (cur + 1));
   };
 
@@ -236,6 +257,7 @@
     const ry = (e.clientY - c.top) / c.height;
     img.style.width = zw + 'px';
     setZoom(true);
+    swapTo(fullOf(cur)); /* phóng to mới cần bản gốc 1600px */
     stage.scrollLeft = rx * img.offsetWidth - stage.clientWidth / 2;
     stage.scrollTop = ry * img.offsetHeight - stage.clientHeight / 2;
   });

@@ -133,7 +133,8 @@ figure{margin:0}
 .about-ph.single img{height:auto}
 .about-ph img{transition:1.2s var(--ease)}
 .about-ph figure:hover img{transform:scale(1.06)}
-.about-tx h2{font-size:clamp(28px,4vw,46px);margin:16px 0 24px}
+/* Tiêu đề Câu chuyện 2 dòng ngắt ở dấu phẩy (máy tính): cỡ chữ vừa đúng bề ngang cột chữ cạnh ảnh */
+.about-tx h2{font-size:clamp(28px,3.1vw,40px);margin:16px 0 24px;text-wrap:balance}
 .about-tx p{color:var(--muted);margin-bottom:20px;font-size:15.5px}
 .about-row.rev .about-ph{order:2}
 .sign{font-family:'Cormorant Garamond','Playfair Display',serif;font-style:italic;font-weight:500;font-size:30px;color:var(--ink);margin-top:30px;line-height:1.1}
@@ -565,6 +566,7 @@ footer{background:var(--ink);color:rgba(250,248,244,.78);padding:54px 0 26px}
   .price-cards{grid-template-columns:1fr 1fr}
   .post-grid{grid-template-columns:1fr}
   .about-row{grid-template-columns:1fr;gap:36px}
+  .about-tx h2{font-size:clamp(28px,4vw,40px)}
   .about-row.rev .about-ph{order:0}
 }
 @media(max-width:680px){
