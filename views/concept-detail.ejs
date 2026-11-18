@@ -37,7 +37,7 @@
       <% images.forEach((im, i) => { const w = im.w || 1, h = im.h || 1; %>
       <a class="cc-it" href="<%= im.file %>" data-i="<%= i %>" data-w="<%= w %>" data-h="<%= h %>"<% if (im.sizes) { %> data-sizes="<%= im.sizes %>"<% } %> style="aspect-ratio:<%= w %>/<%= h %>">
         <img src="<%= im.thumb || im.file %>"
-          <% const ss = srcsetFor(im); if (ss) { %>srcset="<%= ss %>" sizes="(max-width:615px) calc(100vw - 16px), (max-width:680px) calc(50vw - 12px), (max-width:1035px) calc(50vw - 34px), (max-width:1335px) calc(33.3vw - 27px), (max-width:2295px) calc(25vw - 23px), calc(20vw - 21px)"<% } %>
+          <% const ss = srcsetFor(im); if (ss) { %>srcset="<%= ss %>" sizes="(max-width:680px) calc(50vw - 9px), (max-width:1035px) calc(50vw - 34px), (max-width:1335px) calc(33.3vw - 27px), (max-width:2295px) calc(25vw - 23px), calc(20vw - 21px)"<% } %>
           width="<%= w %>" height="<%= h %>"
           alt="<%= album.name %> · concept <%= i + 1 %>" loading="<%= i < 3 ? 'eager' : 'lazy' %>"<%- i === 0 ? ' fetchpriority="high"' : '' %> decoding="async" />
         <span class="cc-it-n" aria-hidden="true">Concept <%= i + 1 %></span>
