@@ -41,7 +41,7 @@
      Hàng trên cùng luôn là các concept đầu tiên theo thứ tự kéo thả trong admin. */
   /* Số cột theo bề ngang cửa sổ, khớp đúng các mốc trong thuộc tính sizes của ảnh (concept-detail.ejs),
      để trình duyệt luôn chọn cỡ ảnh không nhỏ hơn ô thật (kể cả khi có thanh cuộn) */
-  const colsFor = () => { const vw = window.innerWidth; return vw < 616 ? 1 : vw < 1036 ? 2 : vw < 1336 ? 3 : vw < 2296 ? 4 : 5; };
+  const colsFor = () => { const vw = window.innerWidth; return vw < 1036 ? 2 : vw < 1336 ? 3 : vw < 2296 ? 4 : 5; };
   let lastW = 0;
   const layout = () => {
     const W = gal.clientWidth;

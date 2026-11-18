@@ -115,10 +115,11 @@
   .cc-tabs-in.at-end{mask-image:none;-webkit-mask-image:none}
   .cc-tab{padding:15px 0 13px;font-size:11px;letter-spacing:.16em}
   .cc-gal-sec{padding:12px 0 60px}
-  .cc-gal-sec .wrap-wide{padding:0 8px}
-  .cc-gal{--cc-gap:8px}
-  .cc-gal:not(.ready){columns:1}
-  .cc-it-n{right:8px;bottom:8px}
+  .cc-gal-sec .wrap-wide{padding:0 6px}
+  /* Điện thoại: 2 concept mỗi hàng để xem bao quát, chạm vào để xem ảnh lớn */
+  .cc-gal{--cc-gap:6px}
+  .cc-gal:not(.ready){columns:2}
+  .cc-it-n{right:4px;bottom:4px;padding:4px 6px 3px;font-size:8.5px;letter-spacing:.14em}
   .cc-next-in{padding:52px 20px}
   .cl-top{height:52px;padding-left:16px}
   .cl-close{margin-left:8px}
