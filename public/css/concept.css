@@ -98,7 +98,10 @@
 /* ---------- Điện thoại: một cột, ảnh gần tràn viền để thấy rõ chữ trên bảng concept ---------- */
 @media(max-width:680px){
   .cc-hero{padding-bottom:30px}
-  .cc-hero-cat{padding-top:96px;padding-bottom:20px}
+  .cc-hero{padding-top:104px}
+  .cc-hero-cat{padding-top:80px;padding-bottom:18px}
+  /* Số concept đã hiện trên thanh tab: bỏ dòng trùng để concept đầu tiên lọt trọn màn hình đầu */
+  .cc-hero-cat .cc-count{display:none}
   .cc-hero-cat h1{font-size:clamp(30px,8.5vw,38px)}
   .cc-hero-cat p{font-size:14.5px;margin-top:14px}
   .cc-back{margin-bottom:12px}
