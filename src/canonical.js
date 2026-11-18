@@ -2,7 +2,8 @@
  * Địa chỉ chuẩn của website (SEO), gộp mọi chuyển hướng thành MỘT bước 301:
  *  1. Tên miền: mọi biến thể tên miền của Rosé (www, .net, .vn) về tên miền chính.
  *  2. Đường dẫn web cũ Haravan trên rosewedding.vn về trang tương ứng của web mới.
- *  3. /album/<concept> về /concept/<slug>; dấu / thừa ở cuối URL về bản không dấu.
+ *  3. Dấu / thừa ở cuối URL về bản không dấu. Kho concept KHÔNG công khai (chỉ xem bằng link riêng,
+ *     src/concept-access.js): mọi link cũ trỏ vào concept đều về trang Ảnh cưới công khai.
  *
  * Tên miền chính = cài đặt site_url trong admin, nếu trống thì biến môi trường SITE_URL.
  * Luôn dùng bản không www.
@@ -150,7 +151,7 @@ function oldHtmlTarget(pathname, search, lookups) {
   const pick = k => String(q.get(k) || '').trim().toLowerCase();
   if (p === '/album.html') {
     const a = SLUG.test(pick('key')) ? lookups.albumBySlug(pick('key')) : null;
-    return a ? (a.category === 'concept' ? '/concept/' : '/album/') + a.slug : '/anh-cuoi';
+    return a && a.category !== 'concept' ? '/album/' + a.slug : '/anh-cuoi';
   }
   if (p === '/bang-gia.html') return '/bang-gia/' + (SLUG.test(pick('type')) ? pick('type') : 'anh-cuoi');
   if (p === '/post.html') return SLUG.test(pick('id')) ? '/tin-tuc/' + pick('id') : '/tin-tuc';
@@ -165,10 +166,10 @@ function oldHtmlTarget(pathname, search, lookups) {
 function legacyTarget(pathname, lookups) {
   const segs = String(pathname || '').toLowerCase().split('/').filter(Boolean);
 
-  /* Album đã chuyển thành concept: đi thẳng một bước (không qua route /album rồi mới 301) */
+  /* Album concept (không công khai): địa chỉ /album cũ về trang Ảnh cưới trong một bước */
   if (segs.length === 2 && segs[0] === 'album') {
     const a = lookups.albumBySlug(segs[1]);
-    return a && a.category === 'concept' ? '/concept/' + a.slug : null;
+    return a && a.category === 'concept' ? '/anh-cuoi' : null;
   }
   /* /bang-gia trần trùng nội dung /bang-gia/anh-cuoi: gom về một địa chỉ */
   if (segs.length === 1 && segs[0] === 'bang-gia') return '/bang-gia/anh-cuoi';
@@ -201,8 +202,7 @@ function legacyTarget(pathname, lookups) {
     const album = articleSlug && !LISTING.has(articleSlug)
       ? lookups.albumBySlug(articleSlug) || (LEGACY_ALBUM[articleSlug] ? lookups.albumBySlug(LEGACY_ALBUM[articleSlug]) : null)
       : null;
-    if (album) return (album.category === 'concept' ? '/concept/' : '/album/') + album.slug;
-    if (articleSlug && /concept|studio|phim-truong/.test(articleSlug)) return '/concept';
+    if (album && album.category !== 'concept') return '/album/' + album.slug;
     return '/anh-cuoi';
   }
   if (last === 'news') return '/tin-tuc';

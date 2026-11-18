@@ -12,7 +12,7 @@
 <main id="main">
 <section class="page-hero cc-hero cc-hero-cat">
   <div class="wrap center">
-    <a class="cc-back" href="/concept"><span aria-hidden="true">&lsaquo;&ensp;</span>Tất cả hạng mục</a>
+    <a class="cc-back" href="/concept<%= typeof conceptQs !== 'undefined' ? conceptQs : '' %>"><span aria-hidden="true">&lsaquo;&ensp;</span>Tất cả hạng mục</a>
     <h1><%= album.name %></h1>
     <% if (album.desc) { %><p><%= album.desc %></p><% } %>
     <p class="cc-count"><%= images.length %> concept chụp thật tại Rosé<span class="cc-count-hint"> · chạm vào concept để xem ảnh lớn</span></p>
@@ -23,7 +23,7 @@
 <nav class="cc-tabs" aria-label="Hạng mục concept">
   <div class="cc-tabs-in">
     <% categories.forEach(c => { const on = c.id === album.id; %>
-    <a href="/concept/<%= c.slug %>" class="cc-tab<%= on ? ' on' : '' %>"<%- on ? ' aria-current="page"' : '' %>><%= c.name %><span class="cc-tab-n"><%= c.count %></span></a>
+    <a href="/concept/<%= c.slug %><%= typeof conceptQs !== 'undefined' ? conceptQs : '' %>" class="cc-tab<%= on ? ' on' : '' %>"<%- on ? ' aria-current="page"' : '' %>><%= c.name %><span class="cc-tab-n"><%= c.count %></span></a>
     <% }) %>
   </div>
 </nav>
@@ -33,7 +33,7 @@
   <div class="wrap-wide">
     <!-- Lưới so le theo tỉ lệ thật của từng bảng concept (không cắt ảnh). JS xếp ô vào cột thấp nhất,
          giữ thứ tự kéo thả: 3 concept đầu nằm trên cùng. Không JS thì CSS columns vẫn hiển thị đủ. -->
-    <div class="cc-gal" id="ccGal" data-name="<%= album.name %>" data-zalo="<%= (s.zalo || '').replace(/\D/g, '') %>">
+    <div class="cc-gal" id="ccGal" data-name="<%= album.name %>" data-zalo="<%= (s.zalo || '').replace(/\D/g, '') %>"<% if (typeof conceptKey !== 'undefined' && conceptKey) { %> data-share="<%= conceptKey %>"<% } %>>
       <% images.forEach((im, i) => { const w = im.w || 1, h = im.h || 1; %>
       <a class="cc-it" href="<%= im.file %>" data-i="<%= i %>" data-w="<%= w %>" data-h="<%= h %>"<% if (im.sizes) { %> data-sizes="<%= im.sizes %>"<% } %> style="aspect-ratio:<%= w %>/<%= h %>">
         <img src="<%= im.thumb || im.file %>"
@@ -49,7 +49,7 @@
 
 <% if (nextCat) { %>
 <section class="cc-next">
-  <a class="cc-next-in wrap" href="/concept/<%= nextCat.slug %>">
+  <a class="cc-next-in wrap" href="/concept/<%= nextCat.slug %><%= typeof conceptQs !== 'undefined' ? conceptQs : '' %>">
     <span class="eyebrow">Hạng mục tiếp theo</span>
     <span class="cc-next-name"><%= nextCat.name %><span class="cc-next-arrow" aria-hidden="true">&rsaquo;</span></span>
     <span class="cc-next-count"><%= nextCat.count %> concept</span>

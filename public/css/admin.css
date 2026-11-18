@@ -285,3 +285,7 @@ td select { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px;
 .domain-status { display: block; margin-top: 8px; padding: 10px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 400; line-height: 1.6; }
 .domain-status.ok { background: #EBF3EB; color: var(--ok); }
 .domain-status.wait { background: #FDF3E3; color: var(--gold-deep); }
+
+/* Link gửi khách kho concept (Admin → Concept) */
+.share-link .share-row{display:flex;gap:8px;margin-top:10px}
+.share-link .share-row input{flex:1;min-width:0;font-size:13px}

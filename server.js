@@ -128,6 +128,8 @@ const { trackMiddleware, trackRouter } = require('./src/track');
 app.use(trackMiddleware);
 app.use('/track', trackRouter);
 
+/* Kho concept chỉ xem được bằng link riêng gửi khách (src/concept-access.js) */
+app.use('/concept', require('./src/concept-access').gate);
 app.use('/', require('./src/routes/public'));
 app.use('/admin', require('./src/routes/admin'));
 
