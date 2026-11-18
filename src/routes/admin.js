@@ -139,7 +139,15 @@ router.get('/concepts', (req, res) => {
     if (!g) { g = { name: a.grp, concepts: [] }; groups.push(g); }
     g.concepts.push(a);
   }
-  res.render('admin/concepts', { groups, total: rows.length, err: String(req.query.err || '') });
+  /* Link riêng gửi khách (kho concept không công khai, src/concept-access.js) */
+  const shareUrl = res.locals.baseUrl + '/concept?k=' + require('../concept-access').key();
+  res.render('admin/concepts', { groups, total: rows.length, err: String(req.query.err || ''), shareUrl, rotated: req.query.rotated === '1' });
+});
+
+/* Đổi link gửi khách: mọi link và quyền xem cũ hết hiệu lực */
+router.post('/concepts/share/rotate', (req, res) => {
+  require('../concept-access').rotate();
+  res.redirect('/admin/concepts?rotated=1');
 });
 
 router.post('/concepts', (req, res) => {

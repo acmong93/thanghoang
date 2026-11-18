@@ -20,7 +20,7 @@
   <div class="wrap-wide">
     <div class="cc-cats">
       <% categories.forEach((c, i) => { const cv = c.cover || {}; %>
-      <a class="cc-cat reveal" href="/concept/<%= c.slug %>">
+      <a class="cc-cat reveal" href="/concept/<%= c.slug %><%= typeof conceptQs !== 'undefined' ? conceptQs : '' %>">
         <span class="cc-cat-frame">
           <img src="<%= cv.thumb || cv.file %>"
             <% const css = srcsetFor(cv); if (css) { %>srcset="<%= css %>" sizes="(max-width:680px) calc(90vw - 50px), (max-width:1100px) calc(44vw - 33px), (max-width:1400px) calc(22vw - 24px), 290px"<% } %>

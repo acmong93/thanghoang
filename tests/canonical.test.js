@@ -79,8 +79,8 @@ test('bảng ánh xạ web cũ Haravan', () => {
     '/video-cuoi': '/#video',
     '/blogs/video-cuoi/ben-nhau-mai-mai-pre-wedding-yura-phuong-bali': '/#video',
     '/blogs/phong-su-cuoi/le-an-hoi': '/phong-su',
-    '/blogs/anh-cuoi/concept-han-quoc-nhe-nhang': '/concept',
-    '/blogs/anh-cuoi/studio-tuong-hoa': '/concept',
+    '/blogs/anh-cuoi/concept-han-quoc-nhe-nhang': '/anh-cuoi',
+    '/blogs/anh-cuoi/studio-tuong-hoa': '/anh-cuoi',
     '/blogs/anh-cuoi/love-at-night': '/anh-cuoi',
     '/anh-cuoi/love-is-madness-pre-wedding': '/anh-cuoi',
     '/blogs/anh-cuoi235c': '/anh-cuoi',
@@ -101,7 +101,7 @@ test('giữ đúng bài viết / album nếu web mới còn cùng slug', () => {
   assert.equal(legacyTarget('/blogs/news/chuan-bi-chup-cuoi', lk), '/tin-tuc/chuan-bi-chup-cuoi');
   assert.equal(legacyTarget('/news/chuan-bi-chup-cuoi', lk), '/tin-tuc/chuan-bi-chup-cuoi');
   assert.equal(legacyTarget('/blogs/anh-cuoi/lam-diep', lk), '/album/lam-diep');
-  assert.equal(legacyTarget('/blogs/anh-cuoi/ao-dai', lk), '/concept/ao-dai');
+  assert.equal(legacyTarget('/blogs/anh-cuoi/ao-dai', lk), '/anh-cuoi', 'concept không công khai: về Ảnh cưới');
 });
 
 test('KHÔNG đụng tới đường dẫn của web mới', () => {
@@ -291,33 +291,33 @@ test('site_url có www được chuẩn hoá về không www (tránh 301 ngượ
   assert.equal(decide({ ...base, primaryActive: true, hostHeader: 'rosewedding.vn', path: '/x' }), null, 'sau kích hoạt không đẩy ngược sang www');
 });
 
-test('/album/<concept> đi thẳng một bước về /concept/<slug>', () => {
+test('/album/<concept> (kho concept không công khai) về trang Ảnh cưới trong một bước', () => {
   const lk = {
     postExists: () => false,
     albumBySlug: s => (s === 'ao-dai' ? { slug: 'ao-dai', category: 'concept' } : s === 'lam-diep' ? { slug: 'lam-diep', category: 'signature' } : null)
   };
-  assert.equal(legacyTarget('/album/ao-dai', lk), '/concept/ao-dai');
+  assert.equal(legacyTarget('/album/ao-dai', lk), '/anh-cuoi');
   assert.equal(legacyTarget('/album/lam-diep', lk), null);
   const d = decide({ method: 'GET', protocol: 'https', search: '', primary: VN, primaryActive: true, lookups: lk, hostHeader: 'rosewedding.net', path: '/album/ao-dai' });
-  assert.equal(d, 'https://rosewedding.vn/concept/ao-dai');
+  assert.equal(d, 'https://rosewedding.vn/anh-cuoi');
 });
 
 /* ---------- Bổ sung sau đợt rà soát 09/10/2026 ---------- */
 const { oldHtmlTarget, checkPrimary } = require('../src/canonical');
 
-test('link cũ: bài album Haravan về đúng album/concept tương ứng (tra database), mất album thì lùi về danh sách', () => {
+test('link cũ: bài album Haravan về đúng album công khai tương ứng; concept (không công khai) về Ảnh cưới', () => {
   const albums = { 'fine-art': 'signature', 'han-quoc': 'signature', 'editorial-tap-chi': 'concept', 'phim-truong': 'signature', 'studio-phim-truong': 'concept' };
   const lk = { postExists: () => false, albumBySlug: s => (albums[s] ? { slug: s, category: albums[s] } : null) };
   const cases = {
     '/blogs/anh-cuoi/concept-fine-art-200-bong-hong-white-roses': '/album/fine-art',
     '/blogs/anh-cuoi/concept-han-quoc-nhe-nhang': '/album/han-quoc',
-    '/blogs/anh-cuoi/anh-cuoi-tap-chi': '/concept/editorial-tap-chi',
+    '/blogs/anh-cuoi/anh-cuoi-tap-chi': '/anh-cuoi',
     '/blogs/anh-cuoi/concept-co-dien-sang-trong': '/album/phim-truong',
-    '/anh-cuoi/phim-truong-santorini-preweddingmot': '/concept/studio-phim-truong',
-    '/blogs/anh-cuoi/studio-tuong-hoa': '/concept/studio-phim-truong'
+    '/anh-cuoi/phim-truong-santorini-preweddingmot': '/anh-cuoi',
+    '/blogs/anh-cuoi/studio-tuong-hoa': '/anh-cuoi'
   };
   for (const [from, to] of Object.entries(cases)) assert.equal(legacyTarget(from, lk), to, from);
-  assert.equal(legacyTarget('/blogs/anh-cuoi/concept-han-quoc-nhe-nhang', noLookups), '/concept', 'album bị ẩn/xoá: về danh sách concept');
+  assert.equal(legacyTarget('/blogs/anh-cuoi/concept-han-quoc-nhe-nhang', noLookups), '/anh-cuoi', 'album bị ẩn/xoá: về Ảnh cưới');
 });
 
 test('link cũ: váy cưới, /pages/news, sản phẩm Haravan, /bang-gia trần', () => {
@@ -333,7 +333,7 @@ test('link cũ: váy cưới, /pages/news, sản phẩm Haravan, /bang-gia trầ
 test('web tĩnh đời đầu (*.html): một bước tới trang mới, chặn tham số lạ', () => {
   const lk = { postExists: () => false, albumBySlug: s => (s === 'studio-phim-truong' ? { slug: s, category: 'concept' } : s === 'lam-diep' ? { slug: s, category: 'signature' } : null) };
   assert.equal(oldHtmlTarget('/index.html', '', lk), '/');
-  assert.equal(oldHtmlTarget('/album.html', '?key=studio-phim-truong', lk), '/concept/studio-phim-truong');
+  assert.equal(oldHtmlTarget('/album.html', '?key=studio-phim-truong', lk), '/anh-cuoi', 'concept không công khai');
   assert.equal(oldHtmlTarget('/album.html', '?key=lam-diep', lk), '/album/lam-diep');
   assert.equal(oldHtmlTarget('/album.html', '?key=khong-co', lk), '/anh-cuoi');
   assert.equal(oldHtmlTarget('/bang-gia.html', '?type=combo', lk), '/bang-gia/combo');
@@ -342,7 +342,7 @@ test('web tĩnh đời đầu (*.html): một bước tới trang mới, chặn 
   assert.equal(oldHtmlTarget('/post.html', '', lk), '/tin-tuc');
   assert.equal(oldHtmlTarget('/concept', '', lk), null);
   const d = decide({ method: 'GET', protocol: 'https', search: '?key=studio-phim-truong', primary: VN, primaryActive: true, lookups: lk, hostHeader: 'www.rosewedding.net', path: '/album.html' });
-  assert.equal(d, 'https://rosewedding.vn/concept/studio-phim-truong', 'đổi host + đường dẫn trong MỘT bước');
+  assert.equal(d, 'https://rosewedding.vn/anh-cuoi', 'đổi host + đường dẫn trong MỘT bước');
 });
 
 test('host có cổng hoặc dấu chấm cuối không tự chuyển về chính nó', () => {

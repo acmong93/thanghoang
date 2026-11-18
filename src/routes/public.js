@@ -72,8 +72,8 @@ router.get('/concept/:slug', (req, res, next) => {
 router.get('/album/:slug', (req, res, next) => {
   const album = get('SELECT * FROM albums WHERE slug = ? AND visible = 1', req.params.slug);
   if (!album) return next();
-  /* Concept có trang xem riêng đẹp hơn — chuyển hướng để không trùng nội dung */
-  if (album.category === 'concept') return res.redirect(301, '/concept/' + album.slug);
+  /* Concept chỉ xem bằng link riêng: địa chỉ album cũ của concept về trang Ảnh cưới công khai */
+  if (album.category === 'concept') return res.redirect(301, '/anh-cuoi');
   const images = all('SELECT * FROM images WHERE album_id = ? ORDER BY sort_order', album.id);
   const others = albumsWithCover(album.category).filter(a => a.id !== album.id).slice(0, 3);
   album.cover = coverOf(album.id);
@@ -145,12 +145,11 @@ router.get('/robots.txt', (req, res) => {
 });
 
 router.get('/sitemap.xml', (req, res) => {
-  const urls = ['/', '/anh-cuoi', '/phong-su', '/vay-cuoi', '/cau-chuyen', '/tin-tuc', '/concept'];
+  const urls = ['/', '/anh-cuoi', '/phong-su', '/vay-cuoi', '/cau-chuyen', '/tin-tuc'];
   all('SELECT slug FROM pricing WHERE visible = 1 ORDER BY sort_order').forEach(p => urls.push(`/bang-gia/${p.slug}`));
-  all(`SELECT slug, category FROM albums WHERE visible = 1
-       AND (category != 'concept' OR EXISTS(SELECT 1 FROM images WHERE album_id = albums.id))
-       ORDER BY sort_order`)
-    .forEach(a => urls.push(a.category === 'concept' ? `/concept/${a.slug}` : `/album/${a.slug}`));
+  /* Kho concept không công khai (chỉ xem bằng link riêng gửi khách): không đưa vào sơ đồ trang */
+  all(`SELECT slug FROM albums WHERE visible = 1 AND category != 'concept' ORDER BY sort_order`)
+    .forEach(a => urls.push(`/album/${a.slug}`));
   all('SELECT slug FROM posts WHERE visible = 1 ORDER BY created_at DESC').forEach(p => urls.push(`/tin-tuc/${p.slug}`));
   const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
