@@ -151,7 +151,7 @@ function oldHtmlTarget(pathname, search, lookups) {
   const pick = k => String(q.get(k) || '').trim().toLowerCase();
   if (p === '/album.html') {
     const a = SLUG.test(pick('key')) ? lookups.albumBySlug(pick('key')) : null;
-    return a && a.category !== 'concept' ? '/album/' + a.slug : '/anh-cuoi';
+    return a && a.category !== 'concept' && a.category !== 'baogia' ? '/album/' + a.slug : '/anh-cuoi';
   }
   if (p === '/bang-gia.html') return '/bang-gia/' + (SLUG.test(pick('type')) ? pick('type') : 'anh-cuoi');
   if (p === '/post.html') return SLUG.test(pick('id')) ? '/tin-tuc/' + pick('id') : '/tin-tuc';
@@ -169,7 +169,7 @@ function legacyTarget(pathname, lookups) {
   /* Album concept (không công khai): địa chỉ /album cũ về trang Ảnh cưới trong một bước */
   if (segs.length === 2 && segs[0] === 'album') {
     const a = lookups.albumBySlug(segs[1]);
-    return a && a.category === 'concept' ? '/anh-cuoi' : null;
+    return a && (a.category === 'concept' || a.category === 'baogia') ? '/anh-cuoi' : null;
   }
   /* /bang-gia trần trùng nội dung /bang-gia/anh-cuoi: gom về một địa chỉ */
   if (segs.length === 1 && segs[0] === 'bang-gia') return '/bang-gia/anh-cuoi';
@@ -202,7 +202,7 @@ function legacyTarget(pathname, lookups) {
     const album = articleSlug && !LISTING.has(articleSlug)
       ? lookups.albumBySlug(articleSlug) || (LEGACY_ALBUM[articleSlug] ? lookups.albumBySlug(LEGACY_ALBUM[articleSlug]) : null)
       : null;
-    if (album && album.category !== 'concept') return '/album/' + album.slug;
+    if (album && album.category !== 'concept' && album.category !== 'baogia') return '/album/' + album.slug;
     return '/anh-cuoi';
   }
   if (last === 'news') return '/tin-tuc';

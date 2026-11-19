@@ -120,7 +120,7 @@ router.get('/albums', (req, res) => {
     SELECT a.*, COUNT(i.id) AS img_count,
       (SELECT thumb FROM images WHERE album_id = a.id ORDER BY is_cover DESC, sort_order LIMIT 1) AS cover
     FROM albums a LEFT JOIN images i ON i.album_id = a.id
-    WHERE a.category != 'concept'
+    WHERE a.category NOT IN ('concept', 'baogia')
     GROUP BY a.id ORDER BY a.sort_order`);
   res.render('admin/albums', { albums });
 });
@@ -131,7 +131,7 @@ router.get('/concepts', (req, res) => {
     SELECT a.*, COUNT(i.id) AS img_count,
       (SELECT thumb FROM images WHERE album_id = a.id ORDER BY is_cover DESC, sort_order LIMIT 1) AS cover
     FROM albums a LEFT JOIN images i ON i.album_id = a.id
-    WHERE a.category = 'concept'
+    WHERE a.category IN ('concept', 'baogia')
     GROUP BY a.id ORDER BY a.sort_order`);
   const groups = [];
   for (const a of rows) {
@@ -163,7 +163,7 @@ router.post('/concepts', (req, res) => {
 });
 
 router.post('/concepts/:id/delete', (req, res) => {
-  run("DELETE FROM albums WHERE id = ? AND category = 'concept'", req.params.id);
+  run("DELETE FROM albums WHERE id = ? AND category IN ('concept', 'baogia')", req.params.id);
   res.redirect('/admin/concepts');
 });
 
@@ -176,7 +176,7 @@ router.post('/concepts/reorder', express.json(), (req, res) => {
   dbm.db.exec('BEGIN');
   try {
     items.forEach((it, i) => {
-      run("UPDATE albums SET sort_order = ?, grp = ? WHERE id = ? AND category = 'concept'",
+      run("UPDATE albums SET sort_order = ?, grp = ? WHERE id = ? AND category IN ('concept', 'baogia')",
         i, String(it.grp || '').trim().slice(0, 80), Number(it.id) || 0);
     });
     dbm.db.exec('COMMIT');
@@ -213,10 +213,12 @@ router.post('/albums/:id', (req, res) => {
   if (!existing) return res.redirect('/admin/albums');
   /* Concept không đổi được category qua form này (form không có ô đó) — giữ nguyên
      kẻo concept âm thầm biến thành album cưới; nhóm (grp) thì sửa được */
-  const cat = existing.category === 'concept' ? 'concept' : (category || 'wedding');
+  /* Kho tư vấn (concept, báo giá) giữ nguyên loại: không để form album biến nó thành album công khai */
+  const kho = existing.category === 'concept' || existing.category === 'baogia';
+  const cat = kho ? existing.category : (category || 'wedding');
   run('UPDATE albums SET name=?, tag=?, desc=?, category=?, grp=?, visible=?, sort_order=? WHERE id=?',
     name.trim(), (tag || '').trim(), (desc || '').trim(), cat,
-    existing.category === 'concept' ? String(grp || '').trim() : '',
+    kho ? String(grp || '').trim() : '',
     visible ? 1 : 0, Number(sort_order) || 0, req.params.id);
   res.redirect('/admin/albums/' + req.params.id);
 });
@@ -254,7 +256,7 @@ router.post('/albums/:id/images', upload.array('photos', 40), async (req, res) =
     }
   }
   /* Concept: tạo các cỡ ảnh trung gian ở nền (trang khách tải đúng cỡ theo màn hình) */
-  if (album.category === 'concept') variants.queueSync();
+  if (album.category === 'concept' || album.category === 'baogia') variants.queueSync();
   res.redirect('/admin/albums/' + album.id);
 });
 
@@ -620,6 +622,7 @@ router.post('/backup/restore', uploadBackup.single('backup'), (req, res) => {
     ensureAdmin(); // đồng bộ lại mật khẩu quản trị theo biến môi trường hiện tại
     /* Bản sao lưu chụp trước đợt concept: nhập lại concept từ manifest kẻo trang trống */
     require('../concepts-import').ensureConcepts();
+    require('../concepts-import').ensureBaoGia();
     require('../canonical').canonical().afterRestore();
     variants.reconcile(); /* bản sao lưu không kèm cỡ trung gian: dùng tạm bản thường... */
     variants.queueSync(2000); /* ...rồi tạo bù ở nền */

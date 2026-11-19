@@ -1,0 +1,286 @@
+[
+  {
+    "slug": "pre-wedding-2026",
+    "name": "Pre-wedding",
+    "desc": "Các gói chụp ảnh cưới tại studio, phim trường và ngoại cảnh, kèm lưu ý khi đặt lịch.",
+    "sort": 1,
+    "images": [
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/01.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/01-thumb.webp",
+        "label": "Package 1",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/02.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/02-thumb.webp",
+        "label": "Package 2",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/03.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/03-thumb.webp",
+        "label": "Package 3",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/04.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/04-thumb.webp",
+        "label": "Package 4",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/05.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/05-thumb.webp",
+        "label": "Package 5",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/06.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/06-thumb.webp",
+        "label": "VIP 1",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/07.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/07-thumb.webp",
+        "label": "VIP 2",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/08.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/08-thumb.webp",
+        "label": "Luxury 1",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/09.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/09-thumb.webp",
+        "label": "Luxury 2",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/10.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/10-thumb.webp",
+        "label": "Ngoại thành",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/11.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/11-thumb.webp",
+        "label": "Ngoại thành VIP",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/pre-wedding-2026/12.webp",
+        "thumb": "/img/bao-gia/pre-wedding-2026/12-thumb.webp",
+        "label": "Lưu ý",
+        "w": 2000,
+        "h": 1500
+      }
+    ]
+  },
+  {
+    "slug": "combo-tron-goi-2026",
+    "name": "Combo trọn gói",
+    "desc": "Chụp ảnh cưới, phóng sự ngày cưới, váy cưới và trang điểm trong một gói, tiết kiệm hơn đặt lẻ.",
+    "sort": 2,
+    "images": [
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/01.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/01-thumb.webp",
+        "label": "Combo 1",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/02.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/02-thumb.webp",
+        "label": "Combo 2",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/03.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/03-thumb.webp",
+        "label": "Combo 3",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/04.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/04-thumb.webp",
+        "label": "Combo 4",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/05.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/05-thumb.webp",
+        "label": "Combo 5",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/06.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/06-thumb.webp",
+        "label": "Combo VIP 1",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/07.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/07-thumb.webp",
+        "label": "Combo VIP 2",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/08.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/08-thumb.webp",
+        "label": "Combo VIP 3",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/09.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/09-thumb.webp",
+        "label": "Combo VIP 4",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/10.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/10-thumb.webp",
+        "label": "Combo VIP 5",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/11.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/11-thumb.webp",
+        "label": "Combo Luxury 1",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/combo-tron-goi-2026/12.webp",
+        "thumb": "/img/bao-gia/combo-tron-goi-2026/12-thumb.webp",
+        "label": "Combo Luxury 2",
+        "w": 2000,
+        "h": 1500
+      }
+    ]
+  },
+  {
+    "slug": "phong-su-cuoi-2026",
+    "name": "Phóng sự cưới",
+    "desc": "Chụp và quay phóng sự lễ ăn hỏi, ngày cưới cùng JA Studio.",
+    "sort": 3,
+    "images": [
+      {
+        "file": "/img/bao-gia/phong-su-cuoi-2026/01.webp",
+        "thumb": "/img/bao-gia/phong-su-cuoi-2026/01-thumb.webp",
+        "label": "Phóng sự Photo",
+        "w": 2000,
+        "h": 1370
+      },
+      {
+        "file": "/img/bao-gia/phong-su-cuoi-2026/02.webp",
+        "thumb": "/img/bao-gia/phong-su-cuoi-2026/02-thumb.webp",
+        "label": "Phóng sự Video",
+        "w": 2000,
+        "h": 1370
+      },
+      {
+        "file": "/img/bao-gia/phong-su-cuoi-2026/03.webp",
+        "thumb": "/img/bao-gia/phong-su-cuoi-2026/03-thumb.webp",
+        "label": "Phóng sự VIP 1",
+        "w": 2000,
+        "h": 1370
+      },
+      {
+        "file": "/img/bao-gia/phong-su-cuoi-2026/04.webp",
+        "thumb": "/img/bao-gia/phong-su-cuoi-2026/04-thumb.webp",
+        "label": "Phóng sự VIP 2",
+        "w": 2000,
+        "h": 1370
+      },
+      {
+        "file": "/img/bao-gia/phong-su-cuoi-2026/05.webp",
+        "thumb": "/img/bao-gia/phong-su-cuoi-2026/05-thumb.webp",
+        "label": "Phóng sự VIP 3",
+        "w": 2000,
+        "h": 1370
+      },
+      {
+        "file": "/img/bao-gia/phong-su-cuoi-2026/06.webp",
+        "thumb": "/img/bao-gia/phong-su-cuoi-2026/06-thumb.webp",
+        "label": "Luxury Package",
+        "w": 2000,
+        "h": 1370
+      },
+      {
+        "file": "/img/bao-gia/phong-su-cuoi-2026/07.webp",
+        "thumb": "/img/bao-gia/phong-su-cuoi-2026/07-thumb.webp",
+        "label": "Intimate Wedding 1",
+        "w": 2000,
+        "h": 1370
+      },
+      {
+        "file": "/img/bao-gia/phong-su-cuoi-2026/08.webp",
+        "thumb": "/img/bao-gia/phong-su-cuoi-2026/08-thumb.webp",
+        "label": "Intimate Wedding 2",
+        "w": 2000,
+        "h": 1370
+      }
+    ]
+  },
+  {
+    "slug": "dich-vu-khac-2026",
+    "name": "Dịch vụ khác",
+    "desc": "Gói đồng hành và chụp ảnh gia đình.",
+    "sort": 4,
+    "images": [
+      {
+        "file": "/img/bao-gia/dich-vu-khac-2026/01.webp",
+        "thumb": "/img/bao-gia/dich-vu-khac-2026/01-thumb.webp",
+        "label": "Đồng hành 1",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/dich-vu-khac-2026/02.webp",
+        "thumb": "/img/bao-gia/dich-vu-khac-2026/02-thumb.webp",
+        "label": "Đồng hành 2",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/dich-vu-khac-2026/03.webp",
+        "thumb": "/img/bao-gia/dich-vu-khac-2026/03-thumb.webp",
+        "label": "Family 1",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/dich-vu-khac-2026/04.webp",
+        "thumb": "/img/bao-gia/dich-vu-khac-2026/04-thumb.webp",
+        "label": "Family 2",
+        "w": 2000,
+        "h": 1500
+      }
+    ]
+  }
+]

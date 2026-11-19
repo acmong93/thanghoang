@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<%- include('partials/head', { title: 'Concept ' + album.name, desc: album.desc || ('Bộ concept ' + album.name + ' tại Rosé Wedding'),
+<%# Một hạng mục của "kho tư vấn" (concept hoặc báo giá) — cấu hình ở KHO trong src/routes/public.js %>
+<%- include('partials/head', { title: kho.item + ' ' + album.name, desc: album.desc || (kho.item + ' ' + album.name + ' tại Rosé Wedding'),
   og: images.length ? images[0].file : '',
-  crumbs: [['Concept', '/concept'], ['Concept ' + album.name, null]] }) %>
+  crumbs: [[kho.item, kho.base], [kho.item + ' ' + album.name, null]] }) %>
 <link rel="stylesheet" href="/css/concept.css?v=<%= v %>" />
 </head>
 <body>
@@ -12,18 +13,21 @@
 <main id="main">
 <section class="page-hero cc-hero cc-hero-cat">
   <div class="wrap center">
-    <a class="cc-back" href="/concept"><span aria-hidden="true">&lsaquo;&ensp;</span>Tất cả hạng mục</a>
+    <a class="cc-back" href="<%= kho.base %>"><span aria-hidden="true">&lsaquo;&ensp;</span>Tất cả hạng mục</a>
     <h1><%= album.name %></h1>
     <% if (album.desc) { %><p><%= album.desc %></p><% } %>
-    <p class="cc-count"><%= images.length %> concept chụp thật tại Rosé<span class="cc-count-hint"> · chạm vào concept để xem ảnh lớn</span></p>
+    <p class="cc-count"><%= images.length %> <%= kho.unit %><span class="cc-count-hint"> · chạm vào để xem ảnh lớn</span></p>
   </div>
 </section>
 
 <% if (categories.length > 1) { %>
-<nav class="cc-tabs" aria-label="Hạng mục concept">
+<nav class="cc-tabs" aria-label="Hạng mục <%= kho.unit %>">
   <div class="cc-tabs-in">
     <% categories.forEach(c => { const on = c.id === album.id; %>
-    <a href="/concept/<%= c.slug %>" class="cc-tab<%= on ? ' on' : '' %>"<%- on ? ' aria-current="page"' : '' %>><%= c.name %><span class="cc-tab-n"><%= c.count %></span></a>
+    <a href="<%= kho.base %>/<%= c.slug %>" class="cc-tab<%= on ? ' on' : '' %>"<%- on ? ' aria-current="page"' : '' %>>
+      <svg class="cc-tab-ic" viewBox="0 0 20 16" aria-hidden="true"><path d="M1 3.2V14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H9.2L7.4 1.6A1 1 0 0 0 6.6 1H2a1 1 0 0 0-1 1z"/></svg>
+      <span class="cc-tab-name"><%= c.name %></span><span class="cc-tab-n"><%= c.count %></span>
+    </a>
     <% }) %>
   </div>
 </nav>
@@ -31,16 +35,18 @@
 
 <section class="cc-gal-sec" id="concept-list">
   <div class="wrap-wide">
-    <!-- Lưới so le theo tỉ lệ thật của từng bảng concept (không cắt ảnh). JS xếp ô vào cột thấp nhất,
-         giữ thứ tự kéo thả: 3 concept đầu nằm trên cùng. Không JS thì CSS columns vẫn hiển thị đủ. -->
+    <!-- Lưới so le theo tỉ lệ thật của từng ảnh (không cắt ảnh). JS xếp ô vào cột thấp nhất,
+         giữ thứ tự kéo thả: các ảnh đầu nằm trên cùng. Không JS thì CSS columns vẫn hiển thị đủ. -->
     <div class="cc-gal" id="ccGal" data-name="<%= album.name %>" data-zalo="<%= (s.zalo || '').replace(/\D/g, '') %>">
-      <% images.forEach((im, i) => { const w = im.w || 1, h = im.h || 1; %>
-      <a class="cc-it" href="<%= im.file %>" data-i="<%= i %>" data-w="<%= w %>" data-h="<%= h %>"<% if (im.sizes) { %> data-sizes="<%= im.sizes %>"<% } %> style="aspect-ratio:<%= w %>/<%= h %>">
+      <% images.forEach((im, i) => { const w = im.w || 1, h = im.h || 1;
+           /* Concept đánh số; báo giá dùng tên in trên trang (Package 1, Combo VIP 2...) */
+           const label = kho.cat === 'concept' ? 'Concept ' + (i + 1) : (im.alt || (kho.item + ' ' + (i + 1))); %>
+      <a class="cc-it" href="<%= im.file %>" data-i="<%= i %>" data-w="<%= w %>" data-h="<%= h %>" data-label="<%= label %>"<% if (im.sizes) { %> data-sizes="<%= im.sizes %>"<% } %> style="aspect-ratio:<%= w %>/<%= h %>">
         <img src="<%= im.thumb || im.file %>"
           <% const ss = srcsetFor(im); if (ss) { %>srcset="<%= ss %>" sizes="(max-width:680px) calc(50vw - 9px), (max-width:1035px) calc(50vw - 34px), (max-width:1335px) calc(33.3vw - 27px), (max-width:2295px) calc(25vw - 23px), calc(20vw - 21px)"<% } %>
           width="<%= w %>" height="<%= h %>"
-          alt="<%= album.name %> · concept <%= i + 1 %>" loading="<%= i < 3 ? 'eager' : 'lazy' %>"<%- i === 0 ? ' fetchpriority="high"' : '' %> decoding="async" />
-        <span class="cc-it-n" aria-hidden="true">Concept <%= i + 1 %></span>
+          alt="<%= album.name %> · <%= label %>" loading="<%= i < 3 ? 'eager' : 'lazy' %>"<%- i === 0 ? ' fetchpriority="high"' : '' %> decoding="async" />
+        <span class="cc-it-n" aria-hidden="true"><%= label %></span>
       </a>
       <% }) %>
     </div>
@@ -49,18 +55,18 @@
 
 <% if (nextCat) { %>
 <section class="cc-next">
-  <a class="cc-next-in wrap" href="/concept/<%= nextCat.slug %>">
+  <a class="cc-next-in wrap" href="<%= kho.base %>/<%= nextCat.slug %>">
     <span class="eyebrow">Hạng mục tiếp theo</span>
     <span class="cc-next-name"><%= nextCat.name %><span class="cc-next-arrow" aria-hidden="true">&rsaquo;</span></span>
-    <span class="cc-next-count"><%= nextCat.count %> concept</span>
+    <span class="cc-next-count"><%= nextCat.count %> <%= kho.unit %></span>
   </a>
 </section>
 <% } %>
 
 <section class="cta-band reveal">
   <div class="wrap center">
-    <h2>Thích concept <span class="italic">nào?</span></h2>
-    <p class="mt-14">Gửi Rosé concept hai bạn ưng ý (ví dụ “<%= album.name %> · Concept 12”), chúng tôi tư vấn chi tiết và giữ lịch cho riêng hai bạn, hoàn toàn miễn phí.</p>
+    <h2><%= kho.ask.replace(kho.askEm, '') %><span class="italic"><%= kho.askEm %></span></h2>
+    <p class="mt-14"><%= kho.cta %></p>
     <a href="/#booking" class="btn btn-gold mt-24">Đặt lịch tư vấn</a>
   </div>
 </section>

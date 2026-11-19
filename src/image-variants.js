@@ -91,7 +91,7 @@ function removeFor(file) {
 }
 
 const conceptRows = db => db.all(`SELECT i.id, i.file, i.thumb, i.w, i.sizes FROM images i
-  JOIN albums a ON a.id = i.album_id WHERE a.category = 'concept'`);
+  JOIN albums a ON a.id = i.album_id WHERE a.category IN ('concept', 'baogia')`);
 
 /* Kiểm tra nhanh (chỉ xem file có tồn tại, không tạo ảnh): ảnh nào thiếu cỡ thì xoá sizes để trang
    dùng lại thumb + bản gốc, KHÔNG BAO GIỜ trỏ tới file không có (VD vừa khôi phục sao lưu sang máy chủ mới,
