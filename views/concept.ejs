@@ -19,6 +19,19 @@
 
 <section class="cc-cats-sec">
   <div class="wrap-wide">
+    <% if (kho.cat === 'baogia') { %>
+    <!-- Báo giá: không ảnh bìa (trang báo giá thu nhỏ không đọc được), chỉ tiêu đề hạng mục thật nổi bật -->
+    <div class="cc-cats cc-cats-text">
+      <% categories.forEach(c => { %>
+      <a class="cc-cat cc-cat-text reveal" href="<%= kho.base %>/<%= c.slug %>">
+        <span class="cc-cat-count"><%= c.count %> <%= kho.unit %></span>
+        <h2><%= c.name %></h2>
+        <% if (c.desc) { %><span class="cc-cat-desc"><%= c.desc %></span><% } %>
+        <span class="cc-cat-go">Xem báo giá<span aria-hidden="true">&ensp;&rsaquo;</span></span>
+      </a>
+      <% }) %>
+    </div>
+    <% } else { %>
     <div class="cc-cats">
       <% categories.forEach((c, i) => { const cv = c.cover || {}; %>
       <a class="cc-cat reveal" href="<%= kho.base %>/<%= c.slug %>">
@@ -36,6 +49,7 @@
       </a>
       <% }) %>
     </div>
+    <% } %>
   </div>
 </section>
 

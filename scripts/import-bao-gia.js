@@ -50,10 +50,11 @@ const CATS = [
     ]
   },
   {
-    slug: 'dich-vu-khac-2026', name: 'Dịch vụ khác', desc: 'Gói đồng hành và chụp ảnh gia đình.',
+    slug: 'dich-vu-khac-2026', name: 'Dịch vụ khác', desc: 'Gói đồng hành, chụp ảnh gia đình, dịch vụ bổ sung và in ấn ảnh, album.',
     files: [
       ['Dịch vụ khác/dh 1.jpg', 'Đồng hành 1'], ['Dịch vụ khác/dh2..jpg', 'Đồng hành 2'],
-      ['Dịch vụ khác/fam1 copy.jpg', 'Family 1'], ['Dịch vụ khác/fam2 copy.jpg', 'Family 2']
+      ['Dịch vụ khác/fam1 copy.jpg', 'Family 1'], ['Dịch vụ khác/fam2 copy.jpg', 'Family 2'],
+      ['Dịch vụ khác/dich vu bo sung.jpg', 'Bổ sung & in ấn'] /* anh Thắng gửi thêm 19/11/2026 */
     ]
   }
 ];

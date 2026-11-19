@@ -34,6 +34,11 @@ function ensureConcepts() {
    category 'baogia', nhóm 'Báo giá' để quản lý chung trong Admin → Concept (thêm/xoá/kéo thả ảnh như concept).
    Nhãn từng trang (Package 1, Combo VIP 2...) lưu ở images.alt. */
 function ensureBaoGia() {
+  importBaoGia();
+  addBaoGiaPages();
+}
+
+function importBaoGia() {
   const { get, run, setting, setSetting } = require('./db');
   if (setting('baogia_import_v1')) return;
   try {
@@ -54,6 +59,34 @@ function ensureBaoGia() {
     console.log('[init] Đã nhập ' + manifest.length + ' hạng mục báo giá từ manifest');
   } catch (e) {
     console.error('[init] Lỗi nhập báo giá:', e.message);
+  }
+}
+
+/* Trang báo giá bổ sung sau đợt nhập đầu (VD 'Bổ sung & in ấn' vào Dịch vụ khác): thêm vào CUỐI hạng mục
+   đã có, chỉ trang chưa có (so theo file), một lần (marker baogia_pages_v2). Không đụng thứ tự / ảnh đã sửa trong admin. */
+const OLD_DESC = { 'dich-vu-khac-2026': 'Gói đồng hành và chụp ảnh gia đình.' };
+function addBaoGiaPages() {
+  const { get, run, setting, setSetting } = require('./db');
+  if (setting('baogia_pages_v2')) return;
+  try {
+    const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'scripts', 'bao-gia-manifest.json'), 'utf8'));
+    let added = 0;
+    for (const c of manifest) {
+      const a = get("SELECT id, [desc] d FROM albums WHERE slug = ? AND category = 'baogia'", c.slug);
+      if (!a) continue;
+      if (OLD_DESC[c.slug] && a.d === OLD_DESC[c.slug]) run('UPDATE albums SET [desc] = ? WHERE id = ?', c.desc, a.id);
+      for (const im of c.images) {
+        if (get('SELECT 1 FROM images WHERE album_id = ? AND file = ?', a.id, im.file)) continue;
+        const next = get('SELECT COALESCE(MAX(sort_order), -1) + 1 n FROM images WHERE album_id = ?', a.id).n;
+        run('INSERT INTO images(album_id, file, thumb, alt, sort_order, is_cover, w, h) VALUES(?,?,?,?,?,0,?,?)',
+          a.id, im.file, im.thumb, im.label, next, im.w, im.h);
+        added++;
+      }
+    }
+    setSetting('baogia_pages_v2', '1');
+    if (added) console.log('[init] Đã thêm ' + added + ' trang báo giá mới');
+  } catch (e) {
+    console.error('[init] Lỗi thêm trang báo giá:', e.message);
   }
 }
 

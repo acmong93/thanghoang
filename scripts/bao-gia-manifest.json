@@ -250,7 +250,7 @@
   {
     "slug": "dich-vu-khac-2026",
     "name": "Dịch vụ khác",
-    "desc": "Gói đồng hành và chụp ảnh gia đình.",
+    "desc": "Gói đồng hành, chụp ảnh gia đình, dịch vụ bổ sung và in ấn ảnh, album.",
     "sort": 4,
     "images": [
       {
@@ -278,6 +278,13 @@
         "file": "/img/bao-gia/dich-vu-khac-2026/04.webp",
         "thumb": "/img/bao-gia/dich-vu-khac-2026/04-thumb.webp",
         "label": "Family 2",
+        "w": 2000,
+        "h": 1500
+      },
+      {
+        "file": "/img/bao-gia/dich-vu-khac-2026/05.webp",
+        "thumb": "/img/bao-gia/dich-vu-khac-2026/05-thumb.webp",
+        "label": "Bổ sung & in ấn",
         "w": 2000,
         "h": 1500
       }

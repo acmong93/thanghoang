@@ -25,6 +25,13 @@
 .cc-cat-go span{display:inline-block;transition:transform .4s var(--ease)}
 .cc-cat:hover .cc-cat-go{color:var(--gold-deep);border-color:var(--gold)}
 .cc-cat:hover .cc-cat-go span{transform:translateX(5px)}
+/* Báo giá: thẻ chữ, không ảnh — tên hạng mục là thứ nổi bật nhất */
+.cc-cats-text{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:1180px;margin:0 auto}
+.cc-cat-text{display:flex;flex-direction:column;align-items:flex-start;min-height:270px;padding:40px 44px 36px;background:var(--paper);border:1px solid var(--line);transition:border-color .4s var(--ease),background .4s var(--ease)}
+.cc-cat-text h2{font-size:clamp(36px,3.6vw,54px);line-height:1.08;margin-top:16px}
+.cc-cat-text .cc-cat-desc{margin-top:14px;font-size:15px}
+.cc-cat-text .cc-cat-go{margin-top:auto;padding-top:26px}
+.cc-cat-text:hover{border-color:var(--gold);background:var(--pearl, var(--paper))}
 
 /* Thanh thư mục (hạng mục): ô thư mục nổi bật, ô đang xem tô đậm; dính dưới header trên máy tính */
 .cc-tabs{position:sticky;top:var(--hdr,74px);z-index:40;background:rgba(250,248,244,.97);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -112,6 +119,10 @@
   .cc-cat-frame{aspect-ratio:1/1}
   .cc-cat-frame img{inset:5%;width:90%;height:90%}
   .cc-cat-meta{padding-top:18px}
+  .cc-cats-text{grid-template-columns:1fr;gap:12px}
+  .cc-cat-text{min-height:0;padding:28px 24px 24px}
+  .cc-cat-text h2{font-size:clamp(32px,9vw,40px);margin-top:12px}
+  .cc-cat-text .cc-cat-go{padding-top:20px}
   /* Điện thoại: 4 thư mục hiện đủ trong lưới 2 cột (không phải vuốt tìm), không dính để nhường chỗ cho ảnh */
   .cc-tabs{position:static}
   .cc-tabs-in{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 10px}
