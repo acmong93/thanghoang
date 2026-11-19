@@ -33,7 +33,7 @@
 </nav>
 <% } %>
 
-<section class="cc-gal-sec" id="concept-list">
+<section class="cc-gal-sec<%= kho.cat === 'baogia' ? ' cc-gal-bg' : '' %>" id="concept-list">
   <div class="wrap-wide">
     <!-- Lưới so le theo tỉ lệ thật của từng ảnh (không cắt ảnh). JS xếp ô vào cột thấp nhất,
          giữ thứ tự kéo thả: các ảnh đầu nằm trên cùng. Không JS thì CSS columns vẫn hiển thị đủ. -->
