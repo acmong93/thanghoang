@@ -108,6 +108,7 @@ if (ensureAdmin() && sessionStore) {
   /* Hệ Concept: nhập bộ concept + ảnh từ manifest (chạy 1 lần; sau đó anh Thắng
      tự quản trong admin — thêm/xoá/kéo thả không bị ghi đè lại) */
   require('./src/concepts-import').ensureConcepts();
+  require('./src/concepts-import').ensureBaoGia();
   /* Ghi chú bảng giá 2027: thời hạn áp dụng rõ ràng (chạy 1 lần, sau đó sửa được trong admin) */
   if (!setting('pricing_note_2027')) {
     setSetting('pricing_note', 'Bảng giá 2027 áp dụng đến hết 31/12/2027. Mỗi gói đều có thể điều chỉnh theo nhu cầu thực tế của hai bạn.');
@@ -128,8 +129,9 @@ const { trackMiddleware, trackRouter } = require('./src/track');
 app.use(trackMiddleware);
 app.use('/track', trackRouter);
 
-/* Kho concept chỉ xem được bằng link riêng gửi khách (src/concept-access.js) */
+/* Kho tư vấn (concept, báo giá): gửi link cho khách, ẩn khỏi Google (src/concept-access.js) */
 app.use('/concept', require('./src/concept-access').gate);
+app.use('/bao-gia', require('./src/concept-access').gate);
 app.use('/', require('./src/routes/public'));
 app.use('/admin', require('./src/routes/admin'));
 

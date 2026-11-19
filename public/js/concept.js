@@ -84,7 +84,7 @@
   cl.className = 'cl';
   cl.setAttribute('role', 'dialog');
   cl.setAttribute('aria-modal', 'true');
-  cl.setAttribute('aria-label', 'Xem concept ' + albumName);
+  cl.setAttribute('aria-label', 'Xem ' + albumName);
   cl.innerHTML =
     '<div class="cl-top"><span class="cl-count" aria-live="polite"></span>' +
     '<span class="cl-title"><span class="cl-title-cat"></span><span class="cl-title-n"></span></span>' +
@@ -108,6 +108,8 @@
   const total = items.length;
   const fullOf = i => items[i].getAttribute('href');
   const wrapIdx = i => (i + total) % total;
+  /* Tên từng ảnh: concept đánh số, báo giá theo tên gói in trên trang (data-label) */
+  const labelOf = i => items[i].dataset.label || ('Concept ' + (i + 1));
   /* Cỡ vừa đủ nét cho khung xem: bề ngang hiển thị × mật độ điểm ảnh của màn hình.
      Có sẵn các cỡ trung gian (data-sizes, src/image-variants.js) thì không tải bản 1600px khi chưa cần */
   const fitSrc = i => {
@@ -157,11 +159,11 @@
     /* Hiện ngay bản đang có trong lưới, bản vừa đủ nét tải xong thì thay vào */
     const placeholder = (grid && (grid.currentSrc || grid.src)) || target;
     img.src = placeholder;
-    img.alt = albumName + ' · concept ' + (cur + 1);
+    img.alt = albumName + ' · ' + labelOf(cur);
     if (placeholder !== target && placeholder.split('?')[0].slice(-fullOf(cur).length) !== fullOf(cur)) swapTo(target);
     countEl.textContent = (cur + 1) + ' / ' + total;
-    cl.querySelector('.cl-title-n').textContent = 'Concept ' + (cur + 1);
-    if (zaloBtn) zaloBtn.querySelector('.cl-zalo-n').textContent = 'Concept ' + (cur + 1);
+    cl.querySelector('.cl-title-n').textContent = labelOf(cur);
+    if (zaloBtn) zaloBtn.querySelector('.cl-zalo-n').textContent = labelOf(cur);
     hintEl.textContent = HINT;
     [cur + 1, cur - 1].forEach(j => { new Image().src = fitSrc(wrapIdx(j)); });
     if (isOpen) history.replaceState(history.state, '', '#concept-' + (cur + 1));
@@ -221,7 +223,7 @@
   /* Nhắn Zalo: chép sẵn tên hạng mục + số concept + link để khách dán vào tin nhắn (số concept lặp lại giữa các hạng mục) */
   if (zaloBtn) zaloBtn.addEventListener('click', () => {
     if (window.roseTrack) window.roseTrack('zalo');
-    const label = albumName + ' · Concept ' + (cur + 1);
+    const label = albumName + ' · ' + labelOf(cur);
     const text = 'Rosé ơi, mình thích ' + label + ': ' + location.origin + location.pathname + '#concept-' + (cur + 1);
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(text).then(() => {

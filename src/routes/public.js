@@ -41,39 +41,62 @@ router.get('/anh-cuoi', (req, res) => {
   });
 });
 
-/* ============ CONCEPT: hub cho khách xem khi tư vấn online ============
-   Mỗi album concept là một HẠNG MỤC (Studio Phim Trường, Editorial, Áo Dài, Ngoại Cảnh);
-   mỗi ảnh trong album là một bảng concept. Thứ tự theo kéo thả trong admin. */
-function conceptCategories() {
+/* ============ KHO TƯ VẤN (ẩn, Rosé gửi link cho khách): CONCEPT và BÁO GIÁ ============
+   Mỗi album là một HẠNG MỤC; mỗi ảnh là một bảng concept / một trang báo giá. Thứ tự theo kéo thả trong admin.
+   Không có trên menu, sơ đồ trang, Google (noindex ở src/concept-access.js). */
+const KHO = {
+  concept: {
+    cat: 'concept', base: '/concept', page: 'concept', unit: 'concept', item: 'Concept',
+    eyebrow: 'Kho concept của Rosé', headA: 'Chọn ', headEm: 'concept', headB: ' của hai bạn',
+    title: 'Concept chụp ảnh cưới',
+    desc: 'Kho concept chụp ảnh cưới tại Rosé Wedding: studio phim trường, editorial tạp chí, áo dài, ngoại cảnh.',
+    intro: (n, t) => `${n} hạng mục, ${t} concept chụp thật cho khách tại Rosé. Chọn một hạng mục để xem toàn bộ concept, chạm vào từng concept để xem ảnh lớn.`,
+    ask: 'Thích concept nào?', askEm: 'nào?',
+    cta: 'Gửi Rosé concept hai bạn ưng ý, chúng tôi tư vấn chi tiết và giữ lịch cho riêng hai bạn, hoàn toàn miễn phí.'
+  },
+  baogia: {
+    cat: 'baogia', base: '/bao-gia', page: 'bao-gia', unit: 'gói', item: 'Báo giá',
+    eyebrow: 'Rosé Wedding x JA Studio · 2026', headA: 'Báo giá ', headEm: 'chi tiết', headB: ' 2026',
+    title: 'Báo giá chụp ảnh cưới 2026',
+    desc: 'Báo giá chi tiết 2026 của Rosé Wedding x JA Studio: pre-wedding, combo trọn gói, phóng sự cưới, dịch vụ khác.',
+    intro: (n, t) => `${n} hạng mục, ${t} gói dịch vụ. Chọn hạng mục để xem từng gói, chạm vào trang báo giá để xem lớn và phóng to đọc rõ quyền lợi.`,
+    ask: 'Phân vân gói nào?', askEm: 'nào?',
+    cta: 'Gửi Rosé tên gói hai bạn quan tâm, chúng tôi tư vấn chi tiết và báo ưu đãi tháng này cho riêng hai bạn.'
+  }
+};
+
+function khoCategories(k) {
   /* Chỉ hiện hạng mục đã có ảnh — vừa tạo chưa upload không lộ thẻ rỗng ra trang khách */
-  return all("SELECT * FROM albums WHERE visible = 1 AND category = 'concept' ORDER BY sort_order")
+  return all('SELECT * FROM albums WHERE visible = 1 AND category = ? ORDER BY sort_order', k.cat)
     .map(a => ({ ...a, cover: coverOf(a.id), count: get('SELECT COUNT(*) n FROM images WHERE album_id = ?', a.id).n }))
     .filter(a => a.count > 0);
 }
 
-router.get('/concept', (req, res) => {
-  const categories = conceptCategories();
-  const total = categories.reduce((n, c) => n + c.count, 0);
-  res.render('concept', { ...base(), page: 'concept', categories, total });
-});
+for (const k of Object.values(KHO)) {
+  router.get(k.base, (req, res) => {
+    const categories = khoCategories(k);
+    const total = categories.reduce((n, c) => n + c.count, 0);
+    res.render('concept', { ...base(), page: k.page, kho: k, categories, total });
+  });
 
-router.get('/concept/:slug', (req, res, next) => {
-  const album = get("SELECT * FROM albums WHERE slug = ? AND visible = 1 AND category = 'concept'", req.params.slug);
-  if (!album) return next();
-  const images = all('SELECT * FROM images WHERE album_id = ? ORDER BY sort_order', album.id);
-  const categories = conceptCategories();
-  /* Hạng mục kế tiếp (vòng lại đầu) để khách xem tiếp không phải quay về trang chính */
-  const at = categories.findIndex(c => c.id === album.id);
-  const nextCat = categories.length > 1 && at >= 0 ? categories[(at + 1) % categories.length] : null;
-  res.render('concept-detail', { ...base(), page: 'concept', album, images, categories, nextCat });
-});
+  router.get(k.base + '/:slug', (req, res, next) => {
+    const album = get('SELECT * FROM albums WHERE slug = ? AND visible = 1 AND category = ?', req.params.slug, k.cat);
+    if (!album) return next();
+    const images = all('SELECT * FROM images WHERE album_id = ? ORDER BY sort_order', album.id);
+    const categories = khoCategories(k);
+    /* Hạng mục kế tiếp (vòng lại đầu) để khách xem tiếp không phải quay về trang chính */
+    const at = categories.findIndex(c => c.id === album.id);
+    const nextCat = categories.length > 1 && at >= 0 ? categories[(at + 1) % categories.length] : null;
+    res.render('concept-detail', { ...base(), page: k.page, kho: k, album, images, categories, nextCat });
+  });
+}
 
 /* ============ ALBUM CHI TIẾT ============ */
 router.get('/album/:slug', (req, res, next) => {
   const album = get('SELECT * FROM albums WHERE slug = ? AND visible = 1', req.params.slug);
   if (!album) return next();
-  /* Concept chỉ xem bằng link riêng: địa chỉ album cũ của concept về trang Ảnh cưới công khai */
-  if (album.category === 'concept') return res.redirect(301, '/anh-cuoi');
+  /* Concept / báo giá chỉ xem bằng link riêng: địa chỉ /album của chúng về trang Ảnh cưới công khai */
+  if (album.category === 'concept' || album.category === 'baogia') return res.redirect(301, '/anh-cuoi');
   const images = all('SELECT * FROM images WHERE album_id = ? ORDER BY sort_order', album.id);
   const others = albumsWithCover(album.category).filter(a => a.id !== album.id).slice(0, 3);
   album.cover = coverOf(album.id);
@@ -148,7 +171,7 @@ router.get('/sitemap.xml', (req, res) => {
   const urls = ['/', '/anh-cuoi', '/phong-su', '/vay-cuoi', '/cau-chuyen', '/tin-tuc'];
   all('SELECT slug FROM pricing WHERE visible = 1 ORDER BY sort_order').forEach(p => urls.push(`/bang-gia/${p.slug}`));
   /* Kho concept không công khai (chỉ xem bằng link riêng gửi khách): không đưa vào sơ đồ trang */
-  all(`SELECT slug FROM albums WHERE visible = 1 AND category != 'concept' ORDER BY sort_order`)
+  all(`SELECT slug FROM albums WHERE visible = 1 AND category NOT IN ('concept', 'baogia') ORDER BY sort_order`)
     .forEach(a => urls.push(`/album/${a.slug}`));
   all('SELECT slug FROM posts WHERE visible = 1 ORDER BY created_at DESC').forEach(p => urls.push(`/tin-tuc/${p.slug}`));
   const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +

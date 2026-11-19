@@ -1,8 +1,9 @@
 <%- include('partials/top', { t: album.name }) %>
 
-<% const isConcept = album.category === 'concept'; %>
+<% const isConcept = album.category === 'concept' || album.category === 'baogia';
+   const webUrl = album.category === 'baogia' ? '/bao-gia/' + album.slug : isConcept ? '/concept/' + album.slug : '/album/' + album.slug; %>
 <p><a href="<%= isConcept ? '/admin/concepts' : '/admin/albums' %>" class="muted">← <%= isConcept ? 'Tất cả concept' : 'Tất cả album' %></a></p>
-<h1><%= album.name %> <a class="ad-btn sm" href="<%= isConcept ? '/concept/' + album.slug : '/album/' + album.slug %>" target="_blank" rel="noopener">Xem trên web ↗</a></h1>
+<h1><%= album.name %> <a class="ad-btn sm" href="<%= webUrl %>" target="_blank" rel="noopener">Xem trên web ↗</a></h1>
 
 <form method="post" action="/admin/albums/<%= album.id %>" class="panel grid-form">
   <label>Tên <%= isConcept ? 'concept' : 'album' %> <input name="name" value="<%= album.name %>" required /></label>

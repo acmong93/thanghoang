@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<%- include('partials/head', { title: 'Concept chụp ảnh cưới', desc: 'Kho concept chụp ảnh cưới tại Rosé Wedding: studio phim trường, editorial tạp chí, áo dài, ngoại cảnh. Xem ảnh thật từng concept để chọn phong cách cho ngày trọng đại.' }) %>
+<%# Trang chính của một "kho tư vấn" (concept hoặc báo giá) — cấu hình ở KHO trong src/routes/public.js %>
+<%- include('partials/head', { title: kho.title, desc: kho.desc }) %>
 <link rel="stylesheet" href="/css/concept.css?v=<%= v %>" />
 </head>
 <body>
@@ -10,9 +11,9 @@
 <main id="main">
 <section class="page-hero cc-hero">
   <div class="wrap center">
-    <span class="eyebrow gold">Kho concept của Rosé</span>
-    <h1>Chọn <span class="italic">concept</span> của hai bạn</h1>
-    <p><%= categories.length %> hạng mục, <%= total %> concept chụp thật cho khách tại Rosé. Chọn một hạng mục để xem toàn bộ concept, chạm vào từng concept để xem ảnh lớn.</p>
+    <span class="eyebrow gold"><%= kho.eyebrow %></span>
+    <h1><%= kho.headA %><span class="italic"><%= kho.headEm %></span><%= kho.headB %></h1>
+    <p><%= kho.intro(categories.length, total) %></p>
   </div>
 </section>
 
@@ -20,17 +21,17 @@
   <div class="wrap-wide">
     <div class="cc-cats">
       <% categories.forEach((c, i) => { const cv = c.cover || {}; %>
-      <a class="cc-cat reveal" href="/concept/<%= c.slug %>">
+      <a class="cc-cat reveal" href="<%= kho.base %>/<%= c.slug %>">
         <span class="cc-cat-frame">
           <img src="<%= cv.thumb || cv.file %>"
             <% const css = srcsetFor(cv); if (css) { %>srcset="<%= css %>" sizes="(max-width:680px) calc(90vw - 50px), (max-width:1100px) calc(44vw - 33px), (max-width:1400px) calc(22vw - 24px), 290px"<% } %>
-            alt="Hạng mục concept <%= c.name %>" loading="<%= i < 2 ? 'eager' : 'lazy' %>" decoding="async" />
+            alt="<%= kho.item %> <%= c.name %>" loading="<%= i < 2 ? 'eager' : 'lazy' %>" decoding="async" />
         </span>
         <span class="cc-cat-meta">
-          <span class="cc-cat-count"><%= c.count %> concept</span>
+          <span class="cc-cat-count"><%= c.count %> <%= kho.unit %></span>
           <h2><%= c.name %></h2>
           <% if (c.desc) { %><span class="cc-cat-desc"><%= c.desc %></span><% } %>
-          <span class="cc-cat-go">Xem concept<span aria-hidden="true">&ensp;&rsaquo;</span></span>
+          <span class="cc-cat-go">Xem <%= kho.unit %><span aria-hidden="true">&ensp;&rsaquo;</span></span>
         </span>
       </a>
       <% }) %>
@@ -40,8 +41,8 @@
 
 <section class="cta-band reveal">
   <div class="wrap center">
-    <h2>Chưa biết chọn concept <span class="italic">nào?</span></h2>
-    <p class="mt-14">Nhắn Rosé đôi điều về hai bạn, chúng tôi sẽ gợi ý concept hợp nhất với câu chuyện và ngân sách của bạn.</p>
+    <h2><%= kho.ask.replace(kho.askEm, '') %><span class="italic"><%= kho.askEm %></span></h2>
+    <p class="mt-14"><%= kho.cta %></p>
     <a href="/#booking" class="btn btn-gold mt-24">Nhận tư vấn miễn phí</a>
   </div>
 </section>
